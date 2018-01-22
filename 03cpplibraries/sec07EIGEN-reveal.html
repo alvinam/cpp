@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Eigen</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Eigen</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="using-eigen" class="titleslide slide level2"><h1>Using Eigen</h1></section><section id="introduction" class="slide level3">
+<h1>Introduction</h1>
+<ul>
+<li><a href="http://eigen.tuxfamily.org">Eigen</a> is:
+<ul>
+<li>C++ template library,</li>
+<li>Linear algebra, matrices, vectors, numerical solvers, etc.</li>
+<li><img src="figures/eigenContents.png" title="fig:" alt="Overview of features" /></li>
+</ul></li>
+</ul>
+</section><section id="tutorials" class="slide level3">
+<h1>Tutorials</h1>
+<p>Obviously, you can read:</p>
+<ul>
+<li>the existing <a href="http://eigen.tuxfamily.org/dox/index.html">manual pages</a></li>
+<li>tutorials (<a href="http://eigen.tuxfamily.org/dox/GettingStarted.html">short</a>, <a href="http://eigen.tuxfamily.org/dox/group__TutorialMatrixClass.html">long</a>).</li>
+<li>the <a href="http://eigen.tuxfamily.org/dox/group__QuickRefPage.html">Quick Reference</a></li>
+</ul>
+</section><section id="getting-started" class="slide level3">
+<h1>Getting started</h1>
+<ul>
+<li>Header only, just need <code>#include</code></li>
+<li>Uses CMake, but that's just for
+<ul>
+<li>documentation</li>
+<li>run unit tests</li>
+<li>do installation.</li>
+</ul></li>
+</ul>
+</section><section id="c-principles" class="slide level3">
+<h1>C++ Principles</h1>
+<p>(i.e. why introduce Eigen on this course)</p>
+<ul>
+<li>Eigen uses
+<ul>
+<li>Templates</li>
+<li>Loop unrolling, traits, template meta programming</li>
+</ul></li>
+</ul>
+</section><section id="matrix-class" class="slide level3">
+<h1>Matrix Class</h1>
+<ul>
+<li>This:</li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;iostream&gt;</span>
+<span class="ot">#include &lt;Eigen/Dense&gt;</span>
+<span class="kw">using</span> Eigen::MatrixXd;
+<span class="dt">int</span> main()
+{
+  MatrixXd m(<span class="dv">2</span>,<span class="dv">2</span>);
+  m(<span class="dv">0</span>,<span class="dv">0</span>) = <span class="dv">3</span>;
+  m(<span class="dv">1</span>,<span class="dv">0</span>) = <span class="fl">2.5</span>;
+  m(<span class="dv">0</span>,<span class="dv">1</span>) = -<span class="dv">1</span>;
+  m(<span class="dv">1</span>,<span class="dv">1</span>) = m(<span class="dv">1</span>,<span class="dv">0</span>) + m(<span class="dv">0</span>,<span class="dv">1</span>);
+  std::cout &lt;&lt; m &lt;&lt; std::endl;
+}</code></pre>
+<ul>
+<li>Produces:</li>
+</ul>
+<pre><code>  3  -1
+2.5 1.5
+</code></pre>
+</section><section id="matrix-class-declaration" class="slide level3">
+<h1>Matrix Class Declaration</h1>
+<p>Matrix Class</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span>&lt;<span class="kw">typename</span> _Scalar, <span class="dt">int</span> _Rows, <span class="dt">int</span> _Cols, <span class="dt">int</span> _Options, <span class="dt">int</span> _MaxRows, <span class="dt">int</span> _MaxCols&gt;
+<span class="kw">class</span> Matrix
+  : <span class="kw">public</span> PlainObjectBase&lt;Matrix&lt;_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols&gt; &gt;
+{</code></pre>
+<p>So, its templates, <a href="http://development.rc.ucl.ac.uk/training/rcwithcpp/session02/">so review last weeks lecture</a>.</p>
+</section><section id="matrix-class-construction" class="slide level3">
+<h1>Matrix Class Construction</h1>
+<p>But in documentation:</p>
+<figure>
+<img src="figures/eigenMatrixDynamic.png" alt="Matrix construction" /><figcaption>Matrix construction</figcaption>
+</figure>
+<p>It took a while but I searched and found:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">src/Core/util/Constants.h:<span class="dt">const</span> <span class="dt">int</span> Dynamic = -<span class="dv">1</span>;</code></pre>
+<p>and both fixed and dynamic Matrices come from same template class???</p>
+<p>How do they do that?</p>
+</section><section id="densestorage.h---1" class="slide level3">
+<h1>DenseStorage.h - 1</h1>
+<p>In <code>src/Core/DenseStorage.h</code>:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">typename</span> T, <span class="dt">int</span> Size, <span class="dt">int</span> MatrixOrArrayOptions,
+          <span class="dt">int</span> Alignment = (MatrixOrArrayOptions&amp;DontAlign) ? <span class="dv">0</span>
+                        : (((Size*<span class="kw">sizeof</span>(T))%<span class="dv">16</span>)==<span class="dv">0</span>) ? <span class="dv">16</span>
+                        : <span class="dv">0</span> &gt;
+<span class="kw">struct</span> plain_array
+{
+  T array[Size];</code></pre>
+<p>So, a <code>plain_array</code> structure containing a stack allocated array.</p>
+</section><section id="densestorage.h---2" class="slide level3">
+<h1>DenseStorage.h - 2</h1>
+<p>In <code>src/Core/DenseStorage.h</code>:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// purely fixed-size matrix</span>
+<span class="kw">template</span>&lt;<span class="kw">typename</span> T, <span class="dt">int</span> Size, <span class="dt">int</span> _Rows, <span class="dt">int</span> _Cols, <span class="dt">int</span> _Options&gt; <span class="kw">class</span> DenseStorage
+{
+    internal::plain_array&lt;T,Size,_Options&gt; m_data;</code></pre>
+<p>There is a default template class for DenseStorage, and specialisation for fixed arrays.</p>
+</section><section id="densestorage.h---3" class="slide level3">
+<h1>DenseStorage.h - 3</h1>
+<p>In <code>src/Core/DenseStorage.h</code>:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="co">// purely dynamic matrix.</span>
+<span class="kw">template</span>&lt;<span class="kw">typename</span> T, <span class="dt">int</span> _Options&gt; <span class="kw">class</span> DenseStorage&lt;T, Dynamic, Dynamic, Dynamic, _Options&gt;
+{
+    T *m_data;
+    DenseIndex m_rows;
+    DenseIndex m_cols;</code></pre>
+<p>There is a default template class for DenseStorage, and specialisation for Dynamic arrays.</p>
+</section><section id="eigen-matrix-summary" class="slide level3">
+<h1>Eigen Matrix Summary</h1>
+<ul>
+<li>Templated type supports dynamic and fixed arrays seamlessly on stack or heap</li>
+<li>typedef's to make life easier: <code>Matrix3d</code> = 3 by 3 of double</li>
+<li>Uses TMP to generate generate code at compile time</li>
+<li>Benefit from optimisations such as loop unrolling when using fixed size constant arrays</li>
+</ul>
+</section><section id="eigen-usage---cmake-include" class="slide level3">
+<h1>Eigen Usage - CMake Include</h1>
+<ul>
+<li>Need to set include path</li>
+<li>You could download and 'install' eigen into your project, and commit it. e.g.</li>
+</ul>
+<pre class="sourceCode cmake"><code class="sourceCode cmake"><span class="kw">include_directories</span>(<span class="dv">${CMAKE_SOURCE_DIR}</span>/session03/cpp/Eigen/eigen-3.2.3/include/eigen3)</code></pre>
+</section><section id="eigen-usage---cmake-module" class="slide level3">
+<h1>Eigen Usage - CMake Module</h1>
+<ul>
+<li>CMake (3.1) does not have a <code>Find Module</code> for eigen, but eigen provides one.</li>
+<li>So, in your source tree</li>
+</ul>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">mkdir</span> CMake
+<span class="kw">cp</span> <span class="kw">&lt;</span>path_to_eigen<span class="kw">&gt;</span>/cmake/FindEigen3.cmake ./CMake</code></pre>
+<ul>
+<li>Then in your CMakeLists.txt</li>
+</ul>
+<pre class="sourceCode cmake"><code class="sourceCode cmake"><span class="kw">set</span>(<span class="dv">CMAKE_MODULE_PATH</span> <span class="st">&quot;</span><span class="dv">${CMAKE_SOURCE_DIR}</span><span class="st">/CMake;</span><span class="dv">${CMAKE_MODULE_PATH}</span><span class="st">&quot;</span>)
+<span class="kw">find_package</span>(Eigen3)
+<span class="kw">include_directories</span>(<span class="dv">${EIGEN3_INCLUDE_DIR}</span>)</code></pre>
+</section><section id="eigen-usage---cmake-external" class="slide level3">
+<h1>Eigen Usage - CMake External</h1>
+<ul>
+<li><a href="http://sourceforge.net/projects/niftyseg/">NiftySeg</a> uses</li>
+</ul>
+<pre class="sourceCode cmake"><code class="sourceCode cmake"><span class="kw">option</span>(USE_SYSTEM_EIGEN <span class="st">&quot;Use an already installed version of the Eigen library&quot;</span> OFF)
+<span class="kw">if</span>(USE_SYSTEM_EIGEN)
+  <span class="kw">find_package</span>(EIGEN <span class="ot">REQUIRED</span>)
+<span class="kw">else</span>()
+  <span class="kw">set</span>(<span class="dv">${PROJECT_NAME}</span>_VERSION_EIGEN <span class="st">&quot;ffa86ffb5570&quot;</span> <span class="ot">CACHE</span> <span class="ot">STRING</span> <span class="st">&quot;Version of EIGEN&quot;</span> <span class="ot">FORCE</span>)
+  <span class="kw">set</span>(<span class="dv">${PROJECT_NAME}</span>_MD5_SUM_EIGEN 9559c34af203dde5f3f1d976d859c5b3 <span class="ot">CACHE</span> <span class="ot">STRING</span> <span class="st">&quot;MD5 check sum for EIGEN&quot;</span> <span class="ot">FORCE</span>)
+  <span class="kw">set</span>(<span class="dv">${PROJECT_NAME}</span>_LOCATION_EIGEN
+    <span class="st">&quot;http://cmic.cs.ucl.ac.uk/platform/dependencies/eigen-eigen-</span><span class="dv">${${PROJECT_NAME}_VERSION_EIGEN}</span><span class="st">.tar.gz&quot;</span>
+    <span class="ot">CACHE</span> <span class="ot">STRING</span> <span class="st">&quot;Location of Eigen&quot;</span> <span class="ot">FORCE</span>)
+  <span class="fu">ExternalProject_Add</span>(Eigen
+    URL <span class="dv">${${PROJECT_NAME}_LOCATION_EIGEN}</span>
+    URL_MD5 <span class="dv">${${PROJECT_NAME}_MD5_SUM_EIGEN}</span>
+    PREFIX <span class="dv">${PROJECT_BINARY_DIR}</span>/Eigen
+    DOWNLOAD_DIR <span class="dv">${PROJECT_BINARY_DIR}</span>/Eigen/download
+    SOURCE_DIR <span class="dv">${PROJECT_BINARY_DIR}</span>/Eigen/source
+    STAMP_DIR <span class="dv">${PROJECT_BINARY_DIR}</span>/Eigen/stamps
+    TMP_DIR <span class="dv">${PROJECT_BINARY_DIR}</span>/Eigen/tmp
+    BINARY_DIR <span class="dv">${PROJECT_BINARY_DIR}</span>/Eigen/build
+    CMAKE_ARGS
+      <span class="dv">${CMAKE_PROPAGATED_VARIABLES}</span>
+      -DCMAKE_INSTALL_PREFIX:PATH=<span class="dv">${PROJECT_BINARY_DIR}</span>/Eigen/install
+      -DBUILD_TESTING=1
+    )
+  <span class="kw">set</span>(Eigen_INCLUDE_DIR <span class="dv">${PROJECT_BINARY_DIR}</span>/Eigen/install/include/eigen3)
+<span class="kw">endif</span>()
+<span class="kw">include_directories</span>(<span class="dv">${Eigen_INCLUDE_DIR}</span>)</code></pre>
+</section><section id="eigen-example---in-pcl" class="slide level3">
+<h1>Eigen Example - in PCL</h1>
+<p><a href="http://pointclouds.org/">Point Cloud Library</a> uses <a href="http://eigen.tuxfamily.org">Eigen</a>. Lets look at point based registration of two, same length, point sets.</p>
+</section><section id="pcl---manual-registration" class="slide level3">
+<h1>PCL - Manual Registration</h1>
+<ul>
+<li>Class to hold point lists</li>
+<li>Callbacks (not shown here) to add points to list</li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">class</span> ManualRegistration : <span class="kw">public</span> QMainWindow
+{
+  <span class="kw">protected</span>:
+  pcl::PointCloud&lt;pcl::PointXYZ&gt;    src_pc_;
+  pcl::PointCloud&lt;pcl::PointXYZ&gt;    dst_pc_;
+  Eigen::Matrix4f                   transform_;  </code></pre>
+</section><section id="pcl---svd-class" class="slide level3">
+<h1>PCL - SVD class</h1>
+<ul>
+<li>In <code>apps/src/manual_registration/manual_registration.cpp</code></li>
+<li>Create a class to estimate SVD of two point sets</li>
+<li>See paper <a href="http://dl.acm.org/citation.cfm?id=28821">Arun et. al. 1987</a></li>
+<li>Its an example of the orthogonal procrustes problem</li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">  pcl::registration::TransformationEstimationSVD&lt;pcl::PointXYZ, pcl::PointXYZ&gt; tfe;
+  tfe.estimateRigidTransformation(src_pc_, dst_pc_, transform_);</code></pre>
+</section><section id="pcl---correlation" class="slide level3">
+<h1>PCL - Correlation</h1>
+<p>After subtracting each point from the mean point we have in <code>registration/include/pcl/registration/impl/transformation_estimation_svd.hpp</code></p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">typename</span> PointSource, <span class="kw">typename</span> PointTarget, <span class="kw">typename</span> Scalar&gt; <span class="dt">void</span>
+pcl::registration::TransformationEstimationSVD&lt;PointSource, PointTarget, Scalar&gt;::getTransformationFromCorrelation (
+    <span class="dt">const</span> Eigen::Matrix&lt;Scalar, Eigen::Dynamic, Eigen::Dynamic&gt; &amp;cloud_src_demean,
+    <span class="dt">const</span> Eigen::Matrix&lt;Scalar, <span class="dv">4</span>, <span class="dv">1</span>&gt; &amp;centroid_src,
+    <span class="dt">const</span> Eigen::Matrix&lt;Scalar, Eigen::Dynamic, Eigen::Dynamic&gt; &amp;cloud_tgt_demean,
+    <span class="dt">const</span> Eigen::Matrix&lt;Scalar, <span class="dv">4</span>, <span class="dv">1</span>&gt; &amp;centroid_tgt,
+    Matrix4 &amp;transformation_matrix) <span class="dt">const</span>
+{
+  transformation_matrix.setIdentity ();
+
+  <span class="co">// Assemble the correlation matrix H = source * target&#39;</span>
+  Eigen::Matrix&lt;Scalar, <span class="dv">3</span>, <span class="dv">3</span>&gt; H = (cloud_src_demean * cloud_tgt_demean.transpose ()).topLeftCorner (<span class="dv">3</span>, <span class="dv">3</span>);
+
+  <span class="co">// Compute the Singular Value Decomposition</span>
+  Eigen::JacobiSVD&lt;Eigen::Matrix&lt;Scalar, <span class="dv">3</span>, <span class="dv">3</span>&gt; &gt; svd (H, Eigen::ComputeFullU | Eigen::ComputeFullV);
+  Eigen::Matrix&lt;Scalar, <span class="dv">3</span>, <span class="dv">3</span>&gt; u = svd.matrixU ();
+  Eigen::Matrix&lt;Scalar, <span class="dv">3</span>, <span class="dv">3</span>&gt; v = svd.matrixV ();
+
+  <span class="co">// Compute R = V * U&#39;</span>
+  <span class="kw">if</span> (u.determinant () * v.determinant () &lt; <span class="dv">0</span>)
+  {
+    <span class="kw">for</span> (<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; <span class="dv">3</span>; ++x)
+      v (x, <span class="dv">2</span>) *= -<span class="dv">1</span>;
+  }
+
+  Eigen::Matrix&lt;Scalar, <span class="dv">3</span>, <span class="dv">3</span>&gt; R = v * u.transpose ();
+
+  <span class="co">// Return the correct transformation</span>
+  transformation_matrix.topLeftCorner (<span class="dv">3</span>, <span class="dv">3</span>) = R;
+  <span class="dt">const</span> Eigen::Matrix&lt;Scalar, <span class="dv">3</span>, <span class="dv">1</span>&gt; Rc (R * centroid_src.head (<span class="dv">3</span>));
+  transformation_matrix.block (<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">1</span>) = centroid_tgt.head (<span class="dv">3</span>) - Rc;
+}</code></pre>
+</section><section id="pcl---summary" class="slide level3">
+<h1>PCL - Summary</h1>
+<ul>
+<li>Use of Eigen implements <a href="http://dl.acm.org/citation.cfm?id=28821">Arun et. al. 1987</a> in one main function.</li>
+<li>Relatively close matching of algorithm to code.</li>
+<li>Template notation a bit awkward, but now, not so insurmountable.</li>
+<li>So, using library, we gain power and benefit of very experienced library programmers.</li>
+</ul>
+</section><section id="eigen-summary" class="slide level3">
+<h1>Eigen Summary</h1>
+<ul>
+<li>Header only</li>
+<li>Use CMake to set the include path</li>
+<li>Templated, so its compiled in, no link or run-time dependencies</li>
+<li>Simple to use linear algebra library</li>
+<li>Advise not to mix with GUI code</li>
+<li>Consider static linking as using templates anyway - ease of distribution</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

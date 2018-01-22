@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Deployment</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Deployment</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="deployment" class="titleslide slide level2"><h1>Deployment</h1></section><section id="getting-our-code-onto-legion" class="slide level3">
+<h1>Getting our code onto Legion</h1>
+<p>We now have to</p>
+<ul>
+<li>Clone our code base onto our cluster</li>
+<li>Load appropriate modules to get the compilers we need</li>
+<li>Build our code</li>
+<li>Construct an appropriate submission script</li>
+<li>Submit the submission script</li>
+<li>Wait for the job to queue and run</li>
+<li>Copy the data back from the cluster</li>
+<li>Analyse it to display our results.</li>
+</ul>
+<p>This is a <strong>pain in the neck</strong></p>
+</section><section id="scripting-deployment" class="slide level3">
+<h1>Scripting deployment</h1>
+<p>There are various tools that can be used to automate this process.</p>
+<p>You should use one.</p>
+<p>Since I like Python, I use <a href="http://docs.fabfile.org/en/1.10/index.html">Fabric</a> to do this.</p>
+<p>You create <code>fabfile.py</code> in your top level folder, and at the shell you can write:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">fab</span> legion.cold
+<span class="kw">fab</span> legion.sub
+<span class="kw">fab</span> legion.stat
+<span class="kw">fab</span> legion.fetch</code></pre>
+<p>to build and run code on Legion, without ever using ssh. You can be in any folder below the <code>fabfile.py</code> level, such as inside a build folder; the command line tool recurses upward to look for this file, (Just like <code>git</code> looks for the <code>.git</code> folder.)</p>
+</section><section id="writing-fabric-tasks" class="slide level3">
+<h1>Writing fabric tasks</h1>
+<p>If you know Python, writing fabric tasks is easy:</p>
+<p><a href="https://github.com/UCL/SmoothLifeExample/blob/parallel/deploy/legion.py">fabfile.py</a>:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="ot">@task</span>
+<span class="kw">def</span> build():
+    <span class="kw">with</span> cd(<span class="st">&#39;/home/ucgajhe/smooth/build&#39;</span>):
+        <span class="kw">with</span> prefix(<span class="st">&#39;module load cmake&#39;</span>):
+            run(<span class="st">&#39;make&#39;</span>)</code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">fab</span> build</code></pre>
+</section><section id="templating-jobscripts" class="slide level3">
+<h1>Templating jobscripts</h1>
+<p>Editing a jobscript every time you want to change the number of cores you want to run on is tedious. I use a templating tool <a href="http://www.makotemplates.org">Mako</a> to generate the jobscript:</p>
+<pre class="mako"><code>#$ -pe openmpi ${processes}</code></pre>
+<p>the templating tool fills in anything in ${} from a variable in the fabric code.</p>
+</section><section id="mako-template-for-smooth-life" class="slide level3">
+<h1>Mako Template for Smooth Life</h1>
+<pre class="mako"><code></code></pre>
+</section><section id="configuration-files" class="slide level3">
+<h1>Configuration files</h1>
+<p>Avoid using lots of command line arguments to configure your program. It's easier to just have one argument, a configuration file path.</p>
+<ul>
+<li>The configuration file can be kept with results for your records.</li>
+<li>Configuration files can be shipped back and forth to the cluster with fabric.</li>
+</ul>
+<p>Even if your code is using simple C++ I/O rather than a nice formatting library, it's best to design your config file in a format which other frameworks can easily read. My favourite is <a href="http://www.yaml.org">Yaml</a>.</p>
+<pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">width:</span> 200
+<span class="fu">height:</span> 100
+<span class="fu">range:</span> 5</code></pre>
+</section><section id="results" class="slide level3">
+<h1>Results</h1>
+<p><a href="https://www.youtube.com/watch?v=3sXO2rYNwl4">It works</a></p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

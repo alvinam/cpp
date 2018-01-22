@@ -1,0 +1,801 @@
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 7]> <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="lt-ie9 no-js"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset=utf-8 />
+    <meta name="author" content="UCL" />
+    <meta name="description" content="UCL Homepage" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- social meta -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@uclnews">
+    <meta name="twitter:title" content="UCL - London's Global University">
+    <meta name="twitter:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students.">
+    <meta name="twitter:creator" content="@UCLWAMS">
+    <meta name="twitter:image:src" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png">
+    <meta property="og:image" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png" />
+    <meta property="og:title" content="UCL - London's Global University" />
+    <meta property="og:url" content="http://www.ucl.ac.uk" />
+    <meta property="og:site_name" content="UCL" />
+    <meta property="og:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students." />
+    <meta property="og:type" content="website" />
+    <meta property="og:profile_id" content="uclofficial" />
+    <!-- end social meta -->
+
+  <title>STL Containers</title>
+
+  <link href="/research-computing-with-cpp/css/screen.min.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <link href="/research-computing-with-cpp/css/jekyll-styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/local_styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/ipython.css" rel="stylesheet" type="text/css">
+
+  <link rel="shortcut icon" href="/research-computing-with-cpp/images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="/research-computing-with-cpp/favicon-152.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="/research-computing-with-cpp/favicon-144.png">
+
+  <script src="/research-computing-with-cpp/js/lib/modernizr-custom.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+
+    <script>
+      var cuttingTheMustard = document.querySelector && window.localStorage && window.addEventListener;
+
+      Modernizr.load({
+        //cutting the mustard as used by the BBC
+        test: cuttingTheMustard
+        //if old browser load the shiv
+        ,
+        nope: [
+          '/research-computing-with-cpp/js/lib/html5shiv-printshiv.min.js', '/research-computing-with-cpp/js/lib/respond.min.js'
+        ]
+      });
+      //set conditional assets for main.js
+      var globalSiteSpecificVars = {
+        pathToJquery: "/research-computing-with-cpp/js/lib/jquery-1.9.1.min",
+        googleAnalyticsIdsArray: [] //specify array of site specific id's NOT UCL generic UA-943297-1
+      }
+      if (cuttingTheMustard) {
+        globalSiteSpecificVars.pathToJquery = '/research-computing-with-cpp/js/lib/jquery-2.1.1.min';
+      }
+    </script>
+    <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+    <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+</head>
+
+<body id="index" class="layout-vertical layout-vertical--nav-1col">
+
+  <header class="header header--desktop">
+
+  <a class="header__close" href="#">
+    <img src="/research-computing-with-cpp/images/close.png" class="lazy" data-src="//static.ucl.ac.uk/indigo/images/close.png" alt="X" />Close</a>
+
+  <div class="masthead">
+
+  <div class="wrapper clearfix">
+
+      <div class="masthead__search">
+					<form action="#" method="get">
+						<div class="search-form">
+							<input type="search" placeholder="Search UCL websites, people and more" class="search-form__input search-form__input--search" value="">
+						</div>
+						<input type="submit" name="sumbit" value="Go" class="btn search-form__input search-form__input--submit" />
+					</form>
+				</div>
+
+
+				<nav class="masthead__nav m-clear">
+					<ul class="masthead__list">
+						<li class="masthead__item"><a href="index.php" class="masthead__link">UCL Home</a>
+						</li>
+						<li class="masthead__item"><a href="prospective-students.php" class="masthead__link">Prospective students</a>
+						</li>
+						<li class="masthead__item"><a href="current-students.php" class="masthead__link">Current students</a>
+						</li>
+						<li class="masthead__item"><a href="staff.php" class="masthead__link">Staff</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+</div><!-- end .masthead -->
+
+
+  <div class="wrapper">
+
+    <div class="photograph">
+  <div class="brand">
+    <p class="brand__heading">MPHYG002: Research Computing with C++</p>
+    <a href="/" class="brand__link"><span class="visually-hidden">Home</span></a>
+    <img src="//cdn.ucl.ac.uk/img/blank.gif" data-src="//static.ucl.ac.uk/indigo/images/ucl-logo.svg" alt="UCL logo" id="logo" class="brand__logo lazy">  
+  </div>
+</div>
+
+
+    <div class="sidebar">
+
+      <nav class="nav nav--mobile">
+        <ul>
+          
+
+
+
+
+        </ul>
+      </nav>
+
+      <nav class="nav nav--left">
+        <ul>
+          
+
+ <li class="active"> <a href="/research-computing-with-cpp/01research/">C++ for Research</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/01research/sec01Research.html">C++ in Research</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec02Git.html">Git</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec03CMake.html">CMake</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec04UnitTesting.html">Unit Testing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/02libraries/">Including Libraries</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec01ChoosingLibraries.html">Choosing Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LibraryBasics.html">Library Basics</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LinkingLibraries.html">Linking Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec03UsingLibraries.html">Using Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec04Examples.html">Examples</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05CMakeCatchTemplate.html">CMakeCatchTemplate</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05Summary.html">Summary</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/">Better C++</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec01LanguageRecap.html">Object Oriented Review</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec02EssentialReading.html">Essential Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec03TemplatesIntro.html">Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec04FunctionTemplates.html">Function Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec05ClassTemplates.html">Class Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec06Exceptions.html">Error Handling</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec07Inheritance.html">Inheritance</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec08DependencyInjection.html">Dependency Injection</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec09ConstructionPatterns.html">Construction Patterns</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec10MemoryManagement.html">Smart Pointers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec11RAII.html">RAII Pattern</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec12ProgramToInterfaces.html">Program To Interfaces</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec13SummaryOfPatterns.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/">C++ Libraries</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec07EIGEN.html">Eigen</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec08Boost.html">Boost</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec09ITK.html">ITK</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec10Summary.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/04HPC/">HPC Concepts</a><ul> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/05OpenMP/">Shared memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec01IntroductiontoOpenMP.html">Introduction to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec02Loops.html">Parallelizing loops with OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec03CriticalLocksRaces.html">Races, Locks and Critical regions</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec04Tasks.html">Tasks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec05SchedulingLoadBalancing.html">Scheduling and Load Balancing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec06OpenMPAlternatives.html">Alternatives to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec07FurtherReading.html">Further Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec08Exercise.html">Exercise</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/06MPI/">Distributed memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec01practical.html">MPI in practice</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec02PointToPoint.html">Point to Point</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec03collective.html">Collective communication</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec04advanced.html">More advanced MPI</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/07MPIExample/">MPI Design Example</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec01smoothlife.html">Smooth Life</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec02domain.html">Domain decomposition</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec03halo.html">Halo swap</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec04deployment.html">Deployment</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec05derived.html">Derived Datatypes</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec06overlap.html">Overlap</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/08IO/">MPI File I/O</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec01visualise.html">Visualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec02text.html">Formatted Text IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec03binary.html">Binary IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec04endian.html">Portability</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec05single.html">Writing from a single process</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec06mpiio.html">Parallel IO</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/09Accelerators/">Accelerators</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec01Introduction.html">CPU Vectorisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec02UsingAGPUAsAnAccelerator.html">Using a GPU as an Accelerator</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec03Streaming.html">Streaming</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec04Vectorization.html">Vectorization</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/11Performance/">Post-coding medley, memory leaks, and performance measurements</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/01editor_tools.html">Tools for pretty code</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/02valgrind.html">Memory leaks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/03Performance.html">Profiling a program</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/04MicroBenchmarking.html">Micro-benchmarking</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/95stl/">Appendix - STL</a><ul> <li class="active"> <a href="/research-computing-with-cpp/95stl/sec01Intro.html">The Standard Template Library</a> </li> <li class="active"> <a href="/research-computing-with-cpp/95stl/sec01Motivation.html">Motivation</a> </li> <li class="active"> <a href="/research-computing-with-cpp/95stl/sec02Containers.html">STL Containers</a> </li> <li class="active"> <a href="/research-computing-with-cpp/95stl/sec03Other.html">Other STL stuff</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/96TemplateMetaProg/">Appendix - TMP</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/96TemplateMetaProg/sec01TemplateMeta.html">Template Meta-Programming</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/97Cloud/">Appendix - Cloud</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec01cloud.html">Cloud computing and big data</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec02exercise1.html">Working in the cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec03exercise2.html">Command line cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec04virtual.html">Virtualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec05exercise3.html">Containers in the Cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec06distributed.html">Distributed computing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec07exercise4.html">MapReduce</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec08exercise5.html">Distributed computing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/98Installation/">Installation</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/01linux.html">Linux</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/02windows.html">Windows</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/03mac.html">Mac</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/04boost.html">Boost</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/99Assignments/">Assessment</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/99Assignments/assignment2.html">MPHYG002 Coursework 2 Parallelising Conway's Game of Life</a> </li> </ul> </li> 
+
+        </ul>
+      </nav>
+
+    </div>
+    <!-- end .sidebar -->
+
+    <nav class="nav nav--top">
+      <ul>
+        
+      </ul>
+    </nav>
+
+  </div>
+  <!-- end .wrapper -->
+
+  </header>
+  <!-- end .header -->
+
+  <div class="site-content wrapper">
+
+    <header class="header header--mobile default-header">
+      <a class="header__open" href="#">
+        <img src="/research-computing-with-cpp/images/ucl-menu.svg" alt="Menu" />
+      </a>
+    </header>
+
+    <div class="site-content__inner clearfix">
+      <div class="site-content__body">
+
+          
+            <nav class="breadcrumb clearfix">
+              <ul class="breadcrumb__list">
+                <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/">UCL</a></li>
+
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/ISD">ISD</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services">Our services</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it">Research IT</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it/training">Training</a></li>
+  
+
+<li class="breadcrumb__item"><a href="/research-computing-with-cpp/">MPHYG002</a></li>
+
+
+
+              </ul>
+            </nav>
+           <div class="site-content__main">
+            
+            
+               <div id="slidelink">
+                 <a href="/research-computing-with-cpp/95stl/sec02Containers-reveal.html">Slides</a>
+               </div>
+            
+          
+          
+
+    <h2>STL Containers</h2>
+
+<h3>Two general types:</h3>
+
+<ul>
+<li><p><em>Sequences</em>:
+Elements are ordered in a linear sequence. Individual elements are accessed by their position in this sequence/index.
+eg. <code>myVector[3]</code>, <code>myList.front()</code>, etc.</p></li>
+<li><p><em>Associative</em>:
+Elements are referenced by their key and not by their position in the container.
+eg. <code>myMap[&#39;key1&#39;]</code></p></li>
+</ul>
+
+<h3>Sequences</h3>
+
+<p>Properties:</p>
+
+<ul>
+<li>size: fixed/dynamic</li>
+<li>access: random/sequential</li>
+<li>underlying memory structure: contiguous/not
+
+<ul>
+<li>random access in non-contiguous memory is tricky</li>
+<li>affects how efficiently inserting/removing of elements can be done</li>
+<li>affects if pointer arithmetic can be done</li>
+</ul></li>
+<li>optimised insert/remove operations</li>
+</ul>
+
+<h3>Sequences</h3>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th style="text-align: center">size</th>
+<th style="text-align: center">access</th>
+<th style="text-align: center">memory</th>
+<th style="text-align: center">efficient insert/remove</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>array</td>
+<td style="text-align: center">fixed</td>
+<td style="text-align: center">random</td>
+<td style="text-align: center">contiguous</td>
+<td style="text-align: center">-</td>
+</tr>
+<tr>
+<td><strong>vector</strong></td>
+<td style="text-align: center"><strong>dynamic</strong></td>
+<td style="text-align: center"><strong>random</strong></td>
+<td style="text-align: center"><strong>contiguous</strong></td>
+<td style="text-align: center"><strong>at end only</strong></td>
+</tr>
+<tr>
+<td>deque</td>
+<td style="text-align: center">dynamic</td>
+<td style="text-align: center">random</td>
+<td style="text-align: center">non-contiguous</td>
+<td style="text-align: center">both ends</td>
+</tr>
+<tr>
+<td>list</td>
+<td style="text-align: center">dynamic</td>
+<td style="text-align: center">sequential</td>
+<td style="text-align: center">non-contiguous</td>
+<td style="text-align: center">anywhere</td>
+</tr>
+<tr>
+<td>forward_list</td>
+<td style="text-align: center">dynamic</td>
+<td style="text-align: center">sequential, only forward</td>
+<td style="text-align: center">non-contiguous</td>
+<td style="text-align: center">anywhere</td>
+</tr>
+</tbody></table>
+
+<h3>More on vector</h3>
+
+<p>It&#39;s dynamic, so you can add/erase elements:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">myVec</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">myVec</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">myVec</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">myVec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">myVec</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</code></pre></div>
+<p><code>myVec = -1 1 2 3 4 5 6 7 8 9</code></p>
+
+<p>... or manipulate its size:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">myVec</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Vector size before = "</span> <span class="o">&lt;&lt;</span> <span class="n">myVec</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="n">myVec</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" after = "</span> <span class="o">&lt;&lt;</span> <span class="n">myVec</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+</code></pre></div>
+<p><code>Vector size before = 10 after = 5</code></p>
+
+<h3>Note on C++11</h3>
+
+<ul>
+<li>For all containers, <code>emplace(const_iterator position, Args&amp;&amp;... args)</code> is preferable to <code>insert(const_iterator position, const value_type&amp; val)</code>, as it doesn&#39;t create any copies of the object you add to the container.</li>
+<li>Cases you might prefer something other than <code>emplace</code>:
+
+<ul>
+<li>backward compatibility</li>
+<li><code>insert</code> has more constructors</li>
+<li>at least <code>emplace_back</code> might not work as expected in some implementations</li>
+</ul></li>
+</ul>
+
+<h3>Exercise</h3>
+
+<p>Think of cases where you&#39;d use a specific container</p>
+
+<h3>Associative containers</h3>
+
+<p>Properties:</p>
+
+<ul>
+<li>key: is it separate from value?
+
+<ul>
+<li>maps: key-value pair</li>
+<li>sets: value is the key (and thus it&#39;s const!)</li>
+</ul></li>
+<li>ordering. Affects performance:
+
+<ul>
+<li>unordered containers fastest to fill and access by key</li>
+<li>ordered containers fastest to iterate through, and they&#39;re already ordered :o)</li>
+</ul></li>
+<li>unique values?</li>
+</ul>
+
+<h3>Associative containers</h3>
+
+<table><thead>
+<tr>
+<th></th>
+<th style="text-align: center">ordered</th>
+<th style="text-align: center">unordered</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>unique</strong></td>
+<td style="text-align: center">map</td>
+<td style="text-align: center">unordered_map</td>
+</tr>
+<tr>
+<td><strong>non-unique</strong></td>
+<td style="text-align: center">multimap</td>
+<td style="text-align: center">unordered_multimap</td>
+</tr>
+</tbody></table>
+
+<table><thead>
+<tr>
+<th></th>
+<th style="text-align: center">ordered</th>
+<th style="text-align: center">unordered</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>unique</strong></td>
+<td style="text-align: center">set</td>
+<td style="text-align: center">unordered_set</td>
+</tr>
+<tr>
+<td><strong>non-unique</strong></td>
+<td style="text-align: center">multiset</td>
+<td style="text-align: center">unordered_multiset</td>
+</tr>
+</tbody></table>
+
+<h3>More on maps</h3>
+
+<p>Fill them with</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+  <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">myMap</span><span class="p">;</span>
+  <span class="n">myMap</span><span class="p">[</span><span class="s">"brocolli"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="n">myMap</span><span class="p">[</span><span class="s">"garlic"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">myMap</span><span class="p">[</span><span class="s">"brocolli"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// returns reference to element =&gt; element is updated
+</span>  <span class="n">myMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"bread"</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="p">);</span>
+  <span class="n">myMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"brocolli"</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="p">);</span> <span class="c1">// returns iterator
+</span>                               <span class="c1">// to existing element =&gt; element is not updated
+</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">MMapType</span><span class="p">;</span>
+  <span class="n">MMapType</span> <span class="n">myMMap</span><span class="p">;</span>                                <span class="c1">// there's no [] for multimap
+</span>  <span class="n">myMMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"brocolli"</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="p">);</span>
+  <span class="n">myMMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"bread"</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="p">);</span>
+  <span class="n">myMMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"brocolli"</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="p">);</span>
+
+</code></pre></div>
+<h3>More on maps</h3>
+
+<p>Access elements with</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"myMap[brocolli] = "</span> <span class="o">&lt;&lt;</span> <span class="n">myMap</span><span class="p">[</span><span class="s">"brocolli"</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"myMap.find(bread) = "</span> <span class="o">&lt;&lt;</span> <span class="n">myMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"bread"</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">it</span><span class="o">=</span><span class="n">myMap</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span><span class="o">!=</span><span class="n">myMap</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"myMMap.count(brocolli) = "</span> <span class="o">&lt;&lt;</span> <span class="n">myMMap</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="s">"brocolli"</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">pair</span> <span class="o">&lt;</span> <span class="n">MMapType</span><span class="o">::</span><span class="n">iterator</span><span class="p">,</span><span class="n">MMapType</span><span class="o">::</span><span class="n">iterator</span><span class="o">&gt;</span> <span class="n">range</span> <span class="o">=</span> <span class="n">myMMap</span><span class="p">.</span><span class="n">equal_range</span><span class="p">(</span><span class="s">"brocolli"</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">MMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">it</span><span class="o">=</span><span class="n">range</span><span class="p">.</span><span class="n">first</span><span class="p">;</span> <span class="n">it</span><span class="o">!=</span><span class="n">range</span><span class="p">.</span><span class="n">second</span><span class="p">;</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">MMapType</span><span class="o">::</span><span class="n">iterator</span> <span class="n">it</span><span class="o">=</span><span class="n">myMMap</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span><span class="o">!=</span><span class="n">myMMap</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+</code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">myMap[brocolli] = 1
+myMap.find(bread) = 4
+bread 4
+brocolli 1
+garlic 1
+myMMap.count(brocolli) = 2
+brocolli 2
+brocolli 3
+bread 4
+brocolli 2
+brocolli 3
+
+</code></pre></div>
+<h3>Example</h3>
+
+<p>Read in file with unknown number of particle-momentum pairs.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">proton 4.5
+electron 17.8
+pion 4.6
+muon 12.0
+pion 3.2
+neutrino 8.2
+pion 23.7
+proton 9.4
+neutrino 6.7
+
+</code></pre></div>
+<ul>
+<li>Then print out
+
+<ol>
+<li>list of all particle-momentum pairs in alphabetical order
+
+<ul>
+<li>how about in ascending momentum order?</li>
+</ul></li>
+<li>list of types of particles in the file in alphabetical order
+
+<ul>
+<li>how about in mass order?</li>
+</ul></li>
+<li>list of particle-max momentum pairs</li>
+</ol></li>
+</ul>
+
+<h3>Task 1</h3>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;map&gt;
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">ifs</span><span class="p">(</span><span class="s">"95stl/cpp/particleList.txt"</span><span class="p">,</span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">in</span><span class="p">);</span>
+  <span class="c1">// Read in the data
+</span>  <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">theParticles</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="n">momentum</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">ifs</span><span class="p">.</span><span class="n">eof</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">ifs</span> <span class="o">&gt;&gt;</span> <span class="n">name</span> <span class="o">&gt;&gt;</span> <span class="n">momentum</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ifs</span><span class="p">.</span><span class="n">eof</span><span class="p">())</span>
+      <span class="n">theParticles</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">momentum</span><span class="p">)</span> <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">ifs</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+  <span class="c1">// Output - it's already sorted!
+</span>  <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">theParticles</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">iter</span><span class="o">!=</span><span class="n">theParticles</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">iter</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>      
+<span class="p">}</span>
+
+</code></pre></div>
+<h3>Task 2</h3>
+
+<ul>
+<li>Hint1: use a set</li>
+<li>Hint2: write a custom comparator</li>
+</ul>
+
+<h3>Task 2</h3>
+
+<ul>
+<li>Hint1: use a set</li>
+<li>Hint2: write a custom comparator</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="k">class</span> <span class="nc">compMass</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">compMass</span><span class="p">()</span> <span class="o">:</span>
+    <span class="n">m_particlesOrdered</span><span class="p">({</span><span class="s">"neutrino"</span><span class="p">,</span> <span class="s">"electron"</span><span class="p">,</span> <span class="s">"muon"</span><span class="p">,</span> <span class="s">"pion"</span><span class="p">,</span> <span class="s">"kaon"</span><span class="p">,</span> <span class="s">"proton"</span><span class="p">})</span>
+  <span class="p">{};</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="p">()</span> <span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s2</span><span class="p">)</span> <span class="k">const</span>
+  <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">index1</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index2</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">m_particlesOrdered</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">m_particlesOrdered</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">s1</span><span class="p">)</span> <span class="n">index1</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">m_particlesOrdered</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">s2</span><span class="p">)</span> <span class="n">index2</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">index1</span><span class="o">&lt;</span><span class="n">index2</span><span class="p">;</span> <span class="c1">// unknown particles appear first (index=-1)
+</span>  <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">m_particlesOrdered</span><span class="p">;</span>
+<span class="p">};</span>
+
+</code></pre></div>
+<p>then use it in the set constructor:</p>
+
+<p><code>std::set&lt;std::string,compMass&gt; theParticles;</code></p>
+
+<h3>Task 3</h3>
+
+<p>Hint: extend the map class. - How?</p>
+
+<ul>
+<li>inherit from std::map - <strong>NO</strong>!
+
+<ul>
+<li>STL containers are <em>not</em> designed to be polymorphic, as they don&#39;t have virtual destructors (<em>Meyers 1:7</em>)</li>
+</ul></li>
+<li>composition - write a class that contains either an std::map object or smart pointer to it.</li>
+<li>free functions with STL containers/iterators as arguments</li>
+</ul>
+
+<h3>Task 3 - with function</h3>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="kt">void</span> <span class="nf">keepMax</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">theMap</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">key</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">theMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">==</span><span class="n">theMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="c1">//element doesn't already exist in map
+</span>    <span class="n">theMap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+  <span class="k">else</span>
+    <span class="c1">// any logic can go in here, eg a counter, an average, etc...
+</span>    <span class="n">theMap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">theMap</span><span class="p">[</span><span class="n">key</span><span class="p">],</span><span class="n">value</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<p>Then use it in the loop when filling the container:</p>
+
+<p><code>if (!feof(ifp)) keepMax( theParticles,name,momentum );</code></p>
+
+<h3>Task 3 - with composition</h3>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="k">class</span> <span class="nc">maxMap</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">iterator</span><span class="p">;</span>
+
+  <span class="kt">void</span> <span class="nf">insert</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">theElement</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">key</span> <span class="o">=</span> <span class="n">theElement</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">value</span> <span class="o">=</span> <span class="n">theElement</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_map</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">==</span><span class="n">m_map</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="c1">//element doesn't already exist in map
+</span>      <span class="n">m_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="k">else</span>
+      <span class="c1">// any logic can go in here, eg a counter, an average, etc...
+</span>      <span class="n">m_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">m_map</span><span class="p">[</span><span class="n">key</span><span class="p">],</span><span class="n">value</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">iterator</span> <span class="nf">begin</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_map</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="p">}</span>
+  <span class="n">iterator</span> <span class="nf">end</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_map</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">m_map</span><span class="p">;</span>
+<span class="p">};</span>
+
+</code></pre></div>
+<h3>Task 3 - with composition</h3>
+
+<p>Then use it in main:
+``` cpp</p>
+
+<p>int main()
+{
+  std::ifstream ifs(&quot;95stl/cpp/particleList.txt&quot;,std::ifstream::in);
+  // Read in the data
+  maxMap theParticles;
+  std::string name;
+  double momentum;
+  while (!ifs.eof()) {
+    ifs &gt;&gt; name &gt;&gt; momentum;
+    if (!ifs.eof())
+      theParticles.insert( std::pair<a href="std::string,double">std::string,double</a>(name,momentum) );
+  }
+  ifs.close();
+  // Output - it&#39;s already sorted!
+  maxMap::iterator iter = theParticles.begin();
+  for ( ; iter!=theParticles.end(); ++iter) {
+    std::cout &lt;&lt; iter-&gt;first &lt;&lt; &quot; &quot; &lt;&lt; iter-&gt;second &lt;&lt; std::endl;
+  }<br>
+}</p>
+<div class="highlight"><pre><code class="language-" data-lang="">
+
+
+### Accessing containers: iterators
+
+For random-access containers you can do
+
+``` cpp
+
+std::vector&lt;int&gt; myVector = {1,2,3,4};
+for (int i=0; i&lt;myVector.size(); ++i) {
+    std::cout &lt;&lt; myVector[i] &lt;&lt; std::endl;
+}
+
+</code></pre></div>
+<p>But for sequential-access ones, you can only do</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="cp">#include &lt;iterator&gt;
+</span>
+<span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">mylist</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">it</span><span class="o">=</span><span class="n">mylist</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span>
+<span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">it</span><span class="o">!=</span><span class="n">mylist</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">it</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<h3>Iterators</h3>
+
+<p>An iterator is any object that, pointing to some element in a container, has the ability to iterate through the elements of that range using a set of operators.</p>
+
+<ul>
+<li>Minimum operators needed: increment (<code>++</code>) and dereference (<code>*</code>).</li>
+<li>A pointer is the simplest iterator.</li>
+<li>Brings some container-independence.
+
+<ul>
+<li>especially when using  <code>typedef</code></li>
+</ul></li>
+</ul>
+
+<p><a href="http://www.cplusplus.com/reference/iterator/">http://www.cplusplus.com/reference/iterator/</a></p>
+
+<h3>Pairs</h3>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="cp">#include &lt;utility&gt;      // std::pair
+</span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">product1</span><span class="p">;</span>                    <span class="c1">// default constructor
+</span>  <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">product2</span><span class="p">(</span><span class="s">"tomatoes"</span><span class="p">,</span><span class="mf">2.30</span><span class="p">);</span>   <span class="c1">// value init
+</span>
+  <span class="k">auto</span> <span class="n">foo</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_pair</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>                   <span class="c1">// created a std::pair&lt;int,int&gt;
+</span>  <span class="n">product1</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"lightbulbs"</span><span class="p">),</span><span class="mf">0.99</span><span class="p">);</span>  <span class="c1">// using make_pair
+</span>
+  <span class="n">product2</span><span class="p">.</span><span class="n">first</span> <span class="o">=</span> <span class="s">"shoes"</span><span class="p">;</span>                  <span class="c1">// the type of first is string
+</span>  <span class="n">product2</span><span class="p">.</span><span class="n">second</span> <span class="o">=</span> <span class="mf">39.90</span><span class="p">;</span>                   <span class="c1">// the type of second is double
+</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"foo: "</span> <span class="o">&lt;&lt;</span> <span class="n">foo</span><span class="p">.</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="s">", "</span> <span class="o">&lt;&lt;</span> <span class="n">foo</span><span class="p">.</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<h3>Tuples</h3>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="cp">#include &lt;tuple&gt;        // std::tuple, std::make_tuple, std::get
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">one</span><span class="p">;</span>                          <span class="c1">// default
+</span>  <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">two</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="sc">'a'</span><span class="p">);</span>                  <span class="c1">// initialization
+</span>
+  <span class="k">auto</span> <span class="n">first</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="sc">'a'</span><span class="p">);</span>             <span class="c1">// tuple &lt; int, char &gt;
+</span>  <span class="k">const</span> <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="kt">int</span> <span class="n">b</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>                         <span class="c1">// decayed types:
+</span>  <span class="k">auto</span> <span class="n">second</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">);</span>               <span class="c1">// tuple &lt; int, int* &gt;
+</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"two contains: "</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">two</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" and "</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">two</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<h3>Assignment</h3>
+
+<ul>
+<li>Download a human genome file from <a href="ftp://ftp.ensembl.org/pub/release-87/fasta/homo_sapiens/dna/">ftp://ftp.ensembl.org/pub/release-87/fasta/homo_sapiens/dna/</a> .
+This is a sequence of characters from the dictionary <code>{A,C,G,T,N}</code>.</li>
+<li>List all the possible 3-letter combinations (k-mers for k=3) that appear in this file together with the number of appearances of each in the file, in order of number of appearances.
+
+<ul>
+<li>Output should be something like</li>
+</ul></li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">NNN 3345028
+AGT 2348
+CTT 1578
+...
+</code></pre></div>
+<ul>
+<li>Hint: use only associative containers. You&#39;ll need to extend their functionality to some kind of counter.</li>
+</ul>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- end .site-content -->
+
+  <footer class="footer wrapper">
+  <div class="footer__inner clearfix">
+             <article class="block block--col-1">
+                <h2 class="as-h5">Facilities</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/departments/faculties">Faculties and departments</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/library/">Library</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/museums">Museums and Collections</a></li>
+					<li class="footer__item"><a href="http://www.thebloomsbury.com/">UCL Bloomsbury Theatre</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/maps">Maps and buildings</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-2">
+                <h2 class="as-h5">Locations</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/london">UCL and London</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/australia">UCL Australia</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/qatar">UCL Qatar</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/global">UCL Global</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-3">
+                <h2 class="as-h5">Connect with us</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/alumni">Alumni</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/enterprise">Businesses</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/media">Media Relations</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/hr/jobs/">Jobs</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/makeyourmark">Give to UCL</a></li>
+				</ul>
+
+      </article>
+  
+    <hr class="clear">
+    <ul class="footer__list list-unstyled zero-bottom">
+      <li class="footer__item text-muted small">University College London,&nbsp;Gower Street,&nbsp;London,&nbsp;WC1E 6BT&nbsp;Tel:&nbsp;+44&nbsp;(0)&nbsp;20 7679 2000</li>
+    </ul>
+    <ul class="list-inline footer__list list-unstyled list-inline--divided">
+      <li class="text-muted small">Copyright © 2018-01-22 17:49:11 +0000 UCL</li>
+      <li class="text-muted small"><a href="#">Disclaimer</a>
+      </li>
+      <li class="text-muted small"><a href="#">Freedom of Information</a>
+      </li>
+      <li class="text-muted small"><a href="#">Accessibility</a>
+      </li>
+      <li class="text-muted small"><a href="#">Privacy</a>
+      </li>
+      <li class="text-muted small"><a href="#">Cookies</a>
+      </li>
+      <li class="text-muted small"><a href="#">Contact Us</a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+
+  <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+  <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+
+</body>
+
+</html>
+

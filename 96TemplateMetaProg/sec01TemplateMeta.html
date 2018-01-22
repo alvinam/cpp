@@ -1,0 +1,809 @@
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 7]> <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="lt-ie9 no-js"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset=utf-8 />
+    <meta name="author" content="UCL" />
+    <meta name="description" content="UCL Homepage" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- social meta -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@uclnews">
+    <meta name="twitter:title" content="UCL - London's Global University">
+    <meta name="twitter:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students.">
+    <meta name="twitter:creator" content="@UCLWAMS">
+    <meta name="twitter:image:src" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png">
+    <meta property="og:image" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png" />
+    <meta property="og:title" content="UCL - London's Global University" />
+    <meta property="og:url" content="http://www.ucl.ac.uk" />
+    <meta property="og:site_name" content="UCL" />
+    <meta property="og:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students." />
+    <meta property="og:type" content="website" />
+    <meta property="og:profile_id" content="uclofficial" />
+    <!-- end social meta -->
+
+  <title>Template Meta-Programming</title>
+
+  <link href="/research-computing-with-cpp/css/screen.min.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <link href="/research-computing-with-cpp/css/jekyll-styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/local_styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/ipython.css" rel="stylesheet" type="text/css">
+
+  <link rel="shortcut icon" href="/research-computing-with-cpp/images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="/research-computing-with-cpp/favicon-152.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="/research-computing-with-cpp/favicon-144.png">
+
+  <script src="/research-computing-with-cpp/js/lib/modernizr-custom.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+
+    <script>
+      var cuttingTheMustard = document.querySelector && window.localStorage && window.addEventListener;
+
+      Modernizr.load({
+        //cutting the mustard as used by the BBC
+        test: cuttingTheMustard
+        //if old browser load the shiv
+        ,
+        nope: [
+          '/research-computing-with-cpp/js/lib/html5shiv-printshiv.min.js', '/research-computing-with-cpp/js/lib/respond.min.js'
+        ]
+      });
+      //set conditional assets for main.js
+      var globalSiteSpecificVars = {
+        pathToJquery: "/research-computing-with-cpp/js/lib/jquery-1.9.1.min",
+        googleAnalyticsIdsArray: [] //specify array of site specific id's NOT UCL generic UA-943297-1
+      }
+      if (cuttingTheMustard) {
+        globalSiteSpecificVars.pathToJquery = '/research-computing-with-cpp/js/lib/jquery-2.1.1.min';
+      }
+    </script>
+    <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+    <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+</head>
+
+<body id="index" class="layout-vertical layout-vertical--nav-1col">
+
+  <header class="header header--desktop">
+
+  <a class="header__close" href="#">
+    <img src="/research-computing-with-cpp/images/close.png" class="lazy" data-src="//static.ucl.ac.uk/indigo/images/close.png" alt="X" />Close</a>
+
+  <div class="masthead">
+
+  <div class="wrapper clearfix">
+
+      <div class="masthead__search">
+					<form action="#" method="get">
+						<div class="search-form">
+							<input type="search" placeholder="Search UCL websites, people and more" class="search-form__input search-form__input--search" value="">
+						</div>
+						<input type="submit" name="sumbit" value="Go" class="btn search-form__input search-form__input--submit" />
+					</form>
+				</div>
+
+
+				<nav class="masthead__nav m-clear">
+					<ul class="masthead__list">
+						<li class="masthead__item"><a href="index.php" class="masthead__link">UCL Home</a>
+						</li>
+						<li class="masthead__item"><a href="prospective-students.php" class="masthead__link">Prospective students</a>
+						</li>
+						<li class="masthead__item"><a href="current-students.php" class="masthead__link">Current students</a>
+						</li>
+						<li class="masthead__item"><a href="staff.php" class="masthead__link">Staff</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+</div><!-- end .masthead -->
+
+
+  <div class="wrapper">
+
+    <div class="photograph">
+  <div class="brand">
+    <p class="brand__heading">MPHYG002: Research Computing with C++</p>
+    <a href="/" class="brand__link"><span class="visually-hidden">Home</span></a>
+    <img src="//cdn.ucl.ac.uk/img/blank.gif" data-src="//static.ucl.ac.uk/indigo/images/ucl-logo.svg" alt="UCL logo" id="logo" class="brand__logo lazy">  
+  </div>
+</div>
+
+
+    <div class="sidebar">
+
+      <nav class="nav nav--mobile">
+        <ul>
+          
+
+
+
+
+        </ul>
+      </nav>
+
+      <nav class="nav nav--left">
+        <ul>
+          
+
+ <li class="active"> <a href="/research-computing-with-cpp/01research/">C++ for Research</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/01research/sec01Research.html">C++ in Research</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec02Git.html">Git</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec03CMake.html">CMake</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec04UnitTesting.html">Unit Testing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/02libraries/">Including Libraries</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec01ChoosingLibraries.html">Choosing Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LibraryBasics.html">Library Basics</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LinkingLibraries.html">Linking Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec03UsingLibraries.html">Using Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec04Examples.html">Examples</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05CMakeCatchTemplate.html">CMakeCatchTemplate</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05Summary.html">Summary</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/">Better C++</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec01LanguageRecap.html">Object Oriented Review</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec02EssentialReading.html">Essential Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec03TemplatesIntro.html">Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec04FunctionTemplates.html">Function Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec05ClassTemplates.html">Class Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec06Exceptions.html">Error Handling</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec07Inheritance.html">Inheritance</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec08DependencyInjection.html">Dependency Injection</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec09ConstructionPatterns.html">Construction Patterns</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec10MemoryManagement.html">Smart Pointers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec11RAII.html">RAII Pattern</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec12ProgramToInterfaces.html">Program To Interfaces</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec13SummaryOfPatterns.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/">C++ Libraries</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec07EIGEN.html">Eigen</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec08Boost.html">Boost</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec09ITK.html">ITK</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec10Summary.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/04HPC/">HPC Concepts</a><ul> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/05OpenMP/">Shared memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec01IntroductiontoOpenMP.html">Introduction to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec02Loops.html">Parallelizing loops with OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec03CriticalLocksRaces.html">Races, Locks and Critical regions</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec04Tasks.html">Tasks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec05SchedulingLoadBalancing.html">Scheduling and Load Balancing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec06OpenMPAlternatives.html">Alternatives to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec07FurtherReading.html">Further Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec08Exercise.html">Exercise</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/06MPI/">Distributed memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec01practical.html">MPI in practice</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec02PointToPoint.html">Point to Point</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec03collective.html">Collective communication</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec04advanced.html">More advanced MPI</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/07MPIExample/">MPI Design Example</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec01smoothlife.html">Smooth Life</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec02domain.html">Domain decomposition</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec03halo.html">Halo swap</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec04deployment.html">Deployment</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec05derived.html">Derived Datatypes</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec06overlap.html">Overlap</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/08IO/">MPI File I/O</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec01visualise.html">Visualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec02text.html">Formatted Text IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec03binary.html">Binary IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec04endian.html">Portability</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec05single.html">Writing from a single process</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec06mpiio.html">Parallel IO</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/09Accelerators/">Accelerators</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec01Introduction.html">CPU Vectorisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec02UsingAGPUAsAnAccelerator.html">Using a GPU as an Accelerator</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec03Streaming.html">Streaming</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec04Vectorization.html">Vectorization</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/11Performance/">Post-coding medley, memory leaks, and performance measurements</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/01editor_tools.html">Tools for pretty code</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/02valgrind.html">Memory leaks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/03Performance.html">Profiling a program</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/04MicroBenchmarking.html">Micro-benchmarking</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/95stl/">Appendix - STL</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Intro.html">The Standard Template Library</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Motivation.html">Motivation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec02Containers.html">STL Containers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec03Other.html">Other STL stuff</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/96TemplateMetaProg/">Appendix - TMP</a><ul> <li class="active"> <a href="/research-computing-with-cpp/96TemplateMetaProg/sec01TemplateMeta.html">Template Meta-Programming</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/97Cloud/">Appendix - Cloud</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec01cloud.html">Cloud computing and big data</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec02exercise1.html">Working in the cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec03exercise2.html">Command line cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec04virtual.html">Virtualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec05exercise3.html">Containers in the Cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec06distributed.html">Distributed computing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec07exercise4.html">MapReduce</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec08exercise5.html">Distributed computing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/98Installation/">Installation</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/01linux.html">Linux</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/02windows.html">Windows</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/03mac.html">Mac</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/04boost.html">Boost</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/99Assignments/">Assessment</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/99Assignments/assignment2.html">MPHYG002 Coursework 2 Parallelising Conway's Game of Life</a> </li> </ul> </li> 
+
+        </ul>
+      </nav>
+
+    </div>
+    <!-- end .sidebar -->
+
+    <nav class="nav nav--top">
+      <ul>
+        
+      </ul>
+    </nav>
+
+  </div>
+  <!-- end .wrapper -->
+
+  </header>
+  <!-- end .header -->
+
+  <div class="site-content wrapper">
+
+    <header class="header header--mobile default-header">
+      <a class="header__open" href="#">
+        <img src="/research-computing-with-cpp/images/ucl-menu.svg" alt="Menu" />
+      </a>
+    </header>
+
+    <div class="site-content__inner clearfix">
+      <div class="site-content__body">
+
+          
+            <nav class="breadcrumb clearfix">
+              <ul class="breadcrumb__list">
+                <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/">UCL</a></li>
+
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/ISD">ISD</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services">Our services</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it">Research IT</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it/training">Training</a></li>
+  
+
+<li class="breadcrumb__item"><a href="/research-computing-with-cpp/">MPHYG002</a></li>
+
+
+
+              </ul>
+            </nav>
+           <div class="site-content__main">
+            
+            
+               <div id="slidelink">
+                 <a href="/research-computing-with-cpp/96TemplateMetaProg/sec01TemplateMeta-reveal.html">Slides</a>
+               </div>
+            
+          
+          
+
+    <h2>Template Meta-Programming (TMP)</h2>
+
+<h3>What Is It?</h3>
+
+<ul>
+<li>See <a href="http://en.wikipedia.org/wiki/Template_metaprogramming">Wikipedia</a>, <a href="http://en.wikibooks.org/wiki/C%2B%2B_Programming/Templates/Template_Meta-Programming">Wikibooks</a>, <a href="http://www.keithschwarz.com/talks/slides/tmp-cs242.pdf">Keith Schwarz</a></li>
+<li>C++ Template
+
+<ul>
+<li>Type or function, parameterised over, set of types, constants or functions</li>
+<li>Instantiated at compile time</li>
+</ul></li>
+<li>Meta Programme
+
+<ul>
+<li>Program that produces or manipulates constructs of target language</li>
+<li>Typically, it generates code</li>
+</ul></li>
+<li>Template Meta-Programme
+
+<ul>
+<li>C++ programme, uses Templates, generate C++ code at compile time</li>
+</ul></li>
+</ul>
+
+<h3>TMP is Turing Complete</h3>
+
+<ul>
+<li>Given: A <a href="http://en.wikipedia.org/wiki/Turing_machine">Turing Machine</a>
+
+<ul>
+<li>Tape, head, states, program, etc.</li>
+</ul></li>
+<li>A language is &quot;Turing Complete&quot; if it can simulate a Turing Machine
+
+<ul>
+<li>e.g. Conditional branching, infinite looping</li>
+</ul></li>
+<li>Turing&#39;s work underpins much of &quot;what can be computed&quot; on a modern computer
+
+<ul>
+<li>C, C++ no templates, C++ with templates, C++ TMP</li>
+<li>All Turing Complete</li>
+</ul></li>
+<li>Interesting that compiler can generate such theoretically powerful code.<br></li>
+<li>But when, where, why, how to use TMP?<br></li>
+<li>(side-note: Its not just a C++ pre-processor macro)<br></li>
+</ul>
+
+<h3>Why Use It?</h3>
+
+<ul>
+<li>Use sparingly as code difficult to follow</li>
+<li>Use for
+
+<ul>
+<li>Optimisations</li>
+<li>Represent Behaviour as a Type</li>
+<li>Traits classes</li>
+</ul></li>
+<li>But when you see it, you need to understand it!</li>
+</ul>
+
+<h3>Factorial Example</h3>
+
+<p>See <a href="http://en.wikipedia.org/wiki/Template_metaprogramming">Wikipedia Factorial Example</a></p>
+
+<ul>
+<li>This:</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">n</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">factorial</span> <span class="p">{</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">value</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">factorial</span><span class="o">&lt;</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">&gt;::</span><span class="n">value</span> <span class="p">};</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;&gt;</span>
+<span class="k">struct</span> <span class="n">factorial</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">};</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">factorial</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;::</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">factorial</span><span class="o">&lt;</span><span class="mi">8</span><span class="o">&gt;::</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<ul>
+<li>Produces:</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">1
+40320
+
+</code></pre></div>
+<h3>Factorial Notes:</h3>
+
+<ul>
+<li>Compiler must know values at compile time
+
+<ul>
+<li>i.e. constant literal or constant expression</li>
+<li>See also <a href="http://en.wikipedia.org/wiki/C%2B%2B11#constexpr_.E2.80.93_Generalized_constant_expressions">constexpr</a></li>
+</ul></li>
+<li>Generates/Instantiates all functions recursively</li>
+<li>Factorial 16 = 2004189184</li>
+<li>Factorial 17 overflows</li>
+<li>This simple example to illustrate &quot;computation&quot;</li>
+<li>But when is TMP actually useful?</li>
+<li>Notice that parameter was an integer value ... not just &quot;int&quot; type</li>
+</ul>
+
+<h3>Loop Example</h3>
+
+<ul>
+<li>This:</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="n">T</span> <span class="n">Sum</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">data</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">T</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">total</span> <span class="o">+=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">total</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kt">size_t</span> <span class="n">numberOfInts</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">numberOfLoops</span> <span class="o">=</span> <span class="mi">1000000000</span><span class="p">;</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="n">numberOfInts</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Started"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">numberOfLoops</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numberOfInts</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">total</span> <span class="o">=</span> <span class="n">Sum</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Finished:"</span> <span class="o">&lt;&lt;</span> <span class="n">total</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<ul>
+<li>Time: numberOfInts=3 took 40 seconds</li>
+</ul>
+
+<h3>Loop Unrolled</h3>
+
+<ul>
+<li>This:</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">FixedVector</span> <span class="p">{</span>
+   <span class="n">T</span> <span class="n">data</span><span class="p">[</span><span class="n">length</span><span class="p">];</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="n">FixedVector</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="c1">// Initialise
+</span>      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">T</span> <span class="n">Sum</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="n">T</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">numberOfInts</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">numberOfLoops</span> <span class="o">=</span> <span class="mi">1000000000</span><span class="p">;</span>
+  <span class="n">FixedVector</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">numberOfInts</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Started"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">numberOfLoops</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numberOfInts</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">total</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">Sum</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Finished:"</span> <span class="o">&lt;&lt;</span> <span class="n">total</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<ul>
+<li>Time: numberOfInts=3 took 32 seconds when switch to fixed vector, and 23 when a raw array.<br></li>
+</ul>
+
+<h3>Policy Checking</h3>
+
+<ul>
+<li>Templates parameterised by type not by behaviour</li>
+<li>But you can make a class to represent the behaviour</li>
+<li>See <a href="http://www.keithschwarz.com/talks/slides/tmp-cs242.pdf">Keith Schwarz</a> for longer example.</li>
+</ul>
+
+<h3>Simple Policy Checking Example</h3>
+
+<ul>
+<li>This:</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;stdexcept&gt;
+</span>
+<span class="k">class</span> <span class="nc">NoRangeCheckingPolicy</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">CheckRange</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">pos</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// no checking
+</span><span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ThrowErrorRangeCheckingPolicy</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">CheckRange</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">pos</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">pos</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"Out of range!"</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span> <span class="k">typename</span> <span class="n">T</span>
+         <span class="p">,</span> <span class="k">typename</span> <span class="n">RangeCheckingPolicy</span> <span class="o">=</span> <span class="n">NoRangeCheckingPolicy</span>
+         <span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">Vector</span>
+ <span class="o">:</span> <span class="k">public</span> <span class="n">RangeCheckingPolicy</span>
+<span class="p">{</span>
+
+  <span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">;</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="c1">// other methods etc.
+</span>    <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[]</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">pos</span><span class="p">)</span> <span class="k">const</span>
+    <span class="p">{</span>
+      <span class="n">RangeCheckingPolicy</span><span class="o">::</span><span class="n">CheckRange</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+      <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">pos</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">ThrowErrorRangeCheckingPolicy</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">;</span>
+  <span class="c1">// a.push_back(1); or similar
+</span>  <span class="c1">// a.push_back(2); or similar
+</span>  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<ul>
+<li>Produces:</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">
+</code></pre></div>
+<h3>Summary of Policy Checking Example</h3>
+
+<ul>
+<li>Define interface for behaviour</li>
+<li>Parameterize over all behaviours</li>
+<li>Use multiple-inheritance to import policies</li>
+<li>e.g. logging / asserts</li>
+</ul>
+
+<h3>Traits</h3>
+
+<ul>
+<li>From C++ standard 17.1.18
+
+<ul>
+<li>&quot;a class that encapsulates a set of types and functions necessary for template classes and template functions to manipulate objects of types for which they are instantiated.&quot;</li>
+</ul></li>
+<li>Basically: Traits represent details about a type</li>
+<li>You may be using them already!</li>
+<li>Start with a simple example</li>
+</ul>
+
+<h3>Simple Traits Example</h3>
+
+<ul>
+<li>This:</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">is_void</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">value</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;&gt;</span>
+<span class="k">struct</span> <span class="n">is_void</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">value</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"is_void(void)="</span> <span class="o">&lt;&lt;</span> <span class="n">is_void</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;::</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"is_void(int)="</span> <span class="o">&lt;&lt;</span> <span class="n">is_void</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<ul>
+<li>Produces:</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">is_void(void)=1
+is_void(int)=0
+
+</code></pre></div>
+<h3>Traits Principles</h3>
+
+<ul>
+<li>Small, simple, normally public, eg. struct</li>
+<li>else/if
+
+<ul>
+<li>Else template</li>
+<li>partial specialisations</li>
+<li>full specialisations</li>
+</ul></li>
+<li>Probably using them already
+
+<ul>
+<li><code>std::numeric_limits&lt;double&gt;::max()</code></li>
+<li>ITK has similar <code>itk::NumericTrait&lt;PixelType&gt;</code></li>
+</ul></li>
+<li>Applies to primatives as well as types<br></li>
+</ul>
+
+<h3>Traits Examples</h3>
+
+<ul>
+<li><a href="http://blog.aaronballman.com/2011/11/a-simple-introduction-to-type-traits">Simple Tutorial from Aaron Ballman</a></li>
+<li><a href="http://www.boost.org/doc/libs/?view=category_Metaprogramming">Boost meta-programming support</a></li>
+<li><a href="http://www.boost.org/doc/libs/1_57_0/libs/type_traits/doc/html/boost_typetraits/background.html">Boost type_traits tutorial</a></li>
+<li><a href="http://www.cplusplus.com/reference/type_traits">C++11 has many traits</a></li>
+</ul>
+
+<h3>Wait, Inheritance Vs Traits?</h3>
+
+<ul>
+<li>We said inheritance is often overused in OO</li>
+<li>We say that too frequent if/switch statements based on type are bad in OO</li>
+<li>C++11 providing many <a href="http://www.cplusplus.com/reference/type_traits">is_X type traits</a> returning bool, leading to if/else</li>
+<li>So, when to use it?</li>
+</ul>
+
+<h3>When to use Traits</h3>
+
+<ul>
+<li><p>Some advice</p>
+
+<ul>
+<li>Sparingly</li>
+<li>To add information to templated types</li>
+<li>Get algorithm to work for 1 data type</li>
+<li>If you extend to multiple data types and consider templates
+
+<ul>
+<li>When you need type specific behaviour
+
+<ul>
+<li>traits probably better than template specialisation</li>
+<li>traits better than inheritance based template hierarchies</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p>Remember</p>
+
+<ul>
+<li>Scientist = few use-cases</li>
+<li>Library designer = coding for the unknown, and potentially limitless use-cases
+
+<ul>
+<li>More likely of interest to library designers</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h3>TMP Use in Medical Imaging - 1</h3>
+
+<p>Declare an <a href="http://www.itk.org">ITK</a> image</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="k">template</span><span class="o">&lt;</span> <span class="k">typename</span> <span class="n">TPixel</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">VImageDimension</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">Image</span><span class="o">:</span><span class="k">public</span> <span class="n">ImageBase</span><span class="o">&lt;</span> <span class="n">VImageDimension</span> <span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="c1">// etc
+</span>
+</code></pre></div>
+<ul>
+<li>TPixel, <code>int</code>, <code>float</code> etc.</li>
+<li>VImageDimension = number of dimensions</li>
+</ul>
+
+<h3>TMP Use in Medical Imaging - 2</h3>
+
+<p>But what type is origin/spacing/dimensions?</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">VImageDimension</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">ImageBase</span><span class="o">:</span><span class="k">public</span> <span class="n">DataObject</span>
+<span class="p">{</span>
+  <span class="k">typedef</span> <span class="n">SpacePrecisionType</span>                          <span class="n">SpacingValueType</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">Vector</span><span class="o">&lt;</span> <span class="n">SpacingValueType</span><span class="p">,</span> <span class="n">VImageDimension</span> <span class="o">&gt;</span> <span class="n">SpacingType</span><span class="p">;</span>
+</code></pre></div>
+<h3>TMP Use in Medical Imaging - 3</h3>
+
+<p>So now look at <code>Vector</code></p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span> <span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">NVectorDimension</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">Vector</span><span class="o">:</span><span class="k">public</span> <span class="n">FixedArray</span><span class="o">&lt;</span> <span class="n">T</span><span class="p">,</span> <span class="n">NVectorDimension</span> <span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+</code></pre></div>
+<h3>TMP Use in Medical Imaging - 4</h3>
+
+<p>Now we can see how fixed length arrays are used</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span> <span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">TVectorDimension</span> <span class="o">&gt;</span>
+<span class="k">const</span> <span class="k">typename</span> <span class="n">Vector</span><span class="o">&lt;</span> <span class="n">T</span><span class="p">,</span> <span class="n">TVectorDimension</span> <span class="o">&gt;::</span><span class="n">Self</span> <span class="o">&amp;</span>
+<span class="n">Vector</span><span class="o">&lt;</span> <span class="n">T</span><span class="p">,</span> <span class="n">TVectorDimension</span> <span class="o">&gt;</span>
+<span class="o">::</span><span class="k">operator</span><span class="o">+=</span><span class="p">(</span><span class="k">const</span> <span class="n">Self</span> <span class="o">&amp;</span> <span class="n">vec</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">TVectorDimension</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">(</span> <span class="o">*</span><span class="k">this</span> <span class="p">)[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>which may be unrolled by compiler.</p>
+
+<h3>TMP Use in Medical Imaging - 5</h3>
+
+<ul>
+<li><a href="http://www.itk.org">ITK</a>
+
+<ul>
+<li>uses <a href="http://www.itk.org/Doxygen/html/classitk_1_1NumericTraits.html"><code>itk::NumericTraits&lt;&gt;</code></a> adding mathematical operators like multiplicative identity, additive identity</li>
+<li>uses traits to describe features of meshes, <code>like numeric_limits</code>, but more generalised</li>
+</ul></li>
+<li><a href="http://www.mitk.org">MITK</a> (requires coffee and a quiet room)
+
+<ul>
+<li>uses <a href="http://docs.mitk.org/2014.03/mitkPixelTypeList_8h.html">mitkPixelTypeList.h</a> for multi-plexing across templated image to non-templated image type</li>
+<li>uses <a href="http://docs.mitk.org/nightly-qt4/mitkGetClassHierarchy_8h.html">mitkGetClassHierarchy.h</a> to extract a list of class names in the inheritance hierarchy</li>
+</ul></li>
+<li><a href="http://link.springer.com/chapter/10.1007%2F978-3-319-08554-8_2">TMP in B-spline based registration</a>:</li>
+</ul>
+
+<h3>Further Reading For Traits</h3>
+
+<ul>
+<li><a href="http://www.keithschwarz.com/talks/slides/tmp-cs242.pdf">Keith Schwarz</a></li>
+<li><a href="http://www.cantrip.org/traits.html">Nathan Meyers</a></li>
+<li><a href="http://www.cs.rpi.edu/%7Emusser/design/blitz/traits.html">Todd Veldhuizen, traits scientific computing</a></li>
+<li><a href="http://accu.org/index.php/journals/442">Thaddaaeus Frogley, ACCU, traits tutorial</a></li>
+<li><a href="http://blog.aaronballman.com/2011/11/a-simple-introduction-to-type-traits">Aaron Ballman</a></li>
+<li><a href="http://erdani.com/publications/traits.html">Andrei Alexandrescu</a></li>
+<li><a href="http://erdani.com/publications/traits_on_steroids.html">Andrei Alexandrescu traits with state</a></li>
+<li><a href="http://www.boost.org/doc/libs/?view=category_Metaprogramming">Boost meta-mrogramming support</a></li>
+<li><a href="http://www.boost.org/doc/libs/1_57_0/libs/type_traits/doc/html/boost_typetraits/background.html">Boost type_traits tutorial</a></li>
+<li><a href="http://www.cplusplus.com/reference/type_traits">C++11 has many traits</a></li>
+</ul>
+
+<h3>Further Reading In General</h3>
+
+<ul>
+<li><a href="http://www.amazon.co.uk/Modern-Design-Generic-Programming-Patterns/dp/0201704315/ref=sr_1_1?ie=UTF8&qid=1421739179&sr=8-1&keywords=andrei+alexandrescu">Andrei Alexandrescu&#39;s Book</a></li>
+<li><a href="http://herbsutter.com">Herb Sutter</a>&#39;s <a href="http://www.gotw.ca/gotw">Guru of The Week</a>, especially <a href="http://www.gotw.ca/gotw/071.htm">71</a> and <a href="http://www.gotw.ca/publications/mxc++-item-4.htm">this</a> article</li>
+<li>And of course, keep reading <a href="http://www.aristeia.com/books.html">Meyers</a></li>
+</ul>
+
+<h3>Summary</h3>
+
+<ul>
+<li>Learnt
+
+<ul>
+<li>Notation for template function/class/meta-programming</li>
+<li>Uses and limitations of template function/class</li>
+<li>Template Meta-Programming
+
+<ul>
+<li>Optimisation, loop unrolling</li>
+<li>Policy classes</li>
+<li>Traits</li>
+</ul></li>
+</ul></li>
+</ul>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- end .site-content -->
+
+  <footer class="footer wrapper">
+  <div class="footer__inner clearfix">
+             <article class="block block--col-1">
+                <h2 class="as-h5">Facilities</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/departments/faculties">Faculties and departments</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/library/">Library</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/museums">Museums and Collections</a></li>
+					<li class="footer__item"><a href="http://www.thebloomsbury.com/">UCL Bloomsbury Theatre</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/maps">Maps and buildings</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-2">
+                <h2 class="as-h5">Locations</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/london">UCL and London</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/australia">UCL Australia</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/qatar">UCL Qatar</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/global">UCL Global</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-3">
+                <h2 class="as-h5">Connect with us</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/alumni">Alumni</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/enterprise">Businesses</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/media">Media Relations</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/hr/jobs/">Jobs</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/makeyourmark">Give to UCL</a></li>
+				</ul>
+
+      </article>
+  
+    <hr class="clear">
+    <ul class="footer__list list-unstyled zero-bottom">
+      <li class="footer__item text-muted small">University College London,&nbsp;Gower Street,&nbsp;London,&nbsp;WC1E 6BT&nbsp;Tel:&nbsp;+44&nbsp;(0)&nbsp;20 7679 2000</li>
+    </ul>
+    <ul class="list-inline footer__list list-unstyled list-inline--divided">
+      <li class="text-muted small">Copyright © 2018-01-22 17:49:11 +0000 UCL</li>
+      <li class="text-muted small"><a href="#">Disclaimer</a>
+      </li>
+      <li class="text-muted small"><a href="#">Freedom of Information</a>
+      </li>
+      <li class="text-muted small"><a href="#">Accessibility</a>
+      </li>
+      <li class="text-muted small"><a href="#">Privacy</a>
+      </li>
+      <li class="text-muted small"><a href="#">Cookies</a>
+      </li>
+      <li class="text-muted small"><a href="#">Contact Us</a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+
+  <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+  <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Tasks</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Tasks</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="openmp-tasks" class="titleslide slide level2"><h1>OpenMP Tasks</h1></section><section id="introduction" class="slide level3">
+<h1>Introduction</h1>
+<ul>
+<li>Not all problems are easily expressed as for loops.</li>
+<li>The task construction creates a number of tasks</li>
+<li>The tasks are added to a queue</li>
+<li>Threads take a task from the queue</li>
+</ul>
+</section><section id="example" class="slide level3">
+<h1>Example</h1>
+<p>Calculate Fibonacci numbers by recursion.</p>
+<ul>
+<li>Only as an example:
+<ul>
+<li>Hard to get any performance improvement. Usually slower that serial code</li>
+<li>Inefficient algorithm in any case. Why?</li>
+<li>Consider limiting the number of tasks. Why?</li>
+</ul></li>
+<li>Use taskwait to ensure results are done before adding their results together</li>
+</ul>
+</section><section id="code" class="slide level3">
+<h1>Code</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="ot">#include &lt;iostream&gt;</span>
+<span class="ot">#ifdef _OPENMP</span>
+<span class="ot">#include &lt;omp.h&gt;</span>
+<span class="ot">#endif</span>
+
+<span class="dt">int</span> fib(<span class="dt">int</span> n)
+{
+    <span class="kw">if</span> (n &lt; <span class="dv">2</span>)
+        <span class="kw">return</span> n;
+    <span class="dt">int</span> x;
+    <span class="dt">int</span> y;
+    <span class="dt">const</span> <span class="dt">int</span> tune = <span class="dv">40</span>;
+    <span class="ot">#pragma omp task firstprivate(n) shared(x)</span>
+    {
+        x = fib(n<span class="dv">-1</span>);
+    }
+    <span class="ot">#pragma omp task firstprivate(n) shared(y)</span>
+    {
+       y = fib(n<span class="dv">-2</span>);
+    }
+    <span class="ot">#pragma omp taskwait</span>
+    
+    <span class="kw">return</span> x + y;
+}</code></pre>
+</section><section id="main-function" class="slide level3">
+<h1>Main function</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span> ** argv)
+{
+    <span class="ot">#ifdef _OPENMP</span>
+    omp_set_dynamic(<span class="dv">0</span>);
+    <span class="ot">#endif</span>
+    <span class="dt">const</span> <span class="dt">int</span> num = <span class="dv">20</span>;
+    <span class="dt">int</span> a;
+    <span class="ot">#pragma omp parallel shared(a)</span>
+    {
+        <span class="ot">#pragma omp single nowait</span>
+        {
+        a = fib(num);
+       }
+    }
+    std::cout &lt;&lt; <span class="st">&quot;fib &quot;</span> &lt;&lt; num &lt;&lt; <span class="st">&quot; is &quot;</span> &lt;&lt; a &lt;&lt; std::endl;
+}</code></pre>
+<p>Note only one thread initially creates tasks. Tasks are still running in parallel.</p>
+</section><section id="advanced-usage" class="slide level3">
+<h1>Advanced usage</h1>
+<ul>
+<li>Task dependency:
+<ul>
+<li>Depends on child tasks. <code>#taskwait</code></li>
+<li>Real cases may be more complicated</li>
+<li>May need to explicitly set dependency</li>
+<li><code>#pragma omp task depends(in/out/inout:variable)</code></li>
+<li>See OpenMP docs for details</li>
+</ul></li>
+<li><code>taskyield</code> Allows a task to be suspended in favour of a different task:
+<ul>
+<li>Could be useful together with locks</li>
+</ul></li>
+</ul>
+</section><section id="controlling-task-generation" class="slide level3">
+<h1>Controlling task generation</h1>
+<ul>
+<li><code>if(expr)</code> <code>expr==false</code> create an undeferred task
+<ul>
+<li>Suspend the present task and execute the new task immediately on the same tread</li>
+</ul></li>
+<li><code>final(expr)</code> <code>expr==true</code> This is the final task
+<ul>
+<li>All child tasks are included in the present task</li>
+</ul></li>
+<li><code>mergeable</code>
+<ul>
+<li>Included and undeferred tasks may be merged into the parent task</li>
+</ul></li>
+</ul>
+<p>May useful to avoid creating to many small tasks. I.e. in our Fibonacci example.</p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

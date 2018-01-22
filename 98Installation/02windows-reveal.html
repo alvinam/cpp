@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Windows</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Windows</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="windows-install" class="titleslide slide level1"><h1>Windows Install</h1></section><section id="editor" class="slide level2">
+<h1>Editor</h1>
+<p>Unless you already use a specific editor which you are comfortable with we recommend using <a href="http://notepad-plus-plus.org/"><em>Notepad++</em></a> on windows.</p>
+<p>Using Notepad++ to edit text files including code should be straight forward but in addition you should configure git to use Notepad++ when writing commit messages (see below).</p>
+</section><section id="git" class="slide level2">
+<h1>Git</h1>
+<p>Install <a href="http://gitforwindows.org/">Git for Windows</a>.</p>
+<p>During the installation, you can select &quot;Use Notepad++ as Git's default editor&quot; if you installed Notepad++ above. Make sure you tick &quot;Use Git from the Windows Command Prompt&quot; so other Unix tools can find git. The defaults should be suitable for other options.</p>
+<p>Then install the <a href="http://windows.github.com/">GitHub for Windows client</a>.</p>
+</section><section id="cmake" class="slide level2">
+<h1>CMake</h1>
+<p>Install <a href="http://www.cmake.org/cmake/resources/software.html">cmake</a>. Minimum version 3.5.</p>
+<p>And choose to add it to the path for all users if so prompted. (You may need to log out and log back in again before this takes effect!)</p>
+</section><section id="unix-tools" class="slide level2">
+<h1>Unix tools</h1>
+<p>Install <a href="http://sourceforge.net/projects/mingw/">MinGW</a> by following the download link. It should install MinGW's package manager. On the left, select <code>Basic Setup</code>, and on the right select <code>mingw32-base</code>, <code>mingw-developer-toolkit,</code> <code>mingw-gcc-g++</code> and <code>msys-base</code>. On some systems these package might be selected from start. Finally, click the installation menu and <code>Apply Changes</code>.</p>
+</section><section id="locating-your-install" class="slide level2">
+<h1>Locating your install</h1>
+<p>Now, we need to find out where Git and Notepad++ have been installed, this will be either in <code>C:\Program Files (x86)</code> or in <code>C:\Program Files</code>. The former is the norm on more modern versions of windows. If you have the older version, replace <code>Program\ Files\ \(x86\)</code> with <code>Program\ Files</code> in the instructions below.</p>
+</section><section id="telling-shell-where-to-find-the-tools" class="slide level2">
+<h1>Telling Shell where to find the tools</h1>
+<p>We need to tell the new shell installed by MinGW where Notepad++ is.</p>
+<p>To do this, use NotePad++ to edit the file at <code>C:\MinGW\mysys\1.0\etc\profile</code></p>
+<p>and toward the end, above the line <code>alias clear=clsb</code> add the following:</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="co"># Path settings from SoftwareCarpentry</span>
+<span class="kw">export</span> <span class="ot">PATH=$PATH</span>:/c/Program<span class="dt">\ </span>Files<span class="dt">\ \(</span>x86<span class="dt">\)</span>/Notepad++
+<span class="co"># End of Software carpentry settings</span></code></pre>
+</section><section id="finding-your-terminal" class="slide level2">
+<h1>Finding your terminal</h1>
+<p>Check this works by opening MinGW shell, with the start menu (Start-&gt;All programs-&gt;MinGW-&gt;MinGW Shell). This should open a <em>terminal</em> window, where commands can be typed in directly.</p>
+<p>On windows 8 and 10, there may be no app for MinGW. In that case, open the <code>run</code> app and type in</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">C</span>:\MinGW\msys\1.0\msys.bat</code></pre>
+<p>You can also create a shortcut to this file on your Desktop for quicker access.</p>
+</section><section id="checking-which-tools-you-have" class="slide level2">
+<h1>Checking which tools you have</h1>
+<p>Once you have a terminal open, type</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">which</span> notepad++</code></pre>
+<p>which should produce readout similar to</p>
+<pre><code>/c/Program Files (x86)/Notepad++/notepad++.exe</code></pre>
+<p>Also try:</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">which</span> git</code></pre>
+<p>which should produce</p>
+<pre><code>/c/Program Files/Git/cmd/git.exe</code></pre>
+<p>The <code>which</code> command is used to figure out where a given program is located on disk.</p>
+</section><section id="tell-git-about-your-editor" class="slide level2">
+<h1>Tell Git about your editor</h1>
+<p>If you didn't do this as part of the Git install, you now need to update the default editor used by Git.</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">git</span> config --global core.editor <span class="st">&quot;&#39;C:/Program Files (x86)/Notepad++</span>
+<span class="st">    /notepad++.exe&#39; -multiInst  -nosession -noPlugin&quot;</span></code></pre>
+<p>Note that it is not obvious how to copy and paste text in a Windows terminal including Git Bash. Copy and paste can be found by right clicking on the top bar of the window and selecting the commands from the drop down menu (in a sub menu).</p>
+<p>You should now have a working version of git and notepad++, accessible from your shell.</p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Class Templates</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Class Templates</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="class-templates" class="titleslide slide level2"><h1>Class Templates</h1></section><section id="class-templates-example---1" class="slide level3">
+<h1>Class Templates Example - 1</h1>
+<ul>
+<li>If you understand template functions, then template classes are easy!</li>
+<li>Refering to <a href="http://www.cplusplus.com/doc/tutorial/templates/" title="Template Class Tutorial">this tutorial</a>, an example:</li>
+</ul>
+<p>Header:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt; <span class="kw">class</span> MyPair {
+  T m_Values[<span class="dv">2</span>];
+
+<span class="kw">public</span>:
+  MyPair(<span class="dt">const</span> T &amp;first, <span class="dt">const</span> T &amp;second);
+  T getMax() <span class="dt">const</span>;
+};
+<span class="ot">#include &quot;pairClassExample.cc&quot;</span></code></pre>
+</section><section id="class-templates-example---2" class="slide level3">
+<h1>Class Templates Example - 2</h1>
+<p>Implementation:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt;
+MyPair&lt;T&gt;::MyPair(<span class="dt">const</span> T&amp; first, <span class="dt">const</span> T&amp; second)
+{
+  m_Values[<span class="dv">0</span>] = first;
+  m_Values[<span class="dv">1</span>] = second;
+}
+
+<span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt;
+T
+MyPair&lt;T&gt;::getMax() <span class="dt">const</span>
+{
+  <span class="kw">if</span> (m_Values[<span class="dv">0</span>] &gt; m_Values[<span class="dv">1</span>])
+    <span class="kw">return</span> m_Values[<span class="dv">0</span>];
+  <span class="kw">else</span>
+    <span class="kw">return</span> m_Values[<span class="dv">1</span>];
+}</code></pre>
+</section><section id="class-templates-example---3" class="slide level3">
+<h1>Class Templates Example - 3</h1>
+<p>Usage:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &quot;pairClassExample.h&quot;</span>
+<span class="ot">#include &lt;iostream&gt;</span>
+
+<span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span>** argv)
+{
+  MyPair&lt;<span class="dt">int</span>&gt; a(<span class="dv">1</span>,<span class="dv">2</span>);
+  std::cout &lt;&lt; <span class="st">&quot;Max is:&quot;</span> &lt;&lt; a.getMax() &lt;&lt; std::endl;
+}</code></pre>
+</section><section id="quick-comments" class="slide level3">
+<h1>Quick Comments</h1>
+<ul>
+<li>Implementation, 3 uses of parameter T</li>
+<li>Same Implicit/Explicit instantiation rules</li>
+<li>Note implicit requirements, eg. operator &gt;
+<ul>
+<li>Remember the 2 stage compilation</li>
+<li>Remember code not instantiated until its used</li>
+<li>Take Unit Testing Seriously!</li>
+</ul></li>
+</ul>
+</section><section id="template-specialisation" class="slide level3">
+<h1>Template Specialisation</h1>
+<ul>
+<li>If template defined for type T</li>
+<li>Full specialisation - special case for a specific type eg. char</li>
+<li>Partial specialisation - special case for a type that still templates, e.g. T*</li>
+</ul>
+<pre><code>template &lt;typename T&gt; class MyVector {
+template &lt;&gt; class MyVector&lt;char&gt; {  // full specialisation
+template &lt;typename T&gt; MyVector&lt;T*&gt; { // partial specialisation</code></pre>
+</section><section id="nested-types" class="slide level3">
+<h1>Nested Types</h1>
+<p>In libraries such as <a href="http://www.itk.org">ITK</a>, we see:</p>
+<pre><code>    template&lt; typename T, unsigned int NVectorDimension = 3 &gt;
+    class Vector:public FixedArray&lt; T, NVectorDimension &gt;
+    {
+      public:
+        // various stuff
+        typedef T  ValueType;
+        // various stuff
+        T someMemberVariable;</code></pre>
+<ul>
+<li>typedef is just an alias</li>
+<li>using nested typedef, must be qualified by class name</li>
+<li>can also refer to a real variable</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>STL Containers</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">STL Containers</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="stl-containers" class="titleslide slide level2"><h1>STL Containers</h1></section><section id="two-general-types" class="slide level3">
+<h1>Two general types:</h1>
+<ul>
+<li><p><em>Sequences</em>: Elements are ordered in a linear sequence. Individual elements are accessed by their position in this sequence/index. eg. <code>myVector[3]</code>, <code>myList.front()</code>, etc.</p></li>
+<li><p><em>Associative</em>: Elements are referenced by their key and not by their position in the container. eg. <code>myMap['key1']</code></p></li>
+</ul>
+</section><section id="sequences" class="slide level3">
+<h1>Sequences</h1>
+<p>Properties:</p>
+<ul>
+<li>size: fixed/dynamic</li>
+<li>access: random/sequential</li>
+<li>underlying memory structure: contiguous/not
+<ul>
+<li>random access in non-contiguous memory is tricky</li>
+<li>affects how efficiently inserting/removing of elements can be done</li>
+<li>affects if pointer arithmetic can be done</li>
+</ul></li>
+<li>optimised insert/remove operations</li>
+</ul>
+</section><section id="sequences-1" class="slide level3">
+<h1>Sequences</h1>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">size</th>
+<th style="text-align: center;">access</th>
+<th style="text-align: center;">memory</th>
+<th style="text-align: center;">efficient insert/remove</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">array</td>
+<td style="text-align: center;">fixed</td>
+<td style="text-align: center;">random</td>
+<td style="text-align: center;">contiguous</td>
+<td style="text-align: center;">-</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>vector</strong></td>
+<td style="text-align: center;"><strong>dynamic</strong></td>
+<td style="text-align: center;"><strong>random</strong></td>
+<td style="text-align: center;"><strong>contiguous</strong></td>
+<td style="text-align: center;"><strong>at end only</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">deque</td>
+<td style="text-align: center;">dynamic</td>
+<td style="text-align: center;">random</td>
+<td style="text-align: center;">non-contiguous</td>
+<td style="text-align: center;">both ends</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">list</td>
+<td style="text-align: center;">dynamic</td>
+<td style="text-align: center;">sequential</td>
+<td style="text-align: center;">non-contiguous</td>
+<td style="text-align: center;">anywhere</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">forward_list</td>
+<td style="text-align: center;">dynamic</td>
+<td style="text-align: center;">sequential, only forward</td>
+<td style="text-align: center;">non-contiguous</td>
+<td style="text-align: center;">anywhere</td>
+</tr>
+</tbody>
+</table>
+</section><section id="more-on-vector" class="slide level3">
+<h1>More on vector</h1>
+<p>It's dynamic, so you can add/erase elements:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">std::vector&lt;<span class="dt">int</span>&gt; myVec;
+<span class="kw">for</span> (<span class="dt">int</span> i=<span class="dv">0</span>;i&lt;<span class="dv">10</span>;++i) {
+myVec.push_back(i);
+}
+myVec.insert(myVec.begin(),-<span class="dv">1</span>);
+myVec.erase(<span class="dv">1</span>);</code></pre>
+<p><code>myVec = -1 1 2 3 4 5 6 7 8 9</code></p>
+<p>... or manipulate its size:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">std::vector&lt;<span class="dt">int</span>&gt; myVec(<span class="dv">10</span>);
+std::cout &lt;&lt; <span class="st">&quot;Vector size before = &quot;</span> &lt;&lt; myVec.size();
+myVec.resize(<span class="dv">5</span>);
+std::cout &lt;&lt; <span class="st">&quot; after = &quot;</span> &lt;&lt; myVec.size() &lt;&lt; <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>;</code></pre>
+<p><code>Vector size before = 10 after = 5</code></p>
+</section><section id="note-on-c11" class="slide level3">
+<h1>Note on C++11</h1>
+<ul>
+<li>For all containers, <code>emplace(const_iterator position, Args&amp;&amp;... args)</code> is preferable to <code>insert(const_iterator position, const value_type&amp; val)</code>, as it doesn't create any copies of the object you add to the container.</li>
+<li>Cases you might prefer something other than <code>emplace</code>:
+<ul>
+<li>backward compatibility</li>
+<li><code>insert</code> has more constructors</li>
+<li>at least <code>emplace_back</code> might not work as expected in some implementations</li>
+</ul></li>
+</ul>
+</section><section id="exercise" class="slide level3">
+<h1>Exercise</h1>
+<p>Think of cases where you'd use a specific container</p>
+</section><section id="associative-containers" class="slide level3">
+<h1>Associative containers</h1>
+<p>Properties:</p>
+<ul>
+<li>key: is it separate from value?
+<ul>
+<li>maps: key-value pair</li>
+<li>sets: value is the key (and thus it's const!)</li>
+</ul></li>
+<li>ordering. Affects performance:
+<ul>
+<li>unordered containers fastest to fill and access by key</li>
+<li>ordered containers fastest to iterate through, and they're already ordered :o)</li>
+</ul></li>
+<li>unique values?</li>
+</ul>
+</section><section id="associative-containers-1" class="slide level3">
+<h1>Associative containers</h1>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: center;">ordered</th>
+<th style="text-align: center;">unordered</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>unique</strong></td>
+<td style="text-align: center;">map</td>
+<td style="text-align: center;">unordered_map</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>non-unique</strong></td>
+<td style="text-align: center;">multimap</td>
+<td style="text-align: center;">unordered_multimap</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: center;">ordered</th>
+<th style="text-align: center;">unordered</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>unique</strong></td>
+<td style="text-align: center;">set</td>
+<td style="text-align: center;">unordered_set</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>non-unique</strong></td>
+<td style="text-align: center;">multiset</td>
+<td style="text-align: center;">unordered_multiset</td>
+</tr>
+</tbody>
+</table>
+</section><section id="more-on-maps" class="slide level3">
+<h1>More on maps</h1>
+<p>Fill them with</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  std::map&lt;std::string,<span class="dt">int</span>&gt; myMap;
+  myMap[<span class="st">&quot;brocolli&quot;</span>] = <span class="dv">2</span>;
+  myMap[<span class="st">&quot;garlic&quot;</span>] = <span class="dv">1</span>;
+  myMap[<span class="st">&quot;brocolli&quot;</span>] = <span class="dv">1</span>; <span class="co">// returns reference to element =&gt; element is updated</span>
+  myMap.insert( std::pair&lt;std::string,<span class="dt">int</span>&gt;(<span class="st">&quot;bread&quot;</span>,<span class="dv">4</span>) );
+  myMap.insert( std::pair&lt;std::string,<span class="dt">int</span>&gt;(<span class="st">&quot;brocolli&quot;</span>,<span class="dv">3</span>) ); <span class="co">// returns iterator</span>
+                               <span class="co">// to existing element =&gt; element is not updated</span>
+  
+  <span class="kw">typedef</span> std::multimap&lt;std::string,<span class="dt">int</span>&gt; MMapType;
+  MMapType myMMap;                                <span class="co">// there&#39;s no [] for multimap</span>
+  myMMap.insert( std::pair&lt;std::string,<span class="dt">int</span>&gt;(<span class="st">&quot;brocolli&quot;</span>,<span class="dv">2</span>) );
+  myMMap.insert( std::pair&lt;std::string,<span class="dt">int</span>&gt;(<span class="st">&quot;bread&quot;</span>,<span class="dv">4</span>) );
+  myMMap.insert( std::pair&lt;std::string,<span class="dt">int</span>&gt;(<span class="st">&quot;brocolli&quot;</span>,<span class="dv">3</span>) );</code></pre>
+</section><section id="more-on-maps-1" class="slide level3">
+<h1>More on maps</h1>
+<p>Access elements with</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  std::cout &lt;&lt; <span class="st">&quot;myMap[brocolli] = &quot;</span> &lt;&lt; myMap[<span class="st">&quot;brocolli&quot;</span>] &lt;&lt; <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>;
+  std::cout &lt;&lt; <span class="st">&quot;myMap.find(bread) = &quot;</span> &lt;&lt; myMap.find(<span class="st">&quot;bread&quot;</span>)-&gt;second &lt;&lt; <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>;
+  <span class="kw">for</span> (std::map&lt;std::string,<span class="dt">int</span>&gt;::iterator it=myMap.begin(); it!=myMap.end(); ++it)
+    std::cout &lt;&lt; it-&gt;first &lt;&lt; <span class="st">&quot; &quot;</span> &lt;&lt; it-&gt;second &lt;&lt; <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>;
+
+  std::cout &lt;&lt; <span class="st">&quot;myMMap.count(brocolli) = &quot;</span> &lt;&lt; myMMap.count(<span class="st">&quot;brocolli&quot;</span>) &lt;&lt; <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>;
+  std::pair &lt; MMapType::iterator,MMapType::iterator&gt; range = myMMap.equal_range(<span class="st">&quot;brocolli&quot;</span>);
+  <span class="kw">for</span> (MMapType::iterator it=range.first; it!=range.second; ++it)
+    std::cout &lt;&lt; it-&gt;first &lt;&lt; <span class="st">&quot; &quot;</span> &lt;&lt; it-&gt;second &lt;&lt; <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>;
+  <span class="kw">for</span> (MMapType::iterator it=myMMap.begin(); it!=myMMap.end(); ++it)
+    std::cout &lt;&lt; it-&gt;first &lt;&lt; <span class="st">&quot; &quot;</span> &lt;&lt; it-&gt;second &lt;&lt; <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>;</code></pre>
+<pre><code>myMap[brocolli] = 1
+myMap.find(bread) = 4
+bread 4
+brocolli 1
+garlic 1
+myMMap.count(brocolli) = 2
+brocolli 2
+brocolli 3
+bread 4
+brocolli 2
+brocolli 3
+</code></pre>
+</section><section id="example" class="slide level3">
+<h1>Example</h1>
+<p>Read in file with unknown number of particle-momentum pairs.</p>
+<pre><code>proton 4.5
+electron 17.8
+pion 4.6
+muon 12.0
+pion 3.2
+neutrino 8.2
+pion 23.7
+proton 9.4
+neutrino 6.7
+</code></pre>
+<ul>
+<li>Then print out
+<ol type="1">
+<li>list of all particle-momentum pairs in alphabetical order
+<ul>
+<li>how about in ascending momentum order?</li>
+</ul></li>
+<li>list of types of particles in the file in alphabetical order
+<ul>
+<li>how about in mass order?</li>
+</ul></li>
+<li>list of particle-max momentum pairs</li>
+</ol></li>
+</ul>
+</section><section id="task-1" class="slide level3">
+<h1>Task 1</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;map&gt;</span>
+<span class="ot">#include &lt;string&gt;</span>
+<span class="ot">#include &lt;iostream&gt;</span>
+<span class="ot">#include &lt;fstream&gt;</span>
+
+<span class="dt">int</span> main()
+{
+  std::ifstream ifs(<span class="st">&quot;95stl/cpp/particleList.txt&quot;</span>,std::ifstream::in);
+  <span class="co">// Read in the data</span>
+  std::multimap&lt;std::string,<span class="dt">double</span>&gt; theParticles;
+  std::string name;
+  <span class="dt">double</span> momentum;
+  <span class="kw">while</span> (!ifs.eof()) {
+    ifs &gt;&gt; name &gt;&gt; momentum;
+    <span class="kw">if</span> (!ifs.eof())
+      theParticles.insert( std::pair&lt;std::string,<span class="dt">double</span>&gt;(name,momentum) );
+  }
+  ifs.close();
+  <span class="co">// Output - it&#39;s already sorted!</span>
+  std::multimap&lt;std::string,<span class="dt">double</span>&gt;::iterator iter = theParticles.begin();
+  <span class="kw">for</span> ( ; iter!=theParticles.end(); ++iter) {
+    std::cout &lt;&lt; iter-&gt;first &lt;&lt; <span class="st">&quot; &quot;</span> &lt;&lt; iter-&gt;second &lt;&lt; std::endl;
+  }      
+}</code></pre>
+</section><section id="task-2" class="slide level3">
+<h1>Task 2</h1>
+<ul>
+<li>Hint1: use a set</li>
+<li>Hint2: write a custom comparator</li>
+</ul>
+</section><section id="task-2-1" class="slide level3">
+<h1>Task 2</h1>
+<ul>
+<li>Hint1: use a set</li>
+<li>Hint2: write a custom comparator</li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="kw">class</span> compMass {
+<span class="kw">public</span>:
+  compMass() :
+    m_particlesOrdered({<span class="st">&quot;neutrino&quot;</span>, <span class="st">&quot;electron&quot;</span>, <span class="st">&quot;muon&quot;</span>, <span class="st">&quot;pion&quot;</span>, <span class="st">&quot;kaon&quot;</span>, <span class="st">&quot;proton&quot;</span>})
+  {};
+  <span class="dt">bool</span> <span class="kw">operator</span>() (<span class="dt">const</span> std::string&amp; s1, <span class="dt">const</span> std::string&amp; s2) <span class="dt">const</span>
+  {
+    <span class="dt">int</span> index1=-<span class="dv">1</span>, index2=-<span class="dv">1</span>;
+    <span class="kw">for</span> (<span class="dt">int</span> i=<span class="dv">0</span>;i&lt;m_particlesOrdered.size();++i) {
+      <span class="kw">if</span> (m_particlesOrdered[i]==s1) index1 = i;
+      <span class="kw">if</span> (m_particlesOrdered[i]==s2) index2 = i;
+    }
+    <span class="kw">return</span> index1&lt;index2; <span class="co">// unknown particles appear first (index=-1)</span>
+  }
+<span class="kw">private</span>:
+  std::vector&lt;std::string&gt; m_particlesOrdered;
+};</code></pre>
+<p>then use it in the set constructor:</p>
+<p><code>std::set&lt;std::string,compMass&gt; theParticles;</code></p>
+</section><section id="task-3" class="slide level3">
+<h1>Task 3</h1>
+<p>Hint: extend the map class. - How?</p>
+<ul>
+<li>inherit from std::map - <strong>NO</strong>!
+<ul>
+<li>STL containers are <em>not</em> designed to be polymorphic, as they don't have virtual destructors (<em>Meyers 1:7</em>)</li>
+</ul></li>
+<li>composition - write a class that contains either an std::map object or smart pointer to it.</li>
+<li>free functions with STL containers/iterators as arguments</li>
+</ul>
+</section><section id="task-3---with-function" class="slide level3">
+<h1>Task 3 - with function</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">void</span> keepMax(std::map&lt;std::string,<span class="dt">double</span>&gt;&amp; theMap, <span class="dt">const</span> std::string key, <span class="dt">const</span> <span class="dt">double</span> value)
+{
+  <span class="kw">if</span> (theMap.find(key)==theMap.end()) <span class="co">//element doesn&#39;t already exist in map</span>
+    theMap[key] = value;
+  <span class="kw">else</span>
+    <span class="co">// any logic can go in here, eg a counter, an average, etc...</span>
+    theMap[key] = std::max(theMap[key],value);
+}</code></pre>
+<p>Then use it in the loop when filling the container:</p>
+<p><code>if (!feof(ifp)) keepMax( theParticles,name,momentum );</code></p>
+</section><section id="task-3---with-composition" class="slide level3">
+<h1>Task 3 - with composition</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="kw">class</span> maxMap
+{
+<span class="kw">public</span>:
+  <span class="kw">typedef</span> std::map&lt;std::string,<span class="dt">double</span>&gt;::iterator iterator;
+  
+  <span class="dt">void</span> insert(<span class="dt">const</span> std::pair&lt;std::string,<span class="dt">double</span>&gt; theElement)
+  {
+    std::string key = theElement.first;
+    <span class="dt">double</span> value = theElement.second;
+    <span class="kw">if</span> (m_map.find(key)==m_map.end()) <span class="co">//element doesn&#39;t already exist in map</span>
+      m_map[key] = value;
+    <span class="kw">else</span>
+      <span class="co">// any logic can go in here, eg a counter, an average, etc...</span>
+      m_map[key] = std::max(m_map[key],value);
+  }
+  iterator begin() { <span class="kw">return</span> m_map.begin(); }
+  iterator end() { <span class="kw">return</span> m_map.end(); }
+<span class="kw">private</span>:
+  std::map&lt;std::string,<span class="dt">double</span>&gt; m_map;
+};</code></pre>
+</section><section id="task-3---with-composition-1" class="slide level3">
+<h1>Task 3 - with composition</h1>
+<p>Then use it in main:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">int</span> main()
+{
+  std::ifstream ifs(<span class="st">&quot;95stl/cpp/particleList.txt&quot;</span>,std::ifstream::in);
+  <span class="co">// Read in the data</span>
+  maxMap theParticles;
+  std::string name;
+  <span class="dt">double</span> momentum;
+  <span class="kw">while</span> (!ifs.eof()) {
+    ifs &gt;&gt; name &gt;&gt; momentum;
+    <span class="kw">if</span> (!ifs.eof())
+      theParticles.insert( std::pair&lt;std::string,<span class="dt">double</span>&gt;(name,momentum) );
+  }
+  ifs.close();
+  <span class="co">// Output - it&#39;s already sorted!</span>
+  maxMap::iterator iter = theParticles.begin();
+  <span class="kw">for</span> ( ; iter!=theParticles.end(); ++iter) {
+    std::cout &lt;&lt; iter-&gt;first &lt;&lt; <span class="st">&quot; &quot;</span> &lt;&lt; iter-&gt;second &lt;&lt; std::endl;
+  }      
+}</code></pre>
+</section><section id="accessing-containers-iterators" class="slide level3">
+<h1>Accessing containers: iterators</h1>
+<p>For random-access containers you can do</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+std::vector&lt;<span class="dt">int</span>&gt; myVector = {<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>};
+<span class="kw">for</span> (<span class="dt">int</span> i=<span class="dv">0</span>; i&lt;myVector.size(); ++i) {
+    std::cout &lt;&lt; myVector[i] &lt;&lt; std::endl;
+}</code></pre>
+<p>But for sequential-access ones, you can only do</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="ot">#include &lt;iterator&gt;</span>
+
+std::list&lt;<span class="dt">int</span>&gt; mylist = {<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>};
+std::list&lt;<span class="dt">int</span>&gt;::iterator it=mylist.begin()
+<span class="kw">for</span> ( ; it!=mylist.end(); ++it) {
+    std::cout &lt;&lt; *it &lt;&lt; std::endl;
+}</code></pre>
+</section><section id="iterators" class="slide level3">
+<h1>Iterators</h1>
+<p>An iterator is any object that, pointing to some element in a container, has the ability to iterate through the elements of that range using a set of operators.</p>
+<ul>
+<li>Minimum operators needed: increment (<code>++</code>) and dereference (<code>*</code>).</li>
+<li>A pointer is the simplest iterator.</li>
+<li>Brings some container-independence.
+<ul>
+<li>especially when using <code>typedef</code></li>
+</ul></li>
+</ul>
+<p><a href="http://www.cplusplus.com/reference/iterator/">http://www.cplusplus.com/reference/iterator/</a></p>
+</section><section id="pairs" class="slide level3">
+<h1>Pairs</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="ot">#include &lt;utility&gt;      </span><span class="co">// std::pair</span>
+
+<span class="dt">int</span> main () {
+  std::pair&lt;std::string,<span class="dt">double</span>&gt; product1;                    <span class="co">// default constructor</span>
+  std::pair&lt;std::string,<span class="dt">double</span>&gt; product2(<span class="st">&quot;tomatoes&quot;</span>,<span class="fl">2.30</span>);   <span class="co">// value init</span>
+
+  <span class="dt">auto</span> foo = std::make_pair (<span class="dv">10</span>,<span class="dv">20</span>);                   <span class="co">// created a std::pair&lt;int,int&gt;</span>
+  product1 = std::make_pair(std::string(<span class="st">&quot;lightbulbs&quot;</span>),<span class="fl">0.99</span>);  <span class="co">// using make_pair</span>
+
+  product2.first = <span class="st">&quot;shoes&quot;</span>;                  <span class="co">// the type of first is string</span>
+  product2.second = <span class="fl">39.90</span>;                   <span class="co">// the type of second is double</span>
+
+  std::cout &lt;&lt; <span class="st">&quot;foo: &quot;</span> &lt;&lt; foo.first &lt;&lt; <span class="st">&quot;, &quot;</span> &lt;&lt; foo.second &lt;&lt; <span class="ch">&#39;\n&#39;</span>;
+
+  <span class="kw">return</span> <span class="dv">0</span>;
+}</code></pre>
+</section><section id="tuples" class="slide level3">
+<h1>Tuples</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="ot">#include &lt;tuple&gt;        </span><span class="co">// std::tuple, std::make_tuple, std::get</span>
+
+<span class="dt">int</span> main()
+{
+  std::tuple&lt;<span class="dt">int</span>,<span class="dt">char</span>&gt; one;                          <span class="co">// default</span>
+  std::tuple&lt;<span class="dt">int</span>,<span class="dt">char</span>&gt; two(<span class="dv">10</span>,&#39;a&#39;);                  <span class="co">// initialization</span>
+
+  <span class="dt">auto</span> first = std::make_tuple (<span class="dv">10</span>,&#39;a&#39;);             <span class="co">// tuple &lt; int, char &gt;</span>
+  <span class="dt">const</span> <span class="dt">int</span> a = <span class="dv">0</span>; <span class="dt">int</span> b[<span class="dv">3</span>];                         <span class="co">// decayed types:</span>
+  <span class="dt">auto</span> second = std::make_tuple (a,b);               <span class="co">// tuple &lt; int, int* &gt;</span>
+
+  std::cout &lt;&lt; <span class="st">&quot;two contains: &quot;</span> &lt;&lt; std::get&lt;<span class="dv">0</span>&gt;(two);
+  std::cout &lt;&lt; <span class="st">&quot; and &quot;</span> &lt;&lt; std::get&lt;<span class="dv">1</span>&gt;(two);
+  std::cout &lt;&lt; std::endl;
+
+  <span class="kw">return</span> <span class="dv">0</span>;
+}</code></pre>
+</section><section id="assignment" class="slide level3">
+<h1>Assignment</h1>
+<ul>
+<li>Download a human genome file from <a href="ftp://ftp.ensembl.org/pub/release-87/fasta/homo_sapiens/dna/">ftp://ftp.ensembl.org/pub/release-87/fasta/homo_sapiens/dna/</a> . This is a sequence of characters from the dictionary <code>{A,C,G,T,N}</code>.</li>
+<li>List all the possible 3-letter combinations (k-mers for k=3) that appear in this file together with the number of appearances of each in the file, in order of number of appearances.
+<ul>
+<li>Output should be something like</li>
+</ul></li>
+</ul>
+<pre><code>NNN 3345028
+AGT 2348
+CTT 1578
+...</code></pre>
+<ul>
+<li>Hint: use only associative containers. You'll need to extend their functionality to some kind of counter.</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

@@ -1,0 +1,764 @@
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 7]> <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="lt-ie9 no-js"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset=utf-8 />
+    <meta name="author" content="UCL" />
+    <meta name="description" content="UCL Homepage" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- social meta -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@uclnews">
+    <meta name="twitter:title" content="UCL - London's Global University">
+    <meta name="twitter:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students.">
+    <meta name="twitter:creator" content="@UCLWAMS">
+    <meta name="twitter:image:src" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png">
+    <meta property="og:image" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png" />
+    <meta property="og:title" content="UCL - London's Global University" />
+    <meta property="og:url" content="http://www.ucl.ac.uk" />
+    <meta property="og:site_name" content="UCL" />
+    <meta property="og:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students." />
+    <meta property="og:type" content="website" />
+    <meta property="og:profile_id" content="uclofficial" />
+    <!-- end social meta -->
+
+  <title>Unit Testing</title>
+
+  <link href="/research-computing-with-cpp/css/screen.min.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <link href="/research-computing-with-cpp/css/jekyll-styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/local_styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/ipython.css" rel="stylesheet" type="text/css">
+
+  <link rel="shortcut icon" href="/research-computing-with-cpp/images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="/research-computing-with-cpp/favicon-152.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="/research-computing-with-cpp/favicon-144.png">
+
+  <script src="/research-computing-with-cpp/js/lib/modernizr-custom.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+
+    <script>
+      var cuttingTheMustard = document.querySelector && window.localStorage && window.addEventListener;
+
+      Modernizr.load({
+        //cutting the mustard as used by the BBC
+        test: cuttingTheMustard
+        //if old browser load the shiv
+        ,
+        nope: [
+          '/research-computing-with-cpp/js/lib/html5shiv-printshiv.min.js', '/research-computing-with-cpp/js/lib/respond.min.js'
+        ]
+      });
+      //set conditional assets for main.js
+      var globalSiteSpecificVars = {
+        pathToJquery: "/research-computing-with-cpp/js/lib/jquery-1.9.1.min",
+        googleAnalyticsIdsArray: [] //specify array of site specific id's NOT UCL generic UA-943297-1
+      }
+      if (cuttingTheMustard) {
+        globalSiteSpecificVars.pathToJquery = '/research-computing-with-cpp/js/lib/jquery-2.1.1.min';
+      }
+    </script>
+    <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+    <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+</head>
+
+<body id="index" class="layout-vertical layout-vertical--nav-1col">
+
+  <header class="header header--desktop">
+
+  <a class="header__close" href="#">
+    <img src="/research-computing-with-cpp/images/close.png" class="lazy" data-src="//static.ucl.ac.uk/indigo/images/close.png" alt="X" />Close</a>
+
+  <div class="masthead">
+
+  <div class="wrapper clearfix">
+
+      <div class="masthead__search">
+					<form action="#" method="get">
+						<div class="search-form">
+							<input type="search" placeholder="Search UCL websites, people and more" class="search-form__input search-form__input--search" value="">
+						</div>
+						<input type="submit" name="sumbit" value="Go" class="btn search-form__input search-form__input--submit" />
+					</form>
+				</div>
+
+
+				<nav class="masthead__nav m-clear">
+					<ul class="masthead__list">
+						<li class="masthead__item"><a href="index.php" class="masthead__link">UCL Home</a>
+						</li>
+						<li class="masthead__item"><a href="prospective-students.php" class="masthead__link">Prospective students</a>
+						</li>
+						<li class="masthead__item"><a href="current-students.php" class="masthead__link">Current students</a>
+						</li>
+						<li class="masthead__item"><a href="staff.php" class="masthead__link">Staff</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+</div><!-- end .masthead -->
+
+
+  <div class="wrapper">
+
+    <div class="photograph">
+  <div class="brand">
+    <p class="brand__heading">MPHYG002: Research Computing with C++</p>
+    <a href="/" class="brand__link"><span class="visually-hidden">Home</span></a>
+    <img src="//cdn.ucl.ac.uk/img/blank.gif" data-src="//static.ucl.ac.uk/indigo/images/ucl-logo.svg" alt="UCL logo" id="logo" class="brand__logo lazy">  
+  </div>
+</div>
+
+
+    <div class="sidebar">
+
+      <nav class="nav nav--mobile">
+        <ul>
+          
+
+
+
+
+        </ul>
+      </nav>
+
+      <nav class="nav nav--left">
+        <ul>
+          
+
+ <li class="active"> <a href="/research-computing-with-cpp/01research/">C++ for Research</a><ul><li class="active"> <a href="/research-computing-with-cpp/01research/sec01Research.html">C++ in Research</a> </li> <li class="active"> <a href="/research-computing-with-cpp/01research/sec02Git.html">Git</a> </li> <li class="active"> <a href="/research-computing-with-cpp/01research/sec03CMake.html">CMake</a> </li> <li class="active"> <a href="/research-computing-with-cpp/01research/sec04UnitTesting.html">Unit Testing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/02libraries/">Including Libraries</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec01ChoosingLibraries.html">Choosing Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LibraryBasics.html">Library Basics</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LinkingLibraries.html">Linking Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec03UsingLibraries.html">Using Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec04Examples.html">Examples</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05CMakeCatchTemplate.html">CMakeCatchTemplate</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05Summary.html">Summary</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/">Better C++</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec01LanguageRecap.html">Object Oriented Review</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec02EssentialReading.html">Essential Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec03TemplatesIntro.html">Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec04FunctionTemplates.html">Function Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec05ClassTemplates.html">Class Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec06Exceptions.html">Error Handling</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec07Inheritance.html">Inheritance</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec08DependencyInjection.html">Dependency Injection</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec09ConstructionPatterns.html">Construction Patterns</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec10MemoryManagement.html">Smart Pointers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec11RAII.html">RAII Pattern</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec12ProgramToInterfaces.html">Program To Interfaces</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec13SummaryOfPatterns.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/">C++ Libraries</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec07EIGEN.html">Eigen</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec08Boost.html">Boost</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec09ITK.html">ITK</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec10Summary.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/04HPC/">HPC Concepts</a><ul> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/05OpenMP/">Shared memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec01IntroductiontoOpenMP.html">Introduction to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec02Loops.html">Parallelizing loops with OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec03CriticalLocksRaces.html">Races, Locks and Critical regions</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec04Tasks.html">Tasks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec05SchedulingLoadBalancing.html">Scheduling and Load Balancing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec06OpenMPAlternatives.html">Alternatives to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec07FurtherReading.html">Further Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec08Exercise.html">Exercise</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/06MPI/">Distributed memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec01practical.html">MPI in practice</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec02PointToPoint.html">Point to Point</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec03collective.html">Collective communication</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec04advanced.html">More advanced MPI</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/07MPIExample/">MPI Design Example</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec01smoothlife.html">Smooth Life</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec02domain.html">Domain decomposition</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec03halo.html">Halo swap</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec04deployment.html">Deployment</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec05derived.html">Derived Datatypes</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec06overlap.html">Overlap</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/08IO/">MPI File I/O</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec01visualise.html">Visualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec02text.html">Formatted Text IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec03binary.html">Binary IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec04endian.html">Portability</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec05single.html">Writing from a single process</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec06mpiio.html">Parallel IO</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/09Accelerators/">Accelerators</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec01Introduction.html">CPU Vectorisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec02UsingAGPUAsAnAccelerator.html">Using a GPU as an Accelerator</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec03Streaming.html">Streaming</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec04Vectorization.html">Vectorization</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/11Performance/">Post-coding medley, memory leaks, and performance measurements</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/01editor_tools.html">Tools for pretty code</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/02valgrind.html">Memory leaks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/03Performance.html">Profiling a program</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/04MicroBenchmarking.html">Micro-benchmarking</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/95stl/">Appendix - STL</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Intro.html">The Standard Template Library</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Motivation.html">Motivation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec02Containers.html">STL Containers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec03Other.html">Other STL stuff</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/96TemplateMetaProg/">Appendix - TMP</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/96TemplateMetaProg/sec01TemplateMeta.html">Template Meta-Programming</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/97Cloud/">Appendix - Cloud</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec01cloud.html">Cloud computing and big data</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec02exercise1.html">Working in the cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec03exercise2.html">Command line cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec04virtual.html">Virtualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec05exercise3.html">Containers in the Cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec06distributed.html">Distributed computing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec07exercise4.html">MapReduce</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec08exercise5.html">Distributed computing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/98Installation/">Installation</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/01linux.html">Linux</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/02windows.html">Windows</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/03mac.html">Mac</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/04boost.html">Boost</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/99Assignments/">Assessment</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/99Assignments/assignment2.html">MPHYG002 Coursework 2 Parallelising Conway's Game of Life</a> </li> </ul> </li> 
+
+        </ul>
+      </nav>
+
+    </div>
+    <!-- end .sidebar -->
+
+    <nav class="nav nav--top">
+      <ul>
+        
+      </ul>
+    </nav>
+
+  </div>
+  <!-- end .wrapper -->
+
+  </header>
+  <!-- end .header -->
+
+  <div class="site-content wrapper">
+
+    <header class="header header--mobile default-header">
+      <a class="header__open" href="#">
+        <img src="/research-computing-with-cpp/images/ucl-menu.svg" alt="Menu" />
+      </a>
+    </header>
+
+    <div class="site-content__inner clearfix">
+      <div class="site-content__body">
+
+          
+            <nav class="breadcrumb clearfix">
+              <ul class="breadcrumb__list">
+                <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/">UCL</a></li>
+
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/ISD">ISD</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services">Our services</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it">Research IT</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it/training">Training</a></li>
+  
+
+<li class="breadcrumb__item"><a href="/research-computing-with-cpp/">MPHYG002</a></li>
+
+
+
+              </ul>
+            </nav>
+           <div class="site-content__main">
+            
+            
+               <div id="slidelink">
+                 <a href="/research-computing-with-cpp/01research/sec04UnitTesting-reveal.html">Slides</a>
+               </div>
+            
+          
+          
+
+    <h2>Unit Testing</h2>
+
+<h3>What is Unit Testing?</h3>
+
+<p>At a high level</p>
+
+<ul>
+<li>Way of testing code.</li>
+<li>Unit
+
+<ul>
+<li>Smallest &#39;atomic&#39; chunk of code</li>
+<li>i.e. Function, could be a Class</li>
+</ul></li>
+<li>See also:
+
+<ul>
+<li>Integration/System Testing</li>
+<li>Regression Testing</li>
+<li>User Acceptance Testing</li>
+</ul></li>
+</ul>
+
+<h3>Benefits of Unit Testing?</h3>
+
+<ul>
+<li>Certainty of correctness</li>
+<li>(Scientific Rigour)</li>
+<li>Influences and improves design</li>
+<li>Confidence to refactor, improve</li>
+</ul>
+
+<h3>Drawbacks for Unit Testing?</h3>
+
+<ul>
+<li>Don&#39;t know how
+
+<ul>
+<li>This course will help</li>
+</ul></li>
+<li>Takes too much time
+
+<ul>
+<li>Really?</li>
+<li>IT SAVES TIME in the long run</li>
+</ul></li>
+</ul>
+
+<h3>Unit Testing Frameworks</h3>
+
+<p>Generally, all very similar</p>
+
+<ul>
+<li>JUnit (Java), NUnit (.net?), CppUnit, phpUnit,</li>
+<li>Basically
+
+<ul>
+<li>Macros (C++), methods (Java) to test conditions</li>
+<li>Macros (C++), reflection (Java) to run/discover tests</li>
+<li>Ways of looking at results.
+
+<ul>
+<li>Java/Eclipse: Integrated with IDE</li>
+<li>Log file or standard output</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Unit Testing Example</h2>
+
+<h3>How To Start</h3>
+
+<p>We discuss</p>
+
+<ul>
+<li>Basic Example</li>
+<li>Some tips</li>
+</ul>
+
+<p>Then its down to the developer/artist.</p>
+
+<h3>C++ Frameworks</h3>
+
+<p>To Consider:</p>
+
+<ul>
+<li><a href="https://github.com/philsquared/Catch">Catch</a></li>
+<li><a href="https://code.google.com/p/googletest/">GoogleTest</a></li>
+<li><a href="http://qt-project.org/doc/qt-4.8/qtestlib-manual.html">QTestLib</a></li>
+<li><a href="http://www.boost.org/doc/libs/1_57_0/libs/test/doc/html/index.html">BoostTest</a></li>
+<li><a href="http://cpptest.sourceforge.net/">CppTest</a></li>
+<li><a href="http://sourceforge.net/projects/cppunit/">CppUnit</a></li>
+</ul>
+
+<h3>Worked Example</h3>
+
+<ul>
+<li>Borrowed from
+
+<ul>
+<li><a href="https://github.com/philsquared/Catch/blob/master/docs/tutorial.md">Catch Tutorial</a></li>
+<li>and <a href="https://code.google.com/p/googletest/wiki/V1_7_Primer">Googletest Primer</a></li>
+</ul></li>
+<li>We use <a href="https://github.com/philsquared/Catch">Catch</a>, so notes are compilable</li>
+<li>But the concepts are the same</li>
+</ul>
+
+<h3>Code</h3>
+
+<p>To keep it simple for now we do this in one file:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include "../catch/catch.hpp"
+</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">Factorial</span><span class="p">(</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">number</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">number</span> <span class="o">:</span> <span class="n">Factorial</span><span class="p">(</span><span class="n">number</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">TEST_CASE</span><span class="p">(</span> <span class="s">"Factorials are computed"</span><span class="p">,</span> <span class="s">"[factorial]"</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="p">);</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span> <span class="p">);</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3628800</span> <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Produces this output when run:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+
+</code></pre></div>
+<h3>Principles</h3>
+
+<p>So, typically we have</p>
+
+<ul>
+<li>Some <code>#include</code> to get test framework</li>
+<li>Our code that we want to test</li>
+<li>Then make some assertions</li>
+</ul>
+
+<h3>Catch / GoogleTest</h3>
+
+<p>For example, in <a href="https://github.com/philsquared/Catch">Catch</a>:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="c1">// TEST_CASE(&lt;unique test name&gt;, &lt;test case name&gt;)
+</span>    <span class="n">TEST_CASE</span><span class="p">(</span> <span class="s">"Factorials are computed"</span><span class="p">,</span> <span class="s">"[factorial]"</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="p">);</span>
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span> <span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></div>
+<p>In <a href="https://code.google.com/p/googletest/">GoogleTest</a>:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="c1">// TEST(&lt;test case name&gt;, &lt;unique test name&gt;)
+</span>    <span class="n">TEST</span><span class="p">(</span><span class="n">FactorialTest</span><span class="p">,</span> <span class="n">HandlesPositiveInput</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+      <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>
+    <span class="p">}</span>
+</code></pre></div>
+<p>all done via C++ macros.</p>
+
+<h3>Tests That Fail</h3>
+
+<p>What about Factorial of zero?
+Adding</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">);</span>
+</code></pre></div>
+<p>Produces something like:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="n">factorial2</span><span class="p">.</span><span class="n">cc</span><span class="o">:</span><span class="mi">9</span><span class="o">:</span> <span class="n">FAILED</span><span class="o">:</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">)</span>
+    <span class="n">with</span> <span class="n">expansion</span><span class="o">:</span>
+    <span class="mi">0</span> <span class="o">==</span> <span class="mi">1</span>
+</code></pre></div>
+<h3>Fix the Failing Test</h3>
+
+<p>Leading to:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include "../catch/catch.hpp"
+</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">Factorial</span><span class="p">(</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">number</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//return number &lt;= 1 ? number : Factorial(number-1)*number;
+</span>    <span class="k">return</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">Factorial</span><span class="p">(</span><span class="n">number</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">number</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">TEST_CASE</span><span class="p">(</span> <span class="s">"Factorials are computed"</span><span class="p">,</span> <span class="s">"[factorial]"</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="p">);</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span> <span class="p">);</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">Factorial</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3628800</span> <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>which passes:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">===============================================================================
+All tests passed (5 assertions in 1 test case)
+
+
+</code></pre></div>
+<h3>Test Macros</h3>
+
+<p>Each framework has a variety of macros to test for failure. [Check][Check] has:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="n">REQUIRE</span><span class="p">(</span><span class="n">expression</span><span class="p">);</span> <span class="c1">// stop if fail
+</span>    <span class="n">CHECK</span><span class="p">(</span><span class="n">expression</span><span class="p">);</span>   <span class="c1">// doesn't stop if fails
+</span></code></pre></div>
+<p>If an exception is thrown, it&#39;s caught, reported and counts as a failure.</p>
+
+<p>Examples:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="n">CHECK</span><span class="p">(</span> <span class="n">str</span> <span class="o">==</span> <span class="s">"string value"</span> <span class="p">);</span>
+    <span class="n">CHECK</span><span class="p">(</span> <span class="n">thisReturnsTrue</span><span class="p">()</span> <span class="p">);</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">42</span> <span class="p">);</span>
+</code></pre></div>
+<p>Others:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="n">REQUIRE_FALSE</span><span class="p">(</span> <span class="n">expression</span> <span class="p">)</span>
+    <span class="n">CHECK_FALSE</span><span class="p">(</span> <span class="n">expression</span> <span class="p">)</span>
+    <span class="n">REQUIRE_THROWS</span><span class="p">(</span> <span class="n">expression</span> <span class="p">)</span> <span class="err">#</span> <span class="n">Must</span> <span class="k">throw</span> <span class="n">an</span> <span class="n">exception</span>
+    <span class="n">CHECK_THROWS</span><span class="p">(</span> <span class="n">expression</span> <span class="p">)</span> <span class="err">#</span> <span class="n">Must</span> <span class="k">throw</span> <span class="n">an</span> <span class="n">exception</span><span class="p">,</span> <span class="n">and</span> <span class="k">continue</span> <span class="n">testing</span>
+    <span class="n">REQUIRE_THROWS_AS</span><span class="p">(</span> <span class="n">expression</span><span class="p">,</span> <span class="n">exception</span> <span class="n">type</span> <span class="p">)</span>
+    <span class="n">CHECK_THROWS_AS</span><span class="p">(</span> <span class="n">expression</span><span class="p">,</span> <span class="n">exception</span> <span class="n">type</span> <span class="p">)</span>
+    <span class="n">REQUIRE_NOTHROW</span><span class="p">(</span> <span class="n">expression</span> <span class="p">)</span>
+    <span class="n">CHECK_NOTHROW</span><span class="p">(</span> <span class="n">expression</span> <span class="p">)</span>
+</code></pre></div>
+<h3>Testing for Failure</h3>
+
+<p>To re-iterate:</p>
+
+<ul>
+<li>You should test failure cases
+
+<ul>
+<li>Force a failure</li>
+<li>Check that exception is thrown</li>
+<li>If exception is thrown, test passes</li>
+<li>(Some people get confused, expecting test to fail)</li>
+</ul></li>
+<li>Examples
+
+<ul>
+<li>Saving to invalid file name</li>
+<li>Negative numbers passed into double arguments</li>
+<li>Invalid Physical quantities (e.g.  -300 Kelvin)</li>
+</ul></li>
+</ul>
+
+<h3>Setup/Tear Down</h3>
+
+<ul>
+<li>Some tests require objects to exist in memory</li>
+<li>These should be set up
+
+<ul>
+<li>for each test</li>
+<li>for a group of tests</li>
+</ul></li>
+<li>Frameworks do differ in this regards</li>
+</ul>
+
+<h3>Setup/Tear Down in Catch</h3>
+
+<p>Referring to the <a href="https://github.com/philsquared/Catch/blob/master/docs/tutorial.md">Catch Tutorial</a>:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">TEST_CASE</span><span class="p">(</span> <span class="s">"vectors can be sized and resized"</span><span class="p">,</span> <span class="s">"[vector]"</span> <span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span> <span class="mi">5</span> <span class="p">);</span>
+
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span> <span class="p">);</span>
+    <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="p">);</span>
+
+    <span class="n">SECTION</span><span class="p">(</span> <span class="s">"resizing bigger changes size and capacity"</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span> <span class="mi">10</span> <span class="p">);</span>
+
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">10</span> <span class="p">);</span>
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">SECTION</span><span class="p">(</span> <span class="s">"resizing smaller changes size but not capacity"</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">);</span>
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">SECTION</span><span class="p">(</span> <span class="s">"reserving bigger changes capacity but not size"</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">10</span> <span class="p">);</span>
+
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span> <span class="p">);</span>
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">SECTION</span><span class="p">(</span> <span class="s">"reserving smaller does not change size or capacity"</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span> <span class="p">);</span>
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<p>So, Setup/Tear down is done before/after each section.    </p>
+
+<h2>Unit Testing Tips</h2>
+
+<h3>C++ design</h3>
+
+<ul>
+<li>Stuff from above applies to Classes / Functions</li>
+<li>Think about arguments:
+
+<ul>
+<li>Code should be hard to use incorrectly.</li>
+<li>Use <code>const</code>, <code>unsigned</code> etc.</li>
+<li>Testing forces you to sort these out.</li>
+</ul></li>
+</ul>
+
+<h3>Test Driven Development (TDD)</h3>
+
+<ul>
+<li>Methodology
+
+<ol>
+<li>Write a test</li>
+<li>Run test, should fail</li>
+<li>Implement/Debug functionality</li>
+<li>Run test
+
+<ol>
+<li>if succeed goto 5</li>
+<li>else goto  3</li>
+</ol></li>
+<li>Refactor to tidy up</li>
+</ol></li>
+</ul>
+
+<h3>TDD in practice</h3>
+
+<ul>
+<li>Aim to get good coverage</li>
+<li>Some people quote 70% or more</li>
+<li>What are the downsides?</li>
+<li>Don&#39;t write &#39;brittle&#39; tests</li>
+</ul>
+
+<h3>Behaviour Driven Development (BDD)</h3>
+
+<ul>
+<li>Behaviour Driven Development (BDD)
+
+<ul>
+<li>Refers to a <a href="https://en.wikipedia.org/wiki/Behavior-driven_development">whole area</a> of software engineering</li>
+<li>With associated tools and practices</li>
+<li>Think about end-user perspective</li>
+<li>Think about the desired behaviour not the implementation</li>
+<li>See <a href="https://codeutopia.net/blog/2015/03/01/unit-testing-tdd-and-bdd/">Jani Hartikainen</a> article.</li>
+</ul></li>
+</ul>
+
+<h3>TDD Vs BDD</h3>
+
+<ul>
+<li>TDD
+
+<ul>
+<li>Test/Design based on methods available</li>
+<li>Often ties in implementation details</li>
+</ul></li>
+<li>BDD
+
+<ul>
+<li>Test/Design based on behaviour<br></li>
+<li>Code to interfaces (later in course)</li>
+</ul></li>
+<li>Subtly different</li>
+<li>Aim for BDD</li>
+</ul>
+
+<h3>Anti-Pattern 1: Setters/Getters</h3>
+
+<p>Testing every Setter/Getter.</p>
+
+<p>Consider:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">   <span class="k">class</span> <span class="nc">Atom</span> <span class="p">{</span>
+
+     <span class="k">public</span><span class="o">:</span>
+       <span class="kt">void</span> <span class="n">SetAtomicNumber</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span> <span class="n">m_AtomicNumber</span> <span class="o">=</span> <span class="n">number</span><span class="p">;</span> <span class="p">}</span>
+       <span class="kt">int</span> <span class="n">GetAtomicNumber</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_AtomicNumber</span><span class="p">;</span> <span class="p">}</span>
+       <span class="kt">void</span> <span class="n">SetName</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span> <span class="n">m_Name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
+       <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetName</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_Name</span><span class="p">;</span> <span class="p">}</span>
+     <span class="k">private</span><span class="o">:</span>
+       <span class="kt">int</span> <span class="n">m_AtomicNumber</span><span class="p">;</span>
+       <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_Name</span><span class="p">;</span>
+   <span class="p">};</span>
+</code></pre></div>
+<p>and tests like:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="n">TEST_CASE</span><span class="p">(</span> <span class="s">"Testing Setters/Getters"</span><span class="p">,</span> <span class="s">"[Atom]"</span> <span class="p">)</span> <span class="p">{</span>
+
+        <span class="n">Atom</span> <span class="n">a</span><span class="p">;</span>
+
+        <span class="n">a</span><span class="p">.</span><span class="n">SetAtomicNumber</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">a</span><span class="p">.</span><span class="n">GetAtomicNumber</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="n">a</span><span class="p">.</span><span class="n">SetName</span><span class="p">(</span><span class="s">"Hydrogen"</span><span class="p">);</span>
+        <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">a</span><span class="p">.</span><span class="n">GetName</span><span class="p">()</span> <span class="o">==</span> <span class="s">"Hydrogen"</span><span class="p">);</span>
+</code></pre></div>
+<ul>
+<li>It feels tedious</li>
+<li>But you want good coverage</li>
+<li>This often puts people off testing</li>
+<li>It also produces &quot;brittle&quot;, where 1 change breaks many things</li>
+</ul>
+
+<h3>Anti-Pattern 1: Suggestion.</h3>
+
+<ul>
+<li>Focus on behaviour.
+
+<ul>
+<li>What would end-user expect to be doing?</li>
+<li>How would end-user be using this class?</li>
+<li>Write tests that follow the use-case</li>
+<li>Gives a more logical grouping</li>
+<li>One test can cover &gt; 1 function</li>
+<li>i.e. move away from slavishly testing each function</li>
+</ul></li>
+<li>Minimise interface.
+
+<ul>
+<li>Provide the bare number of methods</li>
+<li>Don&#39;t provide setters if you don&#39;t want them</li>
+<li>Don&#39;t provide getters unless the user needs something</li>
+<li>Less to test. Use documentation to describe why.</li>
+</ul></li>
+</ul>
+
+<h3>Anti-Pattern 2: Constructing Dependent Classes</h3>
+
+<ul>
+<li>Sometimes, by necessity we test groups of classes</li>
+<li>Or one class genuinely Has-A contained class</li>
+<li>But the contained class is expensive, or could be changed in future</li>
+</ul>
+
+<h3>Anti-Pattern 2: Suggestion</h3>
+
+<ul>
+<li>Read up on <a href="https://martinfowler.com/articles/injection.html">Dependency Injection</a></li>
+<li>Enables you to create and inject dummy test classes</li>
+<li>So, testing again used to break down design, and increase flexibility</li>
+</ul>
+
+<h3>Summary BDD Vs TDD</h3>
+
+<p>Aim to write:</p>
+
+<ul>
+<li>Most concise description of requirements as unit tests</li>
+<li>Smallest amount of code to pass tests</li>
+<li>... i.e. based on behaviour</li>
+</ul>
+
+<h2>Any Questions?</h2>
+
+<h3>End of Lecture?</h3>
+
+<ul>
+<li>Example git repo, CMake, Catch template project:
+
+<ul>
+<li><a href="https://github.com/MattClarkson/CMakeCatchTemplate">https://github.com/MattClarkson/CMakeCatchTemplate</a></li>
+</ul></li>
+</ul>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- end .site-content -->
+
+  <footer class="footer wrapper">
+  <div class="footer__inner clearfix">
+             <article class="block block--col-1">
+                <h2 class="as-h5">Facilities</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/departments/faculties">Faculties and departments</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/library/">Library</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/museums">Museums and Collections</a></li>
+					<li class="footer__item"><a href="http://www.thebloomsbury.com/">UCL Bloomsbury Theatre</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/maps">Maps and buildings</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-2">
+                <h2 class="as-h5">Locations</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/london">UCL and London</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/australia">UCL Australia</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/qatar">UCL Qatar</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/global">UCL Global</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-3">
+                <h2 class="as-h5">Connect with us</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/alumni">Alumni</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/enterprise">Businesses</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/media">Media Relations</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/hr/jobs/">Jobs</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/makeyourmark">Give to UCL</a></li>
+				</ul>
+
+      </article>
+  
+    <hr class="clear">
+    <ul class="footer__list list-unstyled zero-bottom">
+      <li class="footer__item text-muted small">University College London,&nbsp;Gower Street,&nbsp;London,&nbsp;WC1E 6BT&nbsp;Tel:&nbsp;+44&nbsp;(0)&nbsp;20 7679 2000</li>
+    </ul>
+    <ul class="list-inline footer__list list-unstyled list-inline--divided">
+      <li class="text-muted small">Copyright © 2018-01-22 17:49:11 +0000 UCL</li>
+      <li class="text-muted small"><a href="#">Disclaimer</a>
+      </li>
+      <li class="text-muted small"><a href="#">Freedom of Information</a>
+      </li>
+      <li class="text-muted small"><a href="#">Accessibility</a>
+      </li>
+      <li class="text-muted small"><a href="#">Privacy</a>
+      </li>
+      <li class="text-muted small"><a href="#">Cookies</a>
+      </li>
+      <li class="text-muted small"><a href="#">Contact Us</a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+
+  <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+  <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+
+</body>
+
+</html>
+

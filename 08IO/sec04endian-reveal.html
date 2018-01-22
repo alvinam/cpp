@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Portability</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Portability</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="endianness-and-portability" class="titleslide slide level2"><h1>Endianness and Portability</h1></section><section id="portability" class="slide level3">
+<h1>Portability</h1>
+<p>There's a big problem with binary files: the bytes that get written for a <code>double</code> on one platform are different from those on others.</p>
+<p>This is particularly problematic in HPC: the architecture of your laptop is unlikely to be the same as on ARCHER, so if when ship your output files back, your nice visualisation code will not work.</p>
+</section><section id="length-of-datatypes" class="slide level3">
+<h1>Length of datatypes</h1>
+<p>The C++ standard <strong>does not</strong> specify how many bytes are used to represent a <code>double</code>: just that it is more than a <code>float</code>! (And similarly for other datatypes.)</p>
+<p>This means that your data will be represented differently on different platforms.</p>
+<p>Therefore, don't forget to use <code>sizeof(type)</code> whenever working with byte-level routines like MPI, if you want your code to work on both your laptop, and your local supercomputer.</p>
+</section><section id="endianness" class="slide level3">
+<h1>Endianness</h1>
+<p>Another problem is Endianness: a <code>double</code> is actually <strong>almost</strong> always 8 bytes, with a 1 bit sign, 11 bit exponent, and 52 bit mantissa. (The IEEE standard).</p>
+<p>But there's still ambiguity in how these bytes are ordered.</p>
+<p>The 4-byte standard signed integer &quot;5&quot; can be represented as:</p>
+<blockquote>
+<p>00000101 00000000 00000000 00000000 (little endian)</p>
+</blockquote>
+<p>or as</p>
+<blockquote>
+<p>00000000 00000000 00000000 00000101 (big endian)</p>
+</blockquote>
+</section><section id="numpy-dtypes" class="slide level3">
+<h1>NumPy dtypes</h1>
+<p>As long as you're aware of these problems, you can usually make your visualiser compatible with the endianness and byte counts of the data you're getting off your system.</p>
+<p>If you're visualising with python you can set your datatype to be e.g. <code>&lt;f8</code> for a little endian 8-byte floating point, or <code>&gt;i4</code> for a big-endian 4-byte signed integer.</p>
+</section><section id="xdr" class="slide level3">
+<h1>XDR</h1>
+<p>XDR, or 'extensible data representation' is a portability standard defined for binary IO. If you write through XDR, data will be converted to the XDR standard representation.</p>
+<p>XDR data is big endian, has everything in multiples of 4 bytes, and supports a rich library of appropriate types.</p>
+</section><section id="writing-with-xdr" class="slide level3">
+<h1>Writing with XDR</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="ot">#include &lt;cstdio&gt;</span>
+<span class="ot">#include &lt;rpc/types.h&gt;</span>
+<span class="ot">#include &lt;rpc/xdr.h&gt;</span></code></pre>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">void</span> XDRWriter::Write() {
+
+  <span class="dt">char</span> *start_to_write = <span class="kw">reinterpret_cast</span>&lt;<span class="dt">char</span> *&gt;(smooth.StartOfWritingBlock());
+  xdr_vector(&amp;xdrfile, start_to_write, local_element_count, <span class="kw">sizeof</span>(<span class="dt">double</span>),
+             <span class="kw">reinterpret_cast</span>&lt;xdrproc_t&gt;(xdr_double));
+}</code></pre>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  xdrstdio_create(&amp;xdrfile, myFile, XDR_ENCODE);</code></pre>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Parallel IO</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Parallel IO</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="parallel-io" class="titleslide slide level2"><h1>Parallel IO</h1></section><section id="serialising-on-a-single-process" class="slide level3">
+<h1>Serialising on a single process</h1>
+<p>We know that *any task which is not <span class="math">\(O(1/p)\)</span> will eventually dominate the cost as number of processes increases, preventing scaling.</p>
+<p>This is Amdahl's law again.</p>
+<p>The master-process-writes approach introduces this problem; IO quickly becomes the dominant part of the task, preventing weak scaling as problem sizes and processor counts increase.</p>
+</section><section id="parallel-file-systems" class="slide level3">
+<h1>Parallel file systems</h1>
+<p>Supercomputers provide <strong>parallel file systems</strong>. These store each file in multiple &quot;stripes&quot;: one can obtain as much parallelism in IO as there are stripes in files.</p>
+<p>To make use of this, it is necessary to use MPI's parallel IO library, MPI-IO.</p>
+</section><section id="introduction-to-mpi-io" class="slide level3">
+<h1>Introduction to MPI-IO</h1>
+<p>MPI-IO works by accessing files as data buffers like core MPI_Send and so on:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  MPI_File_write(outfile, smooth.StartOfWritingBlock(), local_element_count, MPI_DOUBLE,
+                 MPI_STATUS_IGNORE);</code></pre>
+</section><section id="opening-parallel-file" class="slide level3">
+<h1>Opening parallel file</h1>
+<p>All processes work together to open and create the file:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  MPI_File_open(MPI_COMM_WORLD, <span class="kw">const_cast</span>&lt;<span class="dt">char</span> *&gt;(fname.str().c_str()),
+                MPI_MODE_CREATE | MPI_MODE_RDWR, MPI_INFO_NULL, &amp;outfile);</code></pre>
+</section><section id="finding-your-place" class="slide level3">
+<h1>Finding your place</h1>
+<p>The hard part is synchronising things so that each process writes it's section of the file:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  <span class="dt">int</span> offset = <span class="dv">4</span> * <span class="kw">sizeof</span>(<span class="dt">int</span>) +                                      <span class="co">// The header</span>
+               rank * local_element_count * <span class="kw">sizeof</span>(<span class="dt">double</span>) +          <span class="co">// Offset within the frame</span>
+               smooth.Frame() * total_element_count * <span class="kw">sizeof</span>(<span class="dt">double</span>); <span class="co">// Frame offset in the file</span>
+
+  MPI_File_seek(outfile, offset, MPI_SEEK_SET);</code></pre>
+</section><section id="high-level-research-io-libraries" class="slide level3">
+<h1>High level research IO libraries</h1>
+<p>Standard libraries for scientific data formats such as <a href="http://www.hdfgroup.org/HDF5/">HDF5</a> support parallel IO.</p>
+<p>You should use these if you can, as you'll get the benefits of both endianness-portability and parallel IO, together with built-in metadata support and compatibility with other tools.</p>
+<p>Introduction to HDF5 or NetCDF is beyond the scope of this course, but familiarising yourself with these is strongly encouraged!</p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

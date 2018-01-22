@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Using Libraries</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Using Libraries</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="using-libraries" class="titleslide slide level2"><h1>Using libraries</h1></section><section id="package-managers" class="slide level3">
+<h1>Package Managers</h1>
+<ul>
+<li>Package Manager (Linux/Mac)
+<ul>
+<li>Precompiled</li>
+<li>Stable choice</li>
+<li>Inter-dependencies work</li>
+</ul></li>
+<li>Linux
+<ul>
+<li><code>sudo apt-get install</code></li>
+<li><code>sudo yum install</code></li>
+</ul></li>
+<li>Mac
+<ul>
+<li><code>sudo port install</code></li>
+<li><code>brew install</code></li>
+</ul></li>
+</ul>
+</section><section id="windows" class="slide level3">
+<h1>Windows</h1>
+<ul>
+<li>Libraries typically:
+<ul>
+<li>Randomly installed location</li>
+<li>In system folders</li>
+<li>In developer folders</li>
+<li>In build folder</li>
+</ul></li>
+<li>Please clean your machine!!</li>
+<li>Try <a href="http://chocolatey.org">Chocolatey</a> package manager</li>
+</ul>
+</section><section id="package-managers-1" class="slide level3">
+<h1>Package Managers</h1>
+<ul>
+<li>So, if you can use standard versions of 3rd party libraries</li>
+<li>Package managers are a good way to go</li>
+<li>You just need to specify what versions so your collaborator can check</li>
+</ul>
+</section><section id="problems" class="slide level3">
+<h1>Problems</h1>
+<ul>
+<li>As soon as you hit a bug in a library
+<ul>
+<li>How to update?</li>
+<li>Knock on effects
+<ul>
+<li>Cascading updates</li>
+<li>Inconsistent development environment</li>
+</ul></li>
+</ul></li>
+</ul>
+</section><section id="build-your-own" class="slide level3">
+<h1>Build Your Own</h1>
+<ul>
+<li>2 basic approaches
+<ul>
+<li>External / Individual build
+<ul>
+<li>Build dependencies externally</li>
+<li>Point your software at those packages</li>
+</ul></li>
+<li>SuperBuild / Meta-Build
+<ul>
+<li>Write code to download all dependencies</li>
+<li>The correct version numbers is stored in code</li>
+</ul></li>
+</ul></li>
+</ul>
+</section><section id="external-individual-build" class="slide level3">
+<h1>External / Individual Build</h1>
+<p>For example</p>
+<pre><code>C:\build\ITK-v1
+C:\build\ITK-v1-build
+C:\build\ITK-v1-install
+C:\build\VTK-v2
+C:\build\VTK-v2-build
+C:\build\VTK-v2-install
+C:\build\MyProject
+C:\build\MyProject-build</code></pre>
+<p>We setup <code>MyProject-build</code> to know the location of ITK and VTK install folder.</p>
+</section><section id="meta-build-super-build" class="slide level3">
+<h1>Meta-Build / Super-Build</h1>
+<p>For example</p>
+<pre><code>C:\build\MyProject
+C:\build\MyProject-SuperBuild\ITK\src
+C:\build\MyProject-SuperBuild\ITK\build
+C:\build\MyProject-SuperBuild\ITK\install
+C:\build\MyProject-SuperBuild\VTK\src
+C:\build\MyProject-SuperBuild\VTK\build
+C:\build\MyProject-SuperBuild\VTK\install
+C:\build\MyProject-SuperBuild\MyProject-build</code></pre>
+<p>We setup <code>MyProject-build</code> to know the location of ITK and VTK that it itself compiled.</p>
+</section><section id="pros-cons" class="slide level3">
+<h1>Pro's / Con's</h1>
+<ul>
+<li>External Build
+<ul>
+<li>Pro's - build each dependency once</li>
+<li>Con's - collaborators will do this inconsistently</li>
+<li>Con's - how to manage multiple versions of all dependencies</li>
+</ul></li>
+<li>Meta Build
+<ul>
+<li>Pro's - all documented, all self-contained, easier to share</li>
+<li>Con's - Slow build? Not a problem if you only run <code>make</code> in sub-folder <code>MyProject-build</code></li>
+</ul></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

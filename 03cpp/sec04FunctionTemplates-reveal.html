@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Function Templates</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Function Templates</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="function-templates" class="titleslide slide level2"><h1>Function Templates</h1></section><section id="function-templates-example" class="slide level3">
+<h1>Function Templates Example</h1>
+<ul>
+<li>Credit to <a href="http://www.cplusplus.com/doc/tutorial/functions2" title="Overloaded Functions and Template Functions">www.cplusplus.com</a></li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// function template</span>
+<span class="ot">#include &lt;iostream&gt;</span>
+<span class="kw">using</span> <span class="kw">namespace</span> std;
+
+<span class="kw">template</span> &lt;<span class="kw">class</span> T&gt; <span class="co">// class|typename</span>
+T sum (T a, T b)
+{
+  T result;
+  result = a + b;
+  <span class="kw">return</span> result;
+}
+
+<span class="dt">int</span> main () {
+  <span class="dt">int</span> i=<span class="dv">5</span>, j=<span class="dv">6</span>;
+  <span class="dt">double</span> f=<span class="fl">2.0</span>, g=<span class="fl">0.5</span>;
+  cout &lt;&lt; sum&lt;<span class="dt">int</span>&gt;(i,j) &lt;&lt; <span class="ch">&#39;\n&#39;</span>;
+  cout &lt;&lt; sum&lt;<span class="dt">double</span>&gt;(f,g) &lt;&lt; <span class="ch">&#39;\n&#39;</span>;
+  <span class="kw">return</span> <span class="dv">0</span>;
+}</code></pre>
+<ul>
+<li>And produces this output when run</li>
+</ul>
+<pre><code>11
+2.5
+</code></pre>
+</section><section id="why-use-function-templates" class="slide level3">
+<h1>Why Use Function Templates?</h1>
+<ul>
+<li>Instead of function overloading
+<ul>
+<li>Reduce your code duplication</li>
+<li>Reduce your maintenance</li>
+<li>Reduce your effort</li>
+<li>Also see this <a href="http://www.codeproject.com/Articles/257589/An-Idiots-Guide-to-Cplusplus-Templates-Part" title="Templates Tutorial">Additional tutorial</a>.</li>
+</ul></li>
+</ul>
+</section><section id="language-definition-1" class="slide level3">
+<h1>Language Definition 1</h1>
+<ul>
+<li>From the <a href="http://en.cppreference.com/w/cpp/language/function_template">language reference</a></li>
+</ul>
+<pre><code>template &lt; parameter-list &gt; function-declaration</code></pre>
+<ul>
+<li>so</li>
+</ul>
+<pre><code>template &lt; class T &gt;  // note &#39;class&#39;
+void MyFunction(T a, T b)
+{
+  // do something
+}</code></pre>
+<ul>
+<li>or</li>
+</ul>
+<pre><code>template &lt; typename T1, typename T2 &gt;  // note &#39;typename&#39;
+T1 MyFunctionTwoArgs(T1 a, T2 b)
+{
+  // do something
+}</code></pre>
+</section><section id="language-definition-2" class="slide level3">
+<h1>Language Definition 2</h1>
+<ul>
+<li>Also
+<ul>
+<li>Can use <code>class</code> or <code>typename</code>.</li>
+<li>I prefer <code>typename</code>.</li>
+<li>Template parameter can apply to references, pointers, return types, arrays etc.</li>
+</ul></li>
+</ul>
+</section><section id="default-argument-resolution" class="slide level3">
+<h1>Default Argument Resolution</h1>
+<ul>
+<li>Given:</li>
+</ul>
+<pre><code>double GetAverage&lt;typename T&gt;(const std::vector&lt;T&gt;&amp; someNumbers);</code></pre>
+<ul>
+<li>then:</li>
+</ul>
+<pre><code>std::vector&lt;double&gt; myNumbers;
+double result = GetAverage(myNumbers);</code></pre>
+<ul>
+<li>will call:</li>
+</ul>
+<pre><code>double GetAverage&lt;double&gt;(const std::vector&lt;double&gt;&amp; someNumbers);</code></pre>
+<ul>
+<li>So, if function parameters can inform the compiler uniquely as to which function to instantiate, its automatically compiled.</li>
+</ul>
+</section><section id="explicit-argument-resolution---1" class="slide level3">
+<h1>Explicit Argument Resolution - 1</h1>
+<ul>
+<li>However, given:</li>
+</ul>
+<pre><code>double GetAverage&lt;typename T&gt;(const T&amp; a, const T&amp; b);</code></pre>
+<ul>
+<li>and:</li>
+</ul>
+<pre><code>int a, b;
+int result = GetAverage(a, b);</code></pre>
+<ul>
+<li>But you don't want the int version called (due to integer division perhaps), you can:</li>
+</ul>
+<pre><code>double result = GetAverage&lt;double&gt;(a, b);</code></pre>
+</section><section id="explicit-argument-resolution---2" class="slide level3">
+<h1>Explicit Argument Resolution - 2</h1>
+<ul>
+<li>equivalent to</li>
+</ul>
+<p><code>GetAverage&lt;double&gt;(static_cast&lt;double&gt;(a), static_cast&lt;double&gt;(b));</code></p>
+<ul>
+<li><p>i.e. name the template function parameter explicitly.</p></li>
+<li>Cases for Explicit Template Argument Specification
+<ul>
+<li>Force compilation of a specific version (eg. int as above)</li>
+<li>Also if method parameters do not allow compiler to deduce anything eg. <code>PrintSize()</code> method.</li>
+</ul></li>
+</ul>
+</section><section id="beware-of-code-bloat" class="slide level3">
+<h1>Beware of Code Bloat</h1>
+<ul>
+<li>Given:</li>
+</ul>
+<pre><code>double GetMax&lt;typename T1, typename T2&gt;(const &amp;T1, const &amp;T2);</code></pre>
+<ul>
+<li>and:</li>
+</ul>
+<pre><code>double r1 = GetMax(1,2);
+double r2 = GetMax(1,2.0);
+double r3 = GetMax(1.0,2.0);</code></pre>
+<ul>
+<li>The compiler will generate 3 different max functions.</li>
+<li>Be Careful
+<ul>
+<li>Executables/libraries get larger</li>
+<li>Compilation time will increase</li>
+<li>Error messages get more verbose</li>
+</ul></li>
+</ul>
+</section><section id="two-stage-compilation" class="slide level3">
+<h1>Two Stage Compilation</h1>
+<ul>
+<li>Basic syntax checking (eg. brackets, semi-colon, etc), when <code>#include</code>'d</li>
+<li>But only compiled when instantiated (eg. check existence of + operator).</li>
+</ul>
+</section><section id="instantiation" class="slide level3">
+<h1>Instantiation</h1>
+<ul>
+<li>Object Code is only really generated if code is used</li>
+<li>Template functions can be
+<ul>
+<li>.h file only</li>
+<li>.h file that includes separate .cxx/.txx/.hxx file (e.g. ITK)</li>
+<li>.h file and separate .cxx/.txx file (sometimes by convention a .hpp file)</li>
+</ul></li>
+<li>In general
+<ul>
+<li>Most libraries/people prefer header only implementations</li>
+</ul></li>
+</ul>
+</section><section id="explicit-instantiation---1" class="slide level3">
+<h1>Explicit Instantiation - 1</h1>
+<ul>
+<li>Language Reference <a href="http://en.cppreference.com/w/cpp/language/function_template" title="Function Template Reference">here</a></li>
+<li><p><a href="http://msdn.microsoft.com/en-us/library/by56e477%28VS.80%29.aspx" title="Microsoft Explicit Instantiation Example">Microsoft Example</a></p></li>
+<li><p>Given (library) header:</p></li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#ifndef explicitInstantiation_h</span>
+<span class="ot">#define explicitInstantiation_h</span>
+<span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt; <span class="dt">void</span> f(T s);
+<span class="ot">#endif</span></code></pre>
+<ul>
+<li>Given (library) implementation:</li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;iostream&gt;</span>
+<span class="ot">#include &lt;typeinfo&gt;</span>
+<span class="ot">#include &quot;explicitInstantiation.h&quot;</span>
+<span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt;
+<span class="dt">void</span> f(T s)
+{
+    std::cout &lt;&lt; <span class="kw">typeid</span>(T).name() &lt;&lt; <span class="st">&quot; &quot;</span> &lt;&lt; s &lt;&lt; <span class="ch">&#39;\n&#39;</span>;
+}
+<span class="kw">template</span> <span class="dt">void</span> f&lt;<span class="dt">double</span>&gt;(<span class="dt">double</span>); <span class="co">// instantiates f&lt;double&gt;(double)</span>
+<span class="kw">template</span> <span class="dt">void</span> f&lt;&gt;(<span class="dt">char</span>); <span class="co">// instantiates f&lt;char&gt;(char), template argument deduced</span>
+<span class="kw">template</span> <span class="dt">void</span> f(<span class="dt">int</span>); <span class="co">// instantiates f&lt;int&gt;(int), template argument deduced</span></code></pre>
+</section><section id="explicit-instantiation---2" class="slide level3">
+<h1>Explicit Instantiation - 2</h1>
+<ul>
+<li>Given client code:</li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;iostream&gt;</span>
+<span class="ot">#include &quot;explicitInstantiation.h&quot;</span>
+
+<span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span>** argv)
+{
+  std::cout &lt;&lt; <span class="st">&quot;Matt, double 1.0=&quot;</span> &lt;&lt; std::endl;
+  f(<span class="fl">1.0</span>);
+  std::cout &lt;&lt; <span class="st">&quot;Matt, char a=&quot;</span> &lt;&lt; std::endl;
+  f(&#39;a&#39;);
+  std::cout &lt;&lt; <span class="st">&quot;Matt, int 2=&quot;</span> &lt;&lt; std::endl;
+  f(<span class="dv">2</span>);
+<span class="co">//  std::cout &lt;&lt; &quot;Matt, float 3.0=&quot; &lt;&lt; std::endl;</span>
+<span class="co">//  f&lt;float&gt;(static_cast&lt;float&gt;(3.0));  // compile error</span>
+}</code></pre>
+<ul>
+<li>We get:</li>
+</ul>
+<pre><code>Matt, double 1.0=
+d 1
+Matt, char a=
+c a
+Matt, int 2=
+i 2
+</code></pre>
+</section><section id="explicit-instantiation---3" class="slide level3">
+<h1>Explicit Instantiation - 3</h1>
+<ul>
+<li>Explicit Instantiation:
+<ul>
+<li>Forces instantiation of the function</li>
+<li>Must appear after the definition</li>
+<li>Must appear only once for given argument list</li>
+<li>Stops implicit instantiation</li>
+</ul></li>
+<li>So, mainly used by compiled library providers</li>
+<li>Clients then <code>#include</code> header and link to library</li>
+</ul>
+<pre><code>Linking CXX executable explicitInstantiationMain.x
+Undefined symbols for architecture x86_64:
+  &quot;void f&lt;float&gt;(float)&quot;, referenced from:</code></pre>
+</section><section id="implicit-instantiation---1" class="slide level3">
+<h1>Implicit Instantiation - 1</h1>
+<ul>
+<li>Instantiated as they are used</li>
+<li><p>Normally via <code>#include</code> header files.</p></li>
+<li><p>Given (library) header, that containts implementation:</p></li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#ifndef explicitInstantiation_h</span>
+<span class="ot">#define explicitInstantiation_h</span>
+<span class="ot">#include &lt;iostream&gt;</span>
+<span class="ot">#include &lt;typeinfo&gt;</span>
+<span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt; <span class="dt">void</span> f(T s) { std::cout &lt;&lt; <span class="kw">typeid</span>(T).name() &lt;&lt; <span class="st">&quot; &quot;</span> &lt;&lt; s &lt;&lt; <span class="ch">&#39;\n&#39;</span>; }
+<span class="ot">#endif</span></code></pre>
+</section><section id="implicit-instantiation---2" class="slide level3">
+<h1>Implicit Instantiation - 2</h1>
+<ul>
+<li>Given client code:</li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;iostream&gt;</span>
+<span class="ot">#include &quot;implicitInstantiation.h&quot;</span>
+
+<span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span>** argv)
+{
+  std::cout &lt;&lt; <span class="st">&quot;Matt, double 1.0=&quot;</span> &lt;&lt; std::endl;
+  f(<span class="fl">1.0</span>);
+  std::cout &lt;&lt; <span class="st">&quot;Matt, char a=&quot;</span> &lt;&lt; std::endl;
+  f(&#39;a&#39;);
+  std::cout &lt;&lt; <span class="st">&quot;Matt, int 2=&quot;</span> &lt;&lt; std::endl;
+  f(<span class="dv">2</span>);
+  std::cout &lt;&lt; <span class="st">&quot;Matt, float 3.0=&quot;</span> &lt;&lt; std::endl;
+  f&lt;<span class="dt">float</span>&gt;(<span class="kw">static_cast</span>&lt;<span class="dt">float</span>&gt;(<span class="fl">3.0</span>));  <span class="co">// no compile error</span>
+}</code></pre>
+<ul>
+<li>We get:</li>
+</ul>
+<pre><code>Matt, double 1.0=
+d 1
+Matt, char a=
+c a
+Matt, int 2=
+i 2
+Matt, float 3.0=
+f 3
+</code></pre>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

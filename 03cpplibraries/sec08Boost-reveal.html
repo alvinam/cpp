@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Boost</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Boost</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="using-boost" class="titleslide slide level2"><h1>Using Boost</h1></section><section id="introduction" class="slide level3">
+<h1>Introduction</h1>
+<ul>
+<li><a href="http://www.boost.org/">Boost</a> is &quot;...one of the most highly regarded and expertly designed C++ library projects in the world.&quot;</li>
+<li>A <a href="http://www.boost.org/doc/libs/1_57_0/">large (121+)</a> collection of C++ libraries</li>
+<li>Aim to establish standards, contribute to C++11, C++17 etc.</li>
+<li>Hard to use C++ without bumping into Boost at some point</li>
+<li>It's heavily templated</li>
+<li>Many libraries header only, some require compiling.</li>
+</ul>
+</section><section id="libraries-included" class="slide level3">
+<h1>Libraries included</h1>
+<ul>
+<li>Log, FileSystem, Asio, Serialization, Pool (memory) ...</li>
+<li>Regexp, String Algo, DateTime, ...</li>
+<li>Math, Odeint, Graph, Polygon, Rational, ...</li>
+<li>Each has good documentation, and tutorial, and unit tests, and is widely compiled.</li>
+</ul>
+</section><section id="getting-started" class="slide level3">
+<h1>Getting started</h1>
+<ul>
+<li>Default build system: <code>bjam</code></li>
+<li>Also CMake version of boost project, possible deprecated.</li>
+<li>Once installed, many header only libraries, so similar to Eigen.</li>
+</ul>
+</section><section id="installing-pre-compiled" class="slide level3">
+<h1>Installing pre-compiled</h1>
+<ul>
+<li>Linux:
+<ul>
+<li><code>sudo apt-get install boost</code></li>
+<li><code>sudo apt-get install libboost1.53-dev</code></li>
+</ul></li>
+<li>Mac
+<ul>
+<li>Homebrew (brew) or Macports (port)</li>
+</ul></li>
+<li>Windows
+<ul>
+<li>Precompiled binaries? Probably you need to build from source.</li>
+</ul></li>
+</ul>
+</section><section id="compiling-from-source" class="slide level3">
+<h1>Compiling from source</h1>
+<ul>
+<li><a href="http://www.boost.org/doc/libs/1_57_0/libs/regex/doc/html/boost_regex/install.html">Follow build instructions here</a></li>
+<li>Or use bigger project with it as part of build system
+<ul>
+<li>NifTK, MITK, Slicer, Gimias (medical imaging)</li>
+</ul></li>
+</ul>
+</section><section id="c-principles" class="slide level3">
+<h1>C++ Principles</h1>
+<p>(i.e. why introduce Boost on this course)</p>
+<ul>
+<li>Boost uses
+<ul>
+<li>Templates</li>
+<li>Widespread use of:
+<ul>
+<li>Generic Programming</li>
+<li>Template Meta-Programming</li>
+</ul></li>
+<li>Functors</li>
+</ul></li>
+</ul>
+</section><section id="c-function-pointers---1" class="slide level3">
+<h1>C Function Pointers - 1</h1>
+<ul>
+<li>Useful if using <a href="http://www.nr.com/">Numerical Recipes in C</a></li>
+<li>See <a href="http://en.wikipedia.org/wiki/Function_pointer">Wikipedia</a> article and tutorials online</li>
+</ul>
+<p>This:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;stdio.h&gt;  </span><span class="co">/* for printf */</span>
+<span class="dt">double</span> cm_to_inches(<span class="dt">double</span> cm) {
+  <span class="kw">return</span> cm / <span class="fl">2.54</span>;
+}
+<span class="dt">int</span> main(<span class="dt">void</span>) {
+  <span class="dt">double</span> (*func1)(<span class="dt">double</span>)            = cm_to_inches;
+  printf(<span class="st">&quot;Converting %f cm to %f inches by calling function.</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="fl">5.0</span>, cm_to_inches(<span class="fl">5.0</span>));
+  printf(<span class="st">&quot;Converting %f cm to %f inches by deref pointer.</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="fl">15.0</span>, func1(<span class="fl">15.0</span>));
+  <span class="kw">return</span> <span class="dv">0</span>;
+}</code></pre>
+<p>Produces:</p>
+<pre><code>Converting 5.000000 cm to 1.968504 inches by calling function.
+Converting 15.000000 cm to 5.905512 inches by deref pointer.
+</code></pre>
+</section><section id="c-function-pointers---2" class="slide level3">
+<h1>C Function Pointers - 2</h1>
+<ul>
+<li>Function pointers can be passed to functions</li>
+</ul>
+<p>This:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;stdio.h&gt;  </span>
+<span class="ot">#include &lt;math.h&gt;  </span>
+<span class="dt">double</span> integrate(<span class="dt">double</span> (*funcp)(<span class="dt">double</span>), <span class="dt">double</span> lo, <span class="dt">double</span> hi) {
+  <span class="dt">double</span>  sum = <span class="fl">0.0</span>;
+  <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>;  i &lt;= <span class="dv">100</span>;  i++)
+  {
+    sum += (*funcp)(i / <span class="fl">100.0</span> * (hi - lo) + lo);
+  }
+  <span class="kw">return</span> sum / <span class="fl">100.0</span>;
+}
+<span class="dt">int</span> main(<span class="dt">void</span>) {
+  <span class="dt">double</span>  (*fp)(<span class="dt">double</span>) = sin;
+  printf(<span class="st">&quot;sum(sin): %f</span><span class="ch">\n</span><span class="st">&quot;</span>, integrate(fp, <span class="fl">0.0</span>, <span class="fl">1.0</span>));
+  <span class="kw">return</span> <span class="dv">0</span>;
+}</code></pre>
+<p>Produces:</p>
+<pre><code>sum(sin): 0.463901
+</code></pre>
+</section><section id="c-function-pointers---3" class="slide level3">
+<h1>C Function Pointers - 3</h1>
+<ul>
+<li>Function pointers
+<ul>
+<li>often used for callbacks, cost functions in optimisation etc.</li>
+<li>called by name, or dereference pointer</li>
+<li>are generally stateless</li>
+</ul></li>
+</ul>
+</section><section id="c-function-objects---1" class="slide level3">
+<h1>C++ Function Objects - 1</h1>
+<ul>
+<li>We can define an object to represent a function
+<ul>
+<li>Called <a href="http://en.wikipedia.org/wiki/Function_object">Function Object</a> or Functor</li>
+</ul></li>
+</ul>
+<p>This:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;vector&gt;</span>
+<span class="ot">#include &lt;algorithm&gt;</span>
+<span class="ot">#include &lt;iostream&gt;</span>
+<span class="kw">struct</span> IntComparator
+{
+  <span class="dt">bool</span> <span class="kw">operator</span>()(<span class="dt">const</span> <span class="dt">int</span> &amp;a, <span class="dt">const</span> <span class="dt">int</span> &amp;b) <span class="dt">const</span>
+  {
+    <span class="kw">return</span> a &lt; b;
+  }
+};
+<span class="co">/*</span>
+<span class="co">template &lt;class RandomIt, class Compare&gt;</span>
+<span class="co">void sort(RandomIt first, RandomIt last, Compare comp);</span>
+<span class="co">*/</span>
+<span class="dt">int</span> main()
+{
+    std::vector&lt;<span class="dt">int</span>&gt; items;
+    items.push_back(<span class="dv">1</span>);
+    items.push_back(<span class="dv">3</span>);
+    items.push_back(<span class="dv">2</span>);
+    std::sort(items.begin(), items.end(), IntComparator());
+    std::cout &lt;&lt; items[<span class="dv">0</span>] &lt;&lt; <span class="st">&quot;,&quot;</span> &lt;&lt; items[<span class="dv">1</span>] &lt;&lt; <span class="st">&quot;,&quot;</span> &lt;&lt; items[<span class="dv">2</span>] &lt;&lt; std::endl;
+    <span class="kw">return</span> <span class="dv">0</span>;
+}</code></pre>
+<p>Produces:</p>
+<pre><code>1,2,3
+</code></pre>
+</section><section id="c-function-objects---2" class="slide level3">
+<h1>C++ Function Objects - 2</h1>
+<ul>
+<li>But function objects can
+<ul>
+<li>Have state</li>
+<li>Have member variables</li>
+<li>Be complex objects, created by any means</li>
+<li>e.g. Cost function, similarity between two images</li>
+</ul></li>
+</ul>
+</section><section id="cmake-for-boost" class="slide level3">
+<h1>CMake for Boost</h1>
+<ul>
+<li>If installed correctly, should be something like:</li>
+</ul>
+<pre><code>set(Boost_ADDITIONAL_VERSIONS 1.53.0 1.54.0 1.53 1.54)
+find_package(Boost 1.53.0)
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+endif()</code></pre>
+</section><section id="boost-example" class="slide level3">
+<h1>Boost Example</h1>
+<ul>
+<li>With 121+ libraries, can't give tutorial on each one!</li>
+<li>Pick one small numerical example</li>
+<li>Illustrate the use of functors in ODE integration</li>
+</ul>
+</section><section id="using-boost-odeint" class="slide level3">
+<h1>Using Boost odeint</h1>
+<ul>
+<li>Its a numerical example, as we are doing scientific computing!</li>
+<li>As with many libraries, just include right header</li>
+</ul>
+<pre><code>#include &lt;boost/numeric/odeint.hpp&gt; // Include ODE solver library
+                                    // just to check our build system found it</code></pre>
+<ul>
+<li>See <a href="http://www.boost.org/doc/libs/1_57_0/libs/numeric/odeint/doc/html/index.html">this tutorial</a></li>
+</ul>
+</section><section id="boost-odeint---1" class="slide level3">
+<h1>Boost odeint - 1</h1>
+<p>Given these global definitions:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">const</span> <span class="dt">double</span> gam = <span class="fl">0.15</span>;
+<span class="kw">typedef</span> std::vector&lt; <span class="dt">double</span> &gt; state_type;
+
+<span class="co">// This is functor class</span></code></pre>
+</section><section id="boost-odeint---2" class="slide level3">
+<h1>Boost odeint - 2</h1>
+<p>First define a functor for the function to integrate:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="kw">class</span> harm_osc {
+    <span class="dt">double</span> m_gam; <span class="co">// class can have member variables, state etc.</span>
+<span class="kw">public</span>:
+    harm_osc( <span class="dt">double</span> gam ) : m_gam(gam) { }
+
+    <span class="co">// odeint integrators normally call f(x, dxdt, t)</span>
+    <span class="dt">void</span> <span class="kw">operator</span>() ( <span class="dt">const</span> state_type &amp;x , state_type &amp;dxdt , <span class="dt">const</span> <span class="dt">double</span> <span class="co">/* t */</span> )
+    {
+        dxdt[<span class="dv">0</span>] = x[<span class="dv">1</span>];
+        dxdt[<span class="dv">1</span>] = -x[<span class="dv">0</span>] - m_gam*x[<span class="dv">1</span>];
+    }
+};
+
+<span class="co">// This is observer to record output, and is also a functor class</span></code></pre>
+</section><section id="boost-odeint---3" class="slide level3">
+<h1>Boost odeint - 3</h1>
+<p>Define an observer to collect graph-points:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="kw">struct</span> push_back_state_and_time
+{
+    std::vector&lt; state_type &gt;&amp; m_states;
+    std::vector&lt; <span class="dt">double</span> &gt;&amp; m_times;
+
+    push_back_state_and_time( std::vector&lt; state_type &gt; &amp;states , std::vector&lt; <span class="dt">double</span> &gt; &amp;times )
+    : m_states( states ) , m_times( times ) { }
+
+    <span class="dt">void</span> <span class="kw">operator</span>()( <span class="dt">const</span> state_type &amp;x , <span class="dt">double</span> t )
+    {
+        m_states.push_back( x );
+        m_times.push_back( t );
+    }
+};</code></pre>
+</section><section id="boost-odeint---4" class="slide level3">
+<h1>Boost odeint - 4</h1>
+<p>The run it:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">int</span> main(<span class="dt">void</span>) {
+
+  state_type x(<span class="dv">2</span>);
+  x[<span class="dv">0</span>] = <span class="fl">1.0</span>; <span class="co">// start at x=1.0, p=0.0</span>
+  x[<span class="dv">1</span>] = <span class="fl">0.0</span>;
+
+  std::vector&lt;state_type&gt; x_vec; <span class="co">// vector of vectors</span>
+  std::vector&lt;<span class="dt">double</span>&gt; times;     <span class="co">// stores each time point</span>
+
+  harm_osc harmonic_oscillator(<span class="fl">0.15</span>);
+  size_t steps = boost::numeric::odeint::integrate(
+    harmonic_oscillator ,
+    x , <span class="fl">0.0</span> , <span class="fl">10.0</span> , <span class="fl">0.1</span> ,
+    push_back_state_and_time( x_vec , times ) );
+
+  <span class="kw">for</span>( size_t i=<span class="dv">0</span>; i&lt;=steps; i++ )
+  {
+    std::cout &lt;&lt; times[i] &lt;&lt; <span class="ch">&#39;\t&#39;</span> &lt;&lt; x_vec[i][<span class="dv">0</span>] &lt;&lt; <span class="ch">&#39;\t&#39;</span> &lt;&lt; x_vec[i][<span class="dv">1</span>] &lt;&lt; <span class="ch">&#39;\n&#39;</span>;
+  }
+
+}</code></pre>
+</section><section id="boost-odeint---4-1" class="slide level3">
+<h1>Boost odeint - 4</h1>
+<p>Produces:</p>
+<pre><code>0   1   0
+0.1 0.995029    -0.0990884
+0.342911    0.942763    -0.32773
+0.59639 0.832373    -0.537274
+0.865439    0.662854    -0.714058
+1.15445 0.436595    -0.839871
+1.44346 0.184494    -0.892171
+1.70128 -0.0446646  -0.875731
+1.9591  -0.262234   -0.80313
+2.21692 -0.454545   -0.681207
+2.48815 -0.616993   -0.510476
+2.77613 -0.733844   -0.296963
+3.06411 -0.7866 -0.0685387
+3.35209 -0.773719   0.155753
+3.64008 -0.699015   0.358007
+3.92806 -0.571123   0.522852
+4.21604 -0.402601   0.638582
+4.50402 -0.20875    0.697943
+4.792   -0.0062679  0.698535
+5.07998 0.188159    0.642795
+5.36797 0.359199    0.537596
+5.65595 0.494053    0.39351
+5.94393 0.583381    0.223796
+6.23191 0.621907    0.0432166
+6.51989 0.608673    -0.133212
+6.80787 0.546935    -0.291443
+7.09586 0.44372 -0.419492
+7.39491 0.303457    -0.510857
+7.69397 0.143005    -0.553869
+7.99302 -0.0228226  -0.546913
+8.29208 -0.179394   -0.492786
+8.59113 -0.313525   -0.398255
+8.89019 -0.414555   -0.273299
+9.18925 -0.475166   -0.130101
+9.4883  -0.49187    0.0181101
+9.78736 -0.465143   0.158247
+10  -0.421907   0.246407
+</code></pre>
+</section><section id="why-boost-for-numerics" class="slide level3">
+<h1>Why Boost for Numerics</h1>
+<ul>
+<li>Broader question is
+<ul>
+<li>Why someone else's library? Boost or some other.</li>
+</ul></li>
+<li>Advanced use of Template Meta Programming, Traits
+<ul>
+<li>Performance optimisations</li>
+<li>Alternative implementations
+<ul>
+<li>CUDA via Thrust</li>
+<li>MPI</li>
+<li>etc</li>
+</ul></li>
+</ul></li>
+<li>You just focus on your bit</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

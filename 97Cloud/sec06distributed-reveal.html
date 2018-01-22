@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Distributed computing</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Distributed computing</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="distributed-computing" class="titleslide slide level2"><h1>Distributed computing</h1></section><section id="distributed-computing-1" class="slide level3">
+<h1>Distributed computing</h1>
+<p>Dividing a problem into many tasks means analysis can be shared across multiple computers, in a parallel fashion.</p>
+<p>Cloud computing systems have made distributed computing increasingly accessible to individual users.</p>
+<p>Introduced by Google in 2004, MapReduce is a popular model that supports distributed computing on large data sets across clusters of computers.</p>
+</section><section id="mapreduce" class="slide level3">
+<h1>MapReduce</h1>
+<p>MapReduce systems are built around the concepts of:</p>
+<ul>
+<li>a mapper, in which the master node takes an input, separates it into sub-problems, and distributes those to worker notes</li>
+<li>a 'shuffle' step to distribute data from the mapper</li>
+<li>a reducer which collates the answers to the sub-problems and combines them to solves the initial question.</li>
+</ul>
+</section><section id="distributed-file-systems" class="slide level3">
+<h1>Distributed file systems</h1>
+<p>Distributed file systems</p>
+<ul>
+<li>developed to provide reliable data storage across distributed systems</li>
+<li>replicates data across multiple hosts to achieve reliability</li>
+</ul>
+</section><section id="hadoop" class="slide level3">
+<h1>Hadoop</h1>
+<p>Apache Hadoop:</p>
+<ul>
+<li>framework for distributed processing of large data sets</li>
+<li>scales from single servers to many machines</li>
+<li>includes Hadoop MapReduce and the Hadoop Distributed File System</li>
+</ul>
+<!-- 
+http://hadoop.apache.org/docs/r1.2.1/mapred_tutorial.html#Reducer
+
+Apache Hadoop is an implementation of MapReduce. Amazon Elastic MapReduce is an implementation of Hadoop MapReduce on the Amazon Web Services.
+
+Combines map reduce with HDFS. Can be run across multiple servers. It is possible to use Hadoop across multiple servers. Requires fairly involved configuration process. Installing Hadoop, opening firewalls etc. 
+
+Nodes, cluster etc. Need to explain Master and Core Instance. What are bootstrap actions?
+
+Fortunately services offer pre-configured clusters. We will use Amazon Elastic MapReduce...
+
+Hive is a tool for managing data on a distributed encironment and provides an SQL-like qery language.
+
+Using "streaming" any language can be used to implement the map and reduce.
+-->
+
+
+
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

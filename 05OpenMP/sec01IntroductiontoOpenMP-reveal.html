@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Introduction to OpenMP</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Introduction to OpenMP</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="openmp" class="titleslide slide level2"><h1>OpenMP</h1></section><section id="openmp-basic-syntax" class="slide level3">
+<h1>OpenMP basic syntax</h1>
+<ul>
+<li>Annotate code with <code>#pragma omp ...</code>
+<ul>
+<li>This instruct the compiler in how to parallize the code</li>
+<li><code>#pragma</code>s are a instructions to the compiler</li>
+<li>Not part of the language</li>
+<li>i.e. <code>#pragma once</code> alternative to include guards</li>
+<li>Compiler will usually ignore pragmas that it doesn't understand</li>
+<li>All OpenMP pragmas start with <code>#pragma omp</code></li>
+</ul></li>
+<li>OpenMP must typically be activated when compiling code</li>
+</ul>
+</section><section id="openmp-library" class="slide level3">
+<h1>OpenMP library</h1>
+<ul>
+<li>OpenMP library:
+<ul>
+<li>It provides utility functions.</li>
+<li><code>omp_get_num_threads()</code> ...</li>
+<li>Use with <code>#include &lt;omp.h&gt;</code></li>
+</ul></li>
+</ul>
+</section><section id="compiler-support" class="slide level3">
+<h1>Compiler support</h1>
+<p>OpenMP is supported by most compilers, except LLVM/Clang(++)</p>
+<ul>
+<li>OpenMP must typically be activated with a command line flags at compile time. Different for different compilers. Examples:
+<ul>
+<li>Intel, Linux, Mac <code>-openmp</code></li>
+<li>Intel, Windows <code>/Qopenmp</code></li>
+<li>GCC/G++, <code>-fopenmp</code></li>
+</ul></li>
+</ul>
+<p>A fork of clang with OpenMP <a href="http://clang-omp.github.io/">exists</a>. It might make it into the mainline eventually.</p>
+</section><section id="cmake-support" class="slide level3">
+<h1> CMake Support</h1>
+<p>CMake knows how to deal with OpenMP, mostly:</p>
+<pre class="sourceCode CMake"><code class="sourceCode cmake"><span class="kw">find_package</span>(OpenMP)
+
+<span class="fu">add_program</span>(my_threaded_monster main.cc)
+<span class="kw">if</span>(OPENMP_FOUND)
+  <span class="fu">target_compile_options</span>(my_threaded_monster PUBLIC <span class="st">&quot;</span><span class="dv">${OpenMP_CXX_FLAGS}</span><span class="st">&quot;</span>)
+  <span class="kw">target_link_libraries</span>(my_threaded_monster <span class="ot">PUBLIC</span> <span class="st">&quot;</span><span class="dv">${OpenMP_CXX_FLAGS}</span><span class="st">&quot;</span>)
+<span class="kw">endif</span>()</code></pre>
+</section><section id="hello-world" class="slide level3">
+<h1>Hello world</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;iostream&gt;</span>
+<span class="ot">#include &lt;omp.h&gt;</span>
+
+<span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span> ** argv)
+{
+    <span class="ot">#pragma omp parallel</span>
+    {   
+        <span class="dt">int</span> threadnum = <span class="dv">0</span>;
+        <span class="dt">int</span> numthreads = <span class="dv">0</span>;
+        threadnum = omp_get_thread_num();
+        numthreads = omp_get_num_threads();
+        std::cout &lt;&lt; <span class="st">&quot;Hello World, I am &quot;</span> &lt;&lt; threadnum 
+            &lt;&lt; <span class="st">&quot; of &quot;</span> &lt;&lt; numthreads &lt;&lt; std::endl;
+    }
+}</code></pre>
+<ul>
+<li><code>#pragma omp parallel</code> marks a block is to be run in parallel</li>
+<li>In this case all threads do the same</li>
+<li>No real work sharing</li>
+</ul>
+</section><section id="issues-with-this-example" class="slide level3">
+<h1>Issues with this example</h1>
+<ul>
+<li><code>std::cout</code> is not thread safe. Output from different threads may be mixed
+<ul>
+<li>Try running the code</li>
+<li>Mixed output?</li>
+</ul></li>
+<li>All threads call <code>omp_get_num_threds()</code> with the same result
+<ul>
+<li>Might be wasteful if this was a slow function</li>
+<li>Everybody stores a copy of numthreads</li>
+<li>Waste of memory</li>
+</ul></li>
+</ul>
+</section><section id="slightly-improved-hello-world" class="slide level3">
+<h1>Slightly improved hello world</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;iostream&gt;</span>
+<span class="ot">#ifdef _OPENMP</span>
+<span class="ot">#include &lt;omp.h&gt;</span>
+<span class="ot">#endif</span>
+
+<span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span> ** argv)
+{
+    <span class="dt">int</span> threadnum = <span class="dv">0</span>;
+    <span class="dt">int</span> numthreads = <span class="dv">0</span>;
+    <span class="ot">#pragma omp parallel shared(numthreads), private(threadnum)</span>
+    {   
+        <span class="ot">#ifdef _OPENMP</span>
+            threadnum = omp_get_thread_num();
+            <span class="ot">#pragma omp single</span>
+            {
+                numthreads = omp_get_num_threads();
+            }
+        <span class="ot">#endif</span>
+        <span class="ot">#pragma omp critical</span>
+        {
+            std::cout &lt;&lt; <span class="st">&quot;Hello World, I am &quot;</span> &lt;&lt; threadnum &lt;&lt; 
+                <span class="st">&quot; of &quot;</span> &lt;&lt; numthreads &lt;&lt; std::endl;
+        }
+    }
+}</code></pre>
+</section><section id="improvements" class="slide level3">
+<h1>Improvements:</h1>
+<ul>
+<li>Use <code>#pragma omp critical</code> to only allow one thread to write at a time
+<ul>
+<li>Comes with a performance penalty since only one thread is running this code at a time</li>
+</ul></li>
+<li>Use Preprocessor <code>#ifdef _OPENMP</code> to only include code if OpenMP is enabled
+<ul>
+<li>Code works both with and without OpenMP</li>
+</ul></li>
+<li>Variables defined outside parallel regions
+<ul>
+<li>Must be careful to tell OpenMP how to handle them</li>
+<li><code>shared</code>, <code>private</code>, <code>first private</code></li>
+<li>More about this later</li>
+</ul></li>
+<li><code>#pragma omp single</code>
+<ul>
+<li>Only one thread calls <code>get_num_threds()</code></li>
+</ul></li>
+</ul>
+</section><section id="running-openmp-code-for-the-course" class="slide level3">
+<h1>Running OpenMP code for the course</h1>
+<p>If you have a multicore computer with GCC or other suitable compiler you can run it locally.</p>
+<p>Otherwise you can use GCC on aristotle</p>
+<ul>
+<li><code>ssh username@aristotle.rc.ucl.ac.uk</code></li>
+<li><code>g++ -fopenmp -O3 mycode.cc</code></li>
+</ul>
+</section><section id="references" class="slide level3">
+<h1>References</h1>
+<ul>
+<li><a href="http://openmp.org/">OpenMP homepage</a></li>
+<li><a href="http://openmp.org/mp-documents/OpenMP-4.0-C.pdf">OpenMP cheat sheet</a></li>
+<li><a href="http://www.openmp.org/mp-documents/OpenMP4.0.0.pdf">OpenMP specifications</a></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

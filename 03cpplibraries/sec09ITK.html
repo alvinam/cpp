@@ -1,0 +1,723 @@
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 7]> <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="lt-ie9 no-js"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset=utf-8 />
+    <meta name="author" content="UCL" />
+    <meta name="description" content="UCL Homepage" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- social meta -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@uclnews">
+    <meta name="twitter:title" content="UCL - London's Global University">
+    <meta name="twitter:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students.">
+    <meta name="twitter:creator" content="@UCLWAMS">
+    <meta name="twitter:image:src" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png">
+    <meta property="og:image" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png" />
+    <meta property="og:title" content="UCL - London's Global University" />
+    <meta property="og:url" content="http://www.ucl.ac.uk" />
+    <meta property="og:site_name" content="UCL" />
+    <meta property="og:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students." />
+    <meta property="og:type" content="website" />
+    <meta property="og:profile_id" content="uclofficial" />
+    <!-- end social meta -->
+
+  <title>ITK</title>
+
+  <link href="/research-computing-with-cpp/css/screen.min.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <link href="/research-computing-with-cpp/css/jekyll-styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/local_styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/ipython.css" rel="stylesheet" type="text/css">
+
+  <link rel="shortcut icon" href="/research-computing-with-cpp/images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="/research-computing-with-cpp/favicon-152.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="/research-computing-with-cpp/favicon-144.png">
+
+  <script src="/research-computing-with-cpp/js/lib/modernizr-custom.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+
+    <script>
+      var cuttingTheMustard = document.querySelector && window.localStorage && window.addEventListener;
+
+      Modernizr.load({
+        //cutting the mustard as used by the BBC
+        test: cuttingTheMustard
+        //if old browser load the shiv
+        ,
+        nope: [
+          '/research-computing-with-cpp/js/lib/html5shiv-printshiv.min.js', '/research-computing-with-cpp/js/lib/respond.min.js'
+        ]
+      });
+      //set conditional assets for main.js
+      var globalSiteSpecificVars = {
+        pathToJquery: "/research-computing-with-cpp/js/lib/jquery-1.9.1.min",
+        googleAnalyticsIdsArray: [] //specify array of site specific id's NOT UCL generic UA-943297-1
+      }
+      if (cuttingTheMustard) {
+        globalSiteSpecificVars.pathToJquery = '/research-computing-with-cpp/js/lib/jquery-2.1.1.min';
+      }
+    </script>
+    <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+    <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+</head>
+
+<body id="index" class="layout-vertical layout-vertical--nav-1col">
+
+  <header class="header header--desktop">
+
+  <a class="header__close" href="#">
+    <img src="/research-computing-with-cpp/images/close.png" class="lazy" data-src="//static.ucl.ac.uk/indigo/images/close.png" alt="X" />Close</a>
+
+  <div class="masthead">
+
+  <div class="wrapper clearfix">
+
+      <div class="masthead__search">
+					<form action="#" method="get">
+						<div class="search-form">
+							<input type="search" placeholder="Search UCL websites, people and more" class="search-form__input search-form__input--search" value="">
+						</div>
+						<input type="submit" name="sumbit" value="Go" class="btn search-form__input search-form__input--submit" />
+					</form>
+				</div>
+
+
+				<nav class="masthead__nav m-clear">
+					<ul class="masthead__list">
+						<li class="masthead__item"><a href="index.php" class="masthead__link">UCL Home</a>
+						</li>
+						<li class="masthead__item"><a href="prospective-students.php" class="masthead__link">Prospective students</a>
+						</li>
+						<li class="masthead__item"><a href="current-students.php" class="masthead__link">Current students</a>
+						</li>
+						<li class="masthead__item"><a href="staff.php" class="masthead__link">Staff</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+</div><!-- end .masthead -->
+
+
+  <div class="wrapper">
+
+    <div class="photograph">
+  <div class="brand">
+    <p class="brand__heading">MPHYG002: Research Computing with C++</p>
+    <a href="/" class="brand__link"><span class="visually-hidden">Home</span></a>
+    <img src="//cdn.ucl.ac.uk/img/blank.gif" data-src="//static.ucl.ac.uk/indigo/images/ucl-logo.svg" alt="UCL logo" id="logo" class="brand__logo lazy">  
+  </div>
+</div>
+
+
+    <div class="sidebar">
+
+      <nav class="nav nav--mobile">
+        <ul>
+          
+
+
+
+
+        </ul>
+      </nav>
+
+      <nav class="nav nav--left">
+        <ul>
+          
+
+ <li class="active"> <a href="/research-computing-with-cpp/01research/">C++ for Research</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/01research/sec01Research.html">C++ in Research</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec02Git.html">Git</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec03CMake.html">CMake</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec04UnitTesting.html">Unit Testing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/02libraries/">Including Libraries</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec01ChoosingLibraries.html">Choosing Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LibraryBasics.html">Library Basics</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LinkingLibraries.html">Linking Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec03UsingLibraries.html">Using Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec04Examples.html">Examples</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05CMakeCatchTemplate.html">CMakeCatchTemplate</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05Summary.html">Summary</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/">Better C++</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec01LanguageRecap.html">Object Oriented Review</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec02EssentialReading.html">Essential Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec03TemplatesIntro.html">Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec04FunctionTemplates.html">Function Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec05ClassTemplates.html">Class Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec06Exceptions.html">Error Handling</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec07Inheritance.html">Inheritance</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec08DependencyInjection.html">Dependency Injection</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec09ConstructionPatterns.html">Construction Patterns</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec10MemoryManagement.html">Smart Pointers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec11RAII.html">RAII Pattern</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec12ProgramToInterfaces.html">Program To Interfaces</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec13SummaryOfPatterns.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/">C++ Libraries</a><ul><li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/sec07EIGEN.html">Eigen</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/sec08Boost.html">Boost</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/sec09ITK.html">ITK</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/sec10Summary.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/04HPC/">HPC Concepts</a><ul> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/05OpenMP/">Shared memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec01IntroductiontoOpenMP.html">Introduction to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec02Loops.html">Parallelizing loops with OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec03CriticalLocksRaces.html">Races, Locks and Critical regions</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec04Tasks.html">Tasks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec05SchedulingLoadBalancing.html">Scheduling and Load Balancing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec06OpenMPAlternatives.html">Alternatives to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec07FurtherReading.html">Further Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec08Exercise.html">Exercise</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/06MPI/">Distributed memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec01practical.html">MPI in practice</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec02PointToPoint.html">Point to Point</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec03collective.html">Collective communication</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec04advanced.html">More advanced MPI</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/07MPIExample/">MPI Design Example</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec01smoothlife.html">Smooth Life</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec02domain.html">Domain decomposition</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec03halo.html">Halo swap</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec04deployment.html">Deployment</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec05derived.html">Derived Datatypes</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec06overlap.html">Overlap</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/08IO/">MPI File I/O</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec01visualise.html">Visualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec02text.html">Formatted Text IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec03binary.html">Binary IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec04endian.html">Portability</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec05single.html">Writing from a single process</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec06mpiio.html">Parallel IO</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/09Accelerators/">Accelerators</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec01Introduction.html">CPU Vectorisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec02UsingAGPUAsAnAccelerator.html">Using a GPU as an Accelerator</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec03Streaming.html">Streaming</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec04Vectorization.html">Vectorization</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/11Performance/">Post-coding medley, memory leaks, and performance measurements</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/01editor_tools.html">Tools for pretty code</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/02valgrind.html">Memory leaks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/03Performance.html">Profiling a program</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/04MicroBenchmarking.html">Micro-benchmarking</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/95stl/">Appendix - STL</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Intro.html">The Standard Template Library</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Motivation.html">Motivation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec02Containers.html">STL Containers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec03Other.html">Other STL stuff</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/96TemplateMetaProg/">Appendix - TMP</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/96TemplateMetaProg/sec01TemplateMeta.html">Template Meta-Programming</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/97Cloud/">Appendix - Cloud</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec01cloud.html">Cloud computing and big data</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec02exercise1.html">Working in the cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec03exercise2.html">Command line cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec04virtual.html">Virtualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec05exercise3.html">Containers in the Cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec06distributed.html">Distributed computing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec07exercise4.html">MapReduce</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec08exercise5.html">Distributed computing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/98Installation/">Installation</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/01linux.html">Linux</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/02windows.html">Windows</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/03mac.html">Mac</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/04boost.html">Boost</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/99Assignments/">Assessment</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/99Assignments/assignment2.html">MPHYG002 Coursework 2 Parallelising Conway's Game of Life</a> </li> </ul> </li> 
+
+        </ul>
+      </nav>
+
+    </div>
+    <!-- end .sidebar -->
+
+    <nav class="nav nav--top">
+      <ul>
+        
+      </ul>
+    </nav>
+
+  </div>
+  <!-- end .wrapper -->
+
+  </header>
+  <!-- end .header -->
+
+  <div class="site-content wrapper">
+
+    <header class="header header--mobile default-header">
+      <a class="header__open" href="#">
+        <img src="/research-computing-with-cpp/images/ucl-menu.svg" alt="Menu" />
+      </a>
+    </header>
+
+    <div class="site-content__inner clearfix">
+      <div class="site-content__body">
+
+          
+            <nav class="breadcrumb clearfix">
+              <ul class="breadcrumb__list">
+                <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/">UCL</a></li>
+
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/ISD">ISD</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services">Our services</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it">Research IT</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it/training">Training</a></li>
+  
+
+<li class="breadcrumb__item"><a href="/research-computing-with-cpp/">MPHYG002</a></li>
+
+
+
+              </ul>
+            </nav>
+           <div class="site-content__main">
+            
+            
+               <div id="slidelink">
+                 <a href="/research-computing-with-cpp/03cpplibraries/sec09ITK-reveal.html">Slides</a>
+               </div>
+            
+          
+          
+
+    <h2>Using ITK</h2>
+
+<h3>Introduction</h3>
+
+<ul>
+<li><a href="http://www.itk.org">Insight Segmentation and Registration Toolkit</a></li>
+<li>Insight Journal for library additions</li>
+<li>Large community in medical image processing</li>
+<li>Deliberately no visualisation, see <a href="http://www.vtk.org">VTK</a>.</li>
+</ul>
+
+<h3>C++ Principles</h3>
+
+<ul>
+<li>Heavy use of Generic Programming</li>
+<li>Use of Template Meta-Programming</li>
+<li>Often perceived by &quot;scientific programmers&quot; (Matlab) as difficult</li>
+<li>Aim: demonstrate here, that we can now use it!</li>
+<li>Of particular interest
+
+<ul>
+<li>typedefs - make life easier</li>
+<li>SmartPointers - reduce leaking memory</li>
+<li>Iterators - fast image access</li>
+<li>Object Factories - extensibility</li>
+</ul></li>
+</ul>
+
+<h3>Architecture Concept</h3>
+
+<ul>
+<li>Use of pipeline of filters</li>
+<li>Simple to plug image processing filters together</li>
+<li>Sometimes difficult to manage memory for huge images</li>
+</ul>
+
+<h3>Filter Usage - 1</h3>
+
+<p>We work through a simple filter program. First, typedefs are aliases.</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+
+  <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">Dimension</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="kt">int</span> <span class="n">PixelType</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">itk</span><span class="o">::</span><span class="n">Image</span><span class="o">&lt;</span><span class="n">PixelType</span><span class="p">,</span> <span class="n">Dimension</span><span class="o">&gt;</span> <span class="n">ImageType</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">itk</span><span class="o">::</span><span class="n">AddImageFilter</span><span class="o">&lt;</span><span class="n">ImageType</span><span class="p">,</span> <span class="n">ImageType</span><span class="o">&gt;</span> <span class="n">AddFilterType</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">itk</span><span class="o">::</span><span class="n">ImageFileReader</span><span class="o">&lt;</span><span class="n">ImageType</span><span class="o">&gt;</span> <span class="n">ImageReaderType</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">itk</span><span class="o">::</span><span class="n">ImageFileWriter</span><span class="o">&lt;</span><span class="n">ImageType</span><span class="o">&gt;</span> <span class="n">ImageWriterType</span><span class="p">;</span>
+
+</code></pre></div>
+<h3>Filter Usage - 2</h3>
+
+<p>Objects are constructed:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+  <span class="n">ImageReaderType</span><span class="o">::</span><span class="n">Pointer</span> <span class="n">reader1</span> <span class="o">=</span> <span class="n">ImageReaderType</span><span class="o">::</span><span class="n">New</span><span class="p">();</span>
+  <span class="n">ImageReaderType</span><span class="o">::</span><span class="n">Pointer</span> <span class="n">reader2</span> <span class="o">=</span> <span class="n">ImageReaderType</span><span class="o">::</span><span class="n">New</span><span class="p">();</span>
+  <span class="n">AddFilterType</span><span class="o">::</span><span class="n">Pointer</span> <span class="n">addFilter</span> <span class="o">=</span> <span class="n">AddFilterType</span><span class="o">::</span><span class="n">New</span><span class="p">();</span>
+  <span class="n">ImageWriterType</span><span class="o">::</span><span class="n">Pointer</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">ImageWriterType</span><span class="o">::</span><span class="n">New</span><span class="p">();</span>
+
+  <span class="c1">// eg. if not using typedefs
+</span>  <span class="c1">//itk::ImageFileWriter&lt; itk::Image&lt;int, 2&gt; &gt;::Pointer writer
+</span>  <span class="c1">//  = itk::ImageFileWriter&lt; itk::Image&lt;int, 2&gt; &gt;::New();
+</span>
+</code></pre></div>
+<h3>Filter Usage - 3</h3>
+
+<p>Pipeline is executed:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+  <span class="n">reader1</span><span class="o">-&gt;</span><span class="n">SetFileName</span><span class="p">(</span><span class="s">"inputFileName1.nii"</span><span class="p">);</span>
+  <span class="n">reader2</span><span class="o">-&gt;</span><span class="n">SetFileName</span><span class="p">(</span><span class="s">"inputFileName2.nii"</span><span class="p">);</span>
+  <span class="n">addFilter</span><span class="o">-&gt;</span><span class="n">SetInput</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">reader1</span><span class="o">-&gt;</span><span class="n">GetOutput</span><span class="p">());</span>
+  <span class="n">addFilter</span><span class="o">-&gt;</span><span class="n">SetInput</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">reader2</span><span class="o">-&gt;</span><span class="n">GetOutput</span><span class="p">());</span>
+  <span class="n">writer</span><span class="o">-&gt;</span><span class="n">SetInput</span><span class="p">(</span><span class="n">addFilter</span><span class="o">-&gt;</span><span class="n">GetOutput</span><span class="p">());</span>
+  <span class="n">writer</span><span class="o">-&gt;</span><span class="n">SetFileName</span><span class="p">(</span><span class="s">"outputFileName1.nii"</span><span class="p">);</span>
+  <span class="c1">//writer-&gt;Update(); // commented out, as filenames are fake.
+</span>                      <span class="c1">// and build system for lecture notes
+</span>                      <span class="c1">// tries to run the program.
+</span>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div>
+<p>More information on ITK Pipeline can be found in the
+<a href="http://www.itk.org/ItkSoftwareGuide.pdf">ITK Software Guide</a>.</p>
+
+<h3>Smart Pointer Intro</h3>
+
+<p>Lets look at some interesting features.</p>
+
+<ul>
+<li>Smart Pointer
+
+<ul>
+<li>Class, like a pointer, but &#39;Smarter&#39; (clever)</li>
+<li>Typically, once allocated will automatically destroy the pointed to object</li>
+<li>Implementations vary, STL, ITK, VTK, Qt, so read the docs</li>
+</ul></li>
+<li>So, in each class e.g. itkAddImageFilter</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="n">AddImageFilter</span>     <span class="n">Self</span>
+<span class="k">typedef</span> <span class="n">SmartPointer</span><span class="o">&lt;</span><span class="n">Self</span><span class="o">&gt;</span> <span class="n">Pointer</span>
+</code></pre></div>
+<p>and so, its used like</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">ClassName</span><span class="o">::</span><span class="n">Pointer</span> <span class="n">variableName</span> <span class="o">=</span> <span class="n">ClassName</span><span class="o">::</span><span class="n">New</span><span class="p">();</span>
+</code></pre></div>
+<h3>Smart Pointer Class</h3>
+
+<p>In the SmartPointer itself</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">  <span class="cm">/** Constructor to pointer p  */</span>
+  <span class="n">SmartPointer</span> <span class="p">(</span><span class="n">ObjectType</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">:</span>
+    <span class="n">m_Pointer</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+  <span class="p">{</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">Register</span><span class="p">();</span> <span class="p">}</span>
+
+  <span class="cm">/** Destructor  */</span>
+  <span class="o">~</span><span class="n">SmartPointer</span> <span class="p">()</span>
+  <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">UnRegister</span><span class="p">();</span>
+    <span class="n">m_Pointer</span> <span class="o">=</span> <span class="n">ITK_SP_NULLPTR</span><span class="p">;</span>
+  <span class="p">}</span>
+
+</code></pre></div>
+<p>and</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="nl">private:</span>
+  <span class="cm">/** The pointer to the object referred to by this smart pointer. */</span>
+  <span class="n">ObjectType</span> <span class="o">*</span><span class="n">m_Pointer</span><span class="p">;</span>
+
+  <span class="kt">void</span> <span class="nf">Register</span><span class="p">()</span>
+  <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">m_Pointer</span> <span class="p">)</span> <span class="p">{</span> <span class="n">m_Pointer</span><span class="o">-&gt;</span><span class="n">Register</span><span class="p">();</span> <span class="p">}</span>
+  <span class="p">}</span>
+</code></pre></div>
+<h3>General Smart Pointer Usage</h3>
+
+<ul>
+<li>Avoid use of explicit pairs of <code>new/delete</code></li>
+<li>Immediately assign object to SmartPointer</li>
+<li>Consistently (i.e. always) use SmartPointer
+
+<ul>
+<li>Pass (reference to) SmartPointer to function.</li>
+<li>Can (but should you?) return SmartPointer from function.</li>
+<li>Don&#39;t use raw pointer, and don&#39;t store raw pointers to objects.</li>
+<li>You can&#39;t test raw pointer to check if object still exists.</li>
+</ul></li>
+<li>Object is deleted when last SmartPointer reference goes out of scope</li>
+</ul>
+
+<h3>ITK SmartPointer</h3>
+
+<ul>
+<li>ITK keeps reference count in itk::LightObject base class</li>
+<li>So, it can only be used by sub-classes of itk::LightObject</li>
+<li>Reference is held in the object</li>
+<li>Same method used in MITK, as MITK uses ITK concepts</li>
+<li><a href="http://www.vtk.org">VTK</a> has a SmartPointer that requires calling Delete explicitly (!!)</li>
+<li>STL has much clearer definition of different types of smart pointer</li>
+<li>Read <a href="http://www.umich.edu/%7Eeecs381/handouts/C++11_smart_ptrs.pdf">THIS</a> tutorial</li>
+</ul>
+
+<h3>Implementing a Filter</h3>
+
+<ul>
+<li>ITK provides many image processing filters.</li>
+<li>But you can write your own easily
+
+<ul>
+<li>Single Threaded - override GenerateData()</li>
+<li>Multi-Threaded - override ThreadedGenerateData()</li>
+</ul></li>
+<li>Now we see an example - thresholding, as we want to study the C++ not the image processing.</li>
+</ul>
+
+<h3>Filter Impl - 1</h3>
+
+<p>Basic filter:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="k">namespace</span> <span class="n">itk</span>
+<span class="p">{</span>
+<span class="k">template</span><span class="o">&lt;</span> <span class="k">class</span> <span class="nc">TInputImage</span><span class="p">,</span> <span class="k">class</span> <span class="nc">TOutputImage</span> <span class="o">=</span> <span class="n">TInputImage</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">MyThresholdFilter</span><span class="o">:</span><span class="k">public</span> <span class="n">ImageToImageFilter</span><span class="o">&lt;</span> <span class="n">TInputImage</span><span class="p">,</span> <span class="n">TOutputImage</span> <span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+</code></pre></div>
+<h3>Filter Impl - 2</h3>
+
+<p>Boilerplate nested typedefs :</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+  <span class="cm">/** Standard class typedefs. */</span>
+  <span class="k">typedef</span> <span class="n">MyThresholdFilter</span>                               <span class="n">Self</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">ImageToImageFilter</span><span class="o">&lt;</span> <span class="n">TInputImage</span><span class="p">,</span> <span class="n">TOutputImage</span> <span class="o">&gt;</span> <span class="n">Superclass</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">SmartPointer</span><span class="o">&lt;</span> <span class="n">Self</span> <span class="o">&gt;</span>                            <span class="n">Pointer</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">TInputImage</span><span class="o">::</span><span class="n">PixelType</span>                 <span class="n">InputPixelType</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">TOutputImage</span><span class="o">::</span><span class="n">PixelType</span>                <span class="n">OutputPixelType</span><span class="p">;</span>
+
+  <span class="cm">/** Method for creation through the object factory. */</span>
+  <span class="n">itkNewMacro</span><span class="p">(</span><span class="n">Self</span><span class="p">);</span>
+
+  <span class="cm">/** Run-time type information (and related methods). */</span>
+  <span class="n">itkTypeMacro</span><span class="p">(</span><span class="n">ImageFilter</span><span class="p">,</span> <span class="n">ImageToImageFilter</span><span class="p">);</span>
+
+</code></pre></div>
+<h3>Filter Impl - 3</h3>
+
+<p>Look at ITK Macros :</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+  <span class="n">itkSetMacro</span><span class="p">(</span><span class="n">Low</span><span class="p">,</span> <span class="n">InputPixelType</span><span class="p">);</span>
+  <span class="n">itkGetMacro</span><span class="p">(</span><span class="n">Low</span><span class="p">,</span> <span class="n">InputPixelType</span><span class="p">);</span>
+  <span class="n">itkSetMacro</span><span class="p">(</span><span class="n">High</span><span class="p">,</span> <span class="n">InputPixelType</span><span class="p">);</span>
+  <span class="n">itkGetMacro</span><span class="p">(</span><span class="n">High</span><span class="p">,</span> <span class="n">InputPixelType</span><span class="p">);</span>
+
+<span class="k">protected</span><span class="o">:</span>
+  <span class="n">MyThresholdFilter</span><span class="p">(){}</span>
+  <span class="o">~</span><span class="n">MyThresholdFilter</span><span class="p">(){}</span>
+
+</code></pre></div>
+<h3>Filter Impl - 4</h3>
+
+<p>The main method :</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+  <span class="cm">/** Does the real work. */</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">GenerateData</span><span class="p">()</span>
+  <span class="p">{</span>
+    <span class="n">TInputImage</span>  <span class="o">*</span><span class="n">inputImage</span>  <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span> <span class="n">TInputImage</span>  <span class="o">*</span> <span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ProcessObject</span><span class="o">::</span><span class="n">GetInput</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">TOutputImage</span> <span class="o">*</span><span class="n">outputImage</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span> <span class="n">TOutputImage</span> <span class="o">*</span> <span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ProcessObject</span><span class="o">::</span><span class="n">GetOutput</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+
+    <span class="n">ImageRegionConstIterator</span><span class="o">&lt;</span><span class="n">TInputImage</span><span class="o">&gt;</span> <span class="n">inputIterator</span> <span class="o">=</span> <span class="n">ImageRegionConstIterator</span><span class="o">&lt;</span><span class="n">TInputImage</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inputImage</span><span class="p">,</span> <span class="n">inputImage</span><span class="o">-&gt;</span><span class="n">GetLargestPossibleRegion</span><span class="p">());</span>
+    <span class="n">ImageRegionIterator</span><span class="o">&lt;</span><span class="n">TOutputImage</span><span class="o">&gt;</span> <span class="n">outputIterator</span> <span class="o">=</span> <span class="n">ImageRegionIterator</span><span class="o">&lt;</span><span class="n">TOutputImage</span><span class="o">&gt;</span><span class="p">(</span><span class="n">outputImage</span><span class="p">,</span> <span class="n">outputImage</span><span class="o">-&gt;</span><span class="n">GetLargestPossibleRegion</span><span class="p">());</span>
+
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">inputIterator</span><span class="p">.</span><span class="n">GoToBegin</span><span class="p">(),</span>
+         <span class="n">outputIterator</span><span class="p">.</span><span class="n">GoToBegin</span><span class="p">();</span>
+         <span class="o">!</span><span class="n">inputIterator</span><span class="p">.</span><span class="n">IsAtEnd</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">outputIterator</span><span class="p">.</span><span class="n">IsAtEnd</span><span class="p">();</span>
+         <span class="o">++</span><span class="n">inputIterator</span><span class="p">,</span>
+         <span class="o">++</span><span class="n">outputIterator</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">inputIterator</span> <span class="o">&gt;=</span> <span class="n">m_Low</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">inputIterator</span> <span class="o">&lt;=</span> <span class="n">m_High</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="o">*</span><span class="n">outputIterator</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">else</span>
+      <span class="p">{</span>
+        <span class="o">*</span><span class="n">outputIterator</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">MyThresholdFilter</span><span class="p">(</span><span class="k">const</span> <span class="n">Self</span> <span class="o">&amp;</span><span class="p">);</span> <span class="c1">//purposely not implemented
+</span>  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Self</span> <span class="o">&amp;</span><span class="p">);</span>  <span class="c1">//purposely not implemented
+</span>  <span class="n">InputPixelType</span> <span class="n">m_Low</span><span class="p">;</span>
+  <span class="n">InputPixelType</span> <span class="n">m_High</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="p">}</span> <span class="c1">// end namespace
+</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// Not providing a real example,
+</span>  <span class="c1">// as I dont know how to read/write images within the
+</span>  <span class="c1">// dexy framework.
+</span>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>Iterators</h3>
+
+<ul>
+<li>ITK provides many iterators</li>
+<li>Generic Programming means:
+
+<ul>
+<li>Suitable for n-dimensions</li>
+<li>Suitable for all types of data</li>
+</ul></li>
+<li>Also, different image access concepts
+
+<ul>
+<li>Region of Interest</li>
+<li>Random subsampling</li>
+<li>No change in code</li>
+</ul></li>
+<li>So iterators enable you to traverse image and encapsulate the traversal mechanism in an iterator<br></li>
+<li>Similar concept to STL <code>.begin()</code>, <code>.end()</code></li>
+<li>See <a href="http://www.itk.org/ItkSoftwareGuide.pdf">ITK Software Guide</a></li>
+</ul>
+
+<h3>Private Constructors?</h3>
+
+<p>If you look at an ITK filter, you may notice for example</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="nl">protected:</span>
+      <span class="n">AddImageFilter</span><span class="p">()</span> <span class="p">{}</span>
+      <span class="k">virtual</span> <span class="o">~</span><span class="n">AddImageFilter</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">private</span><span class="o">:</span>
+      <span class="n">AddImageFilter</span><span class="p">(</span><span class="k">const</span> <span class="n">Self</span> <span class="o">&amp;</span><span class="p">);</span>
+      <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Self</span> <span class="o">&amp;</span><span class="p">);</span>
+</code></pre></div>
+<ul>
+<li>Copy constructor and copy assignment are private and not implemented</li>
+<li>Constructor and Destructor private. So how do you use?</li>
+</ul>
+
+<h3>Static New Method</h3>
+
+<p>You will then see</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">  <span class="cm">/** Method for creation through the object factory. */</span>
+  <span class="n">itkNewMacro</span><span class="p">(</span><span class="n">Self</span><span class="p">);</span>
+</code></pre></div>
+<p>which if you hunt for long enough, you find this snippet</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#define itkSimpleNewMacro(x)                                   
+</span>  <span class="k">static</span> <span class="n">Pointer</span> <span class="nf">New</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                                     
+    <span class="p">{</span>
+    <span class="n">Pointer</span> <span class="n">smartPtr</span> <span class="o">=</span> <span class="o">::</span><span class="n">itk</span><span class="o">::</span><span class="n">ObjectFactory</span><span class="o">&lt;</span> <span class="n">x</span> <span class="o">&gt;::</span><span class="n">Create</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">smartPtr</span><span class="p">.</span><span class="n">GetPointer</span><span class="p">()</span> <span class="o">==</span> <span class="n">ITK_NULLPTR</span> <span class="p">)</span>
+      <span class="p">{</span>
+      <span class="n">smartPtr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">x</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="k">return</span> <span class="n">smartPtr</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div>
+<p>So, either this <code>ObjectFactory</code> creates it, or a standard <code>new</code> call.</p>
+
+<h3>ObjectFactory::Create</h3>
+
+<p>In <code>itk::ObjectFactory</code> we ask factory to CreateInstance using a <code>char*</code></p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">  <span class="k">static</span> <span class="k">typename</span> <span class="n">T</span><span class="o">::</span><span class="n">Pointer</span> <span class="n">Create</span><span class="p">()</span>
+  <span class="p">{</span>
+    <span class="n">LightObject</span><span class="o">::</span><span class="n">Pointer</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">CreateInstance</span><span class="p">(</span> <span class="k">typeid</span><span class="p">(</span> <span class="n">T</span> <span class="p">).</span><span class="n">name</span><span class="p">()</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span> <span class="n">T</span> <span class="o">*</span> <span class="o">&gt;</span><span class="p">(</span> <span class="n">ret</span><span class="p">.</span><span class="n">GetPointer</span><span class="p">()</span> <span class="p">);</span>
+  <span class="p">}</span>
+</code></pre></div>
+<p><code>CreateInstance</code> works with either a base class name, or a class name
+to return either a specific class, or a family of classes derived from a common base class.</p>
+
+<h3>Why Object Factories?</h3>
+
+<ul>
+<li>Rather than create objects directly</li>
+<li>Ask a class (ObjectFactory) to do it</li>
+<li>This class contain complex logic, not just a new operator</li>
+<li>So, we can
+
+<ul>
+<li>dynamically load libraries from ITK<em>AUTOLOAD</em>PATH at runtime</li>
+<li>Have a list/map of current classes, and provide overrides</li>
+<li>i.e swap in a GPU version instead of CPU</li>
+</ul></li>
+<li>More dynamic variant of FactoryMethod, AbstractFactory (See <a href="http://en.wikipedia.org/wiki/Design_Patterns">GoF</a>)</li>
+</ul>
+
+<h3>File IO Example</h3>
+
+<p>In <code>itkImageFileReader.hxx</code></p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">      <span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span> <span class="n">LightObject</span><span class="o">::</span><span class="n">Pointer</span> <span class="o">&gt;</span> <span class="n">allobjects</span> <span class="o">=</span>
+        <span class="n">ObjectFactoryBase</span><span class="o">::</span><span class="n">CreateAllInstance</span><span class="p">(</span><span class="s">"itkImageIOBase"</span><span class="p">);</span>
+</code></pre></div>
+<ul>
+<li>We ask the factory for every class that is a sub-class of itkImageIOBase.</li>
+<li>Then we can ask each ImageIOBase sub-class if it can read a specific format.</li>
+<li>First one to reply true reads the image.</li>
+<li>In general case, ask ObjectFactoryBase for any class.</li>
+</ul>
+
+<h3>Object Factory List of Factories</h3>
+
+<p>In class ObjectFactoryBase</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span>  <span class="nc">ObjectFactoryBase</span><span class="o">:</span><span class="k">public</span> <span class="n">Object</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span> <span class="n">ObjectFactoryBase</span> <span class="o">*</span> <span class="o">&gt;</span> <span class="n">GetRegisteredFactories</span><span class="p">();</span>
+</code></pre></div>
+<p>This class maintains a static vector of ObjectFactoryBase. These
+are added programmatically, via static initialisation or
+dynamically via the ITK<em>AUTO</em>LOAD_PATH.</p>
+
+<h3>PNG IO Factory</h3>
+
+<ul>
+<li>Given <code>itkPNGImageIO.h/cxx</code> can read PNG images</li>
+<li>We see in <code>itkPNGImageIOFactory.cxx</code></li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">PNGImageIOFactory</span><span class="o">::</span><span class="n">PNGImageIOFactory</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">RegisterOverride</span><span class="p">(</span> <span class="s">"itkImageIOBase"</span><span class="p">,</span>
+                          <span class="s">"itkPNGImageIO"</span><span class="p">,</span>
+                          <span class="s">"PNG Image IO"</span><span class="p">,</span>
+                          <span class="mi">1</span><span class="p">,</span>
+                          <span class="n">CreateObjectFunction</span><span class="o">&lt;</span> <span class="n">PNGImageIO</span> <span class="o">&gt;::</span><span class="n">New</span><span class="p">()</span> <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>So, PNG factory says it implements a type of itkImageIOBase,
+will return an itkPNGImageIO, and instantiates a function object that calls the right constructor.</p>
+
+<h3>ObjectFactory Summary</h3>
+
+<ul>
+<li>ObjectFactory defines a static vector of ObjectFactory</li>
+<li>ObjectFactory objects loaded:
+
+<ul>
+<li>Directly named in code at compile time</li>
+<li>Via static initialisers when a dynamic library is loaded</li>
+<li>Or from ITK<em>AUTOLOAD</em>PATH</li>
+</ul></li>
+<li>ObjectFactory returns one/all classes that implement a given class</li>
+<li>Static New method now asks factory for a class.</li>
+<li>So, you can override any ITK class.</li>
+<li>Why is above example not an infinite loop?</li>
+</ul>
+
+<h3>ITK Summary</h3>
+
+<ul>
+<li>Pipeline architecture for most filters</li>
+<li>Also includes a registration framework (see <a href="http://www.itk.org/ItkSoftwareGuide.pdf">ITK Software Guide</a>)</li>
+<li>Smart Pointers - reference counting, automatic deletion</li>
+<li>Static New method with ObjectFactory to enable overriding any class at runtime</li>
+<li>Dynamic loading via ITK<em>AUTOLOAD</em>PATH</li>
+<li>Pipeline architecture - easy to prototype, once you know C++</li>
+<li>Write your own filter, unit test, generalise to n-dimension, of n-vectors.</li>
+<li>Easy to extend to multi-threading</li>
+</ul>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- end .site-content -->
+
+  <footer class="footer wrapper">
+  <div class="footer__inner clearfix">
+             <article class="block block--col-1">
+                <h2 class="as-h5">Facilities</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/departments/faculties">Faculties and departments</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/library/">Library</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/museums">Museums and Collections</a></li>
+					<li class="footer__item"><a href="http://www.thebloomsbury.com/">UCL Bloomsbury Theatre</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/maps">Maps and buildings</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-2">
+                <h2 class="as-h5">Locations</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/london">UCL and London</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/australia">UCL Australia</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/qatar">UCL Qatar</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/global">UCL Global</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-3">
+                <h2 class="as-h5">Connect with us</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/alumni">Alumni</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/enterprise">Businesses</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/media">Media Relations</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/hr/jobs/">Jobs</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/makeyourmark">Give to UCL</a></li>
+				</ul>
+
+      </article>
+  
+    <hr class="clear">
+    <ul class="footer__list list-unstyled zero-bottom">
+      <li class="footer__item text-muted small">University College London,&nbsp;Gower Street,&nbsp;London,&nbsp;WC1E 6BT&nbsp;Tel:&nbsp;+44&nbsp;(0)&nbsp;20 7679 2000</li>
+    </ul>
+    <ul class="list-inline footer__list list-unstyled list-inline--divided">
+      <li class="text-muted small">Copyright © 2018-01-22 17:49:11 +0000 UCL</li>
+      <li class="text-muted small"><a href="#">Disclaimer</a>
+      </li>
+      <li class="text-muted small"><a href="#">Freedom of Information</a>
+      </li>
+      <li class="text-muted small"><a href="#">Accessibility</a>
+      </li>
+      <li class="text-muted small"><a href="#">Privacy</a>
+      </li>
+      <li class="text-muted small"><a href="#">Cookies</a>
+      </li>
+      <li class="text-muted small"><a href="#">Contact Us</a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+
+  <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+  <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+
+</body>
+
+</html>
+

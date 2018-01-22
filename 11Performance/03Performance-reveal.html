@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Profiling a program</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Profiling a program</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section id="amdahls-law" class="slide level2">
+<h1>Amdahl's law</h1>
+<p>Maximum theoretical speedup for parallelizing a given task.</p>
+<ul>
+<li>Given a program that takes a time T to execute</li>
+<li>When parallelizing a task A taking time P over n threads</li>
+<li><p>Then the maximum speedup is:</p>
+<p><span class="math">\(S = \frac{T}{T - P + \frac{P}{n}}\)</span></p></li>
+</ul>
+<p>Some simple cases:</p>
+<ul>
+<li><span class="math">\(P \mapsto 0\)</span>, <span class="math">\(n \mapsto \infty\)</span>, then <span class="math">\(S \rightarrow 1\)</span></li>
+<li><span class="math">\(P=0.5\)</span>, <span class="math">\(n \mapsto \infty\)</span>, then <span class="math">\(S \rightarrow 2\)</span></li>
+</ul>
+<p>In practice, it means programmers/researchers should measure performance before jumping to &quot;optimize&quot; code (a.k.a. apply the scientific method?).</p>
+</section>
+<section id="profiling" class="slide level2">
+<h1>Profiling</h1>
+<p>Refers to measuring how much time the program spends in each function:</p>
+<ul>
+<li>Valgrind, via <a href="http://valgrind.org/docs/manual/cl-manual.html">callgrind</a> provides an accurate, non-intrusive solution</li>
+<li><a href="https://sourceware.org/binutils/docs/gprof/">gprof</a> require &quot;instrumenting&quot; the program, e.g. recompiling with the gprof library. It polls the program every so often, a.k.a. &quot;sampling&quot;</li>
+<li><a href="[https://github.com/gperftools/gperftools">gperftools</a>, intrusive, thread-capable, can select parts of code to profile, info can be visualized by kcachegrind and/or <a href="https://github.com/google/pprof">pprof</a></li>
+<li><a href="https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/">XCode instruments</a> provides &quot;sampling&quot; without requiring instrumentation</li>
+</ul>
+<p>Other considerations to take into account: threads, GPU-specifics, MPI...</p>
+</section>
+<section id="exercise-profiling-the-correct-less_bad" class="slide level2">
+<h1>Exercise: Profiling the correct <code>less_bad</code></h1>
+<ol type="1">
+<li>install <code>kcachegrind</code> or <code>qcachegrind</code> (latter on Mac + Homebrew, or Windows)</li>
+<li>recompile in release mode + debug info <code>cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo</code></li>
+<li>Run the following command:</li>
+</ol>
+<pre><code>&gt; docker run --rm \
+    -v /path/to/source/on/vm:/path/to/source/on/container \
+    -w /path/to/source/on/container  \
+    course_container \
+    valgrind -v --tool=callgrind ./awful</code></pre>
+<ol type="1">
+<li>Then run qcachegrind on the artifact file:</li>
+</ol>
+<pre><code>&gt; /usr/local/Cellar/qcachegrind/16.12.0/bin/qcachegrind callgrind.out.1</code></pre>
+<p>Notice the difference between <code>include</code> and <code>self</code>, e.g. the time spent in the function as whole, vs the time spent strictly in the function excluding sub-function calls.</p>
+<p>Questions:</p>
+<ol type="1">
+<li>How much time is spent on <code>neighbor</code></li>
+<li>How much time is spent on <code>TravelDistance::operator()</code></li>
+<li>What happens when you increase the number of cities to 100, or 10000</li>
+<li>What should we optimize or parallelize?</li>
+</ol>
+</section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

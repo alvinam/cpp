@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>C++ in Research</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">C++ in Research</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="c-in-research" class="titleslide slide level2"><h1>C++ In Research</h1></section><section id="problems-in-research" class="slide level3">
+<h1>Problems In Research</h1>
+<ul>
+<li>Poor quality software</li>
+<li>Excuses
+<ul>
+<li>I'm not a software engineer</li>
+<li>I don't have time</li>
+<li>I'm unsure of my code</li>
+</ul></li>
+</ul>
+</section><section id="c-disadvantages" class="slide level3">
+<h1>C++ Disadvantages</h1>
+<p>Some people say:</p>
+<ul>
+<li>Compiled language
+<ul>
+<li>(compiler versions, libraries, platform specific etc)</li>
+</ul></li>
+<li>Perceived as difficult, error prone, wordy, unfriendly syntax</li>
+<li>Result: It's more trouble than its worth?</li>
+</ul>
+</section><section id="c-advantages" class="slide level3">
+<h1>C++ Advantages</h1>
+<ul>
+<li>Fast, code compiled to machine code</li>
+<li>Nice integration with CUDA, OpenACC, OpenCL, OpenMP, OpenMPI</li>
+<li>Stable, evolving standard, powerful notation, improving</li>
+<li>Lots of libraries, Boost, Qt, VTK, ITK etc.</li>
+<li>Result: Good reasons to use it, or you may <em>have</em> to use it</li>
+</ul>
+</section><section id="research-programming" class="slide level3">
+<h1>Research Programming</h1>
+<ul>
+<li>Software is already expensive
+<ul>
+<li>Famous Book: <a href="http://www.amazon.co.uk/Mythical-Man-month-Essays-Software-Engineering/dp/0201835959/ref=sr_1_1?ie=UTF8&amp;qid=1452507457&amp;sr=8-1&amp;keywords=mythical+man+month">Mythical Man Month</a></li>
+<li>Famous People: <a href="https://www.cs.utexas.edu/users/EWD/">Edsger W. Dijkstra</a></li>
+</ul></li>
+<li>Research programming is different
+<ul>
+<li>What is the end product?</li>
+</ul></li>
+</ul>
+</section><section id="development-methodology" class="slide level3">
+<h1>Development Methodology?</h1>
+<ul>
+<li>Will software engineering methods help?
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Waterfall_model">Waterfall</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Agile_software_development">Agile</a></li>
+</ul></li>
+<li>At the 'concept discovery' stage, probably too early to talk about product development</li>
+</ul>
+</section><section id="approach" class="slide level3">
+<h1>Approach</h1>
+<ul>
+<li>What am I trying to achieve?</li>
+<li>How do I maximise my output?</li>
+<li>What is the best pathway to success?</li>
+<li>How do I de-risk my research?</li>
+</ul>
+</section><section id="types-of-code" class="slide level3">
+<h1>1. Types of Code</h1>
+<ul>
+<li>What are you trying to achieve?</li>
+<li>Divide code:
+<ul>
+<li>Your algorithm: <a href="http://cmictig.cs.ucl.ac.uk/wiki/index.php/NiftyReg">NiftyReg</a></li>
+<li>Testing code</li>
+<li>Data analysis</li>
+<li>User Interface</li>
+<li>Glue code</li>
+<li>Deployment code</li>
+<li>Scientific <a href="http://www.sciencedirect.com/science/article/pii/S0169260709002533">paper</a> production</li>
+</ul></li>
+</ul>
+<p>Examples: NiftyReg 300 citations in 5 years!</p>
+</section><section id="maximise-your-value" class="slide level3">
+<h1>2. Maximise Your Value</h1>
+<ul>
+<li>Developer time is expensive</li>
+<li>Your brain is your asset</li>
+<li>Write as little code as possible</li>
+<li>Focus tightly on your hypothesis</li>
+<li>Write the minimum code that produces a paper</li>
+</ul>
+<p>Don't fall into the trap &quot;Hey, I'll write a framework for that&quot;</p>
+</section><section id="ask-advice" class="slide level3">
+<h1>3. Ask Advice</h1>
+<ul>
+<li>Before contemplating a new piece of software
+<ul>
+<li>Ask advice - <a href="https://ucl-programming-hub.slack.com/">Slack Channel</a></li>
+<li>Review libraries and use them.</li>
+<li>Check libraries are suitable, and sustainable.</li>
+<li>Read <a href="http://development.rc.ucl.ac.uk/training/engineering/ch04packaging/01Libraries.html">Libraries</a> section from <a href="http://github-pages.ucl.ac.uk/rsd-engineeringcourse/">Software Engineering</a> course</li>
+<li>Ask about best practices</li>
+</ul></li>
+</ul>
+</section><section id="example---niftycal" class="slide level3">
+<h1>Example - NiftyCal</h1>
+<ul>
+<li>We should: Practice What We Preach</li>
+<li>Small, algorithms</li>
+<li>Unit tested</li>
+<li>Version controlled</li>
+<li>Small number of libraries</li>
+<li>Increased research output</li>
+</ul>
+</section><section id="debunking-the-excuses" class="slide level3">
+<h1>Debunking The Excuses</h1>
+<ul>
+<li>I'm not a software engineer
+<ul>
+<li>Learn effective, minimal tools</li>
+</ul></li>
+<li>I don't have time
+<ul>
+<li>Unit testing to save time</li>
+<li>Choose your battles/languages wisely</li>
+</ul></li>
+<li>I'm unsure of my code
+<ul>
+<li>Share, collaborate</li>
+</ul></li>
+</ul>
+</section><section id="what-isnt-this-course" class="slide level3">
+<h1>What Isn't This Course?</h1>
+<p>We are NOT suggesting that:</p>
+<ul>
+<li>C++ is the solution to all problems.</li>
+<li>You should write all parts of your code in C++.</li>
+</ul>
+</section><section id="what-is-this-course" class="slide level3">
+<h1>What Is This Course?</h1>
+<p>We aim to:</p>
+<ul>
+<li>Improve your C++ (and associated technologies).</li>
+<li>Do High Performance Computing (HPC).</li>
+</ul>
+<p>So that:</p>
+<ul>
+<li>Apply it to research in a pragmatic fashion.</li>
+<li>You use the right tool for the job.</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

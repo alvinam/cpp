@@ -1,0 +1,588 @@
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 7]> <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="lt-ie9 no-js"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset=utf-8 />
+    <meta name="author" content="UCL" />
+    <meta name="description" content="UCL Homepage" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- social meta -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@uclnews">
+    <meta name="twitter:title" content="UCL - London's Global University">
+    <meta name="twitter:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students.">
+    <meta name="twitter:creator" content="@UCLWAMS">
+    <meta name="twitter:image:src" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png">
+    <meta property="og:image" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png" />
+    <meta property="og:title" content="UCL - London's Global University" />
+    <meta property="og:url" content="http://www.ucl.ac.uk" />
+    <meta property="og:site_name" content="UCL" />
+    <meta property="og:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students." />
+    <meta property="og:type" content="website" />
+    <meta property="og:profile_id" content="uclofficial" />
+    <!-- end social meta -->
+
+  <title>Eigen</title>
+
+  <link href="/research-computing-with-cpp/css/screen.min.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <link href="/research-computing-with-cpp/css/jekyll-styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/local_styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/ipython.css" rel="stylesheet" type="text/css">
+
+  <link rel="shortcut icon" href="/research-computing-with-cpp/images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="/research-computing-with-cpp/favicon-152.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="/research-computing-with-cpp/favicon-144.png">
+
+  <script src="/research-computing-with-cpp/js/lib/modernizr-custom.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+
+    <script>
+      var cuttingTheMustard = document.querySelector && window.localStorage && window.addEventListener;
+
+      Modernizr.load({
+        //cutting the mustard as used by the BBC
+        test: cuttingTheMustard
+        //if old browser load the shiv
+        ,
+        nope: [
+          '/research-computing-with-cpp/js/lib/html5shiv-printshiv.min.js', '/research-computing-with-cpp/js/lib/respond.min.js'
+        ]
+      });
+      //set conditional assets for main.js
+      var globalSiteSpecificVars = {
+        pathToJquery: "/research-computing-with-cpp/js/lib/jquery-1.9.1.min",
+        googleAnalyticsIdsArray: [] //specify array of site specific id's NOT UCL generic UA-943297-1
+      }
+      if (cuttingTheMustard) {
+        globalSiteSpecificVars.pathToJquery = '/research-computing-with-cpp/js/lib/jquery-2.1.1.min';
+      }
+    </script>
+    <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+    <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+</head>
+
+<body id="index" class="layout-vertical layout-vertical--nav-1col">
+
+  <header class="header header--desktop">
+
+  <a class="header__close" href="#">
+    <img src="/research-computing-with-cpp/images/close.png" class="lazy" data-src="//static.ucl.ac.uk/indigo/images/close.png" alt="X" />Close</a>
+
+  <div class="masthead">
+
+  <div class="wrapper clearfix">
+
+      <div class="masthead__search">
+					<form action="#" method="get">
+						<div class="search-form">
+							<input type="search" placeholder="Search UCL websites, people and more" class="search-form__input search-form__input--search" value="">
+						</div>
+						<input type="submit" name="sumbit" value="Go" class="btn search-form__input search-form__input--submit" />
+					</form>
+				</div>
+
+
+				<nav class="masthead__nav m-clear">
+					<ul class="masthead__list">
+						<li class="masthead__item"><a href="index.php" class="masthead__link">UCL Home</a>
+						</li>
+						<li class="masthead__item"><a href="prospective-students.php" class="masthead__link">Prospective students</a>
+						</li>
+						<li class="masthead__item"><a href="current-students.php" class="masthead__link">Current students</a>
+						</li>
+						<li class="masthead__item"><a href="staff.php" class="masthead__link">Staff</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+</div><!-- end .masthead -->
+
+
+  <div class="wrapper">
+
+    <div class="photograph">
+  <div class="brand">
+    <p class="brand__heading">MPHYG002: Research Computing with C++</p>
+    <a href="/" class="brand__link"><span class="visually-hidden">Home</span></a>
+    <img src="//cdn.ucl.ac.uk/img/blank.gif" data-src="//static.ucl.ac.uk/indigo/images/ucl-logo.svg" alt="UCL logo" id="logo" class="brand__logo lazy">  
+  </div>
+</div>
+
+
+    <div class="sidebar">
+
+      <nav class="nav nav--mobile">
+        <ul>
+          
+
+
+
+
+        </ul>
+      </nav>
+
+      <nav class="nav nav--left">
+        <ul>
+          
+
+ <li class="active"> <a href="/research-computing-with-cpp/01research/">C++ for Research</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/01research/sec01Research.html">C++ in Research</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec02Git.html">Git</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec03CMake.html">CMake</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec04UnitTesting.html">Unit Testing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/02libraries/">Including Libraries</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec01ChoosingLibraries.html">Choosing Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LibraryBasics.html">Library Basics</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LinkingLibraries.html">Linking Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec03UsingLibraries.html">Using Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec04Examples.html">Examples</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05CMakeCatchTemplate.html">CMakeCatchTemplate</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05Summary.html">Summary</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/">Better C++</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec01LanguageRecap.html">Object Oriented Review</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec02EssentialReading.html">Essential Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec03TemplatesIntro.html">Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec04FunctionTemplates.html">Function Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec05ClassTemplates.html">Class Templates</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec06Exceptions.html">Error Handling</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec07Inheritance.html">Inheritance</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec08DependencyInjection.html">Dependency Injection</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec09ConstructionPatterns.html">Construction Patterns</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec10MemoryManagement.html">Smart Pointers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec11RAII.html">RAII Pattern</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec12ProgramToInterfaces.html">Program To Interfaces</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpp/sec13SummaryOfPatterns.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/">C++ Libraries</a><ul><li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/sec07EIGEN.html">Eigen</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/sec08Boost.html">Boost</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/sec09ITK.html">ITK</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/sec10Summary.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/04HPC/">HPC Concepts</a><ul> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/05OpenMP/">Shared memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec01IntroductiontoOpenMP.html">Introduction to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec02Loops.html">Parallelizing loops with OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec03CriticalLocksRaces.html">Races, Locks and Critical regions</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec04Tasks.html">Tasks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec05SchedulingLoadBalancing.html">Scheduling and Load Balancing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec06OpenMPAlternatives.html">Alternatives to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec07FurtherReading.html">Further Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec08Exercise.html">Exercise</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/06MPI/">Distributed memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec01practical.html">MPI in practice</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec02PointToPoint.html">Point to Point</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec03collective.html">Collective communication</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec04advanced.html">More advanced MPI</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/07MPIExample/">MPI Design Example</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec01smoothlife.html">Smooth Life</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec02domain.html">Domain decomposition</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec03halo.html">Halo swap</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec04deployment.html">Deployment</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec05derived.html">Derived Datatypes</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec06overlap.html">Overlap</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/08IO/">MPI File I/O</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec01visualise.html">Visualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec02text.html">Formatted Text IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec03binary.html">Binary IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec04endian.html">Portability</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec05single.html">Writing from a single process</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec06mpiio.html">Parallel IO</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/09Accelerators/">Accelerators</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec01Introduction.html">CPU Vectorisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec02UsingAGPUAsAnAccelerator.html">Using a GPU as an Accelerator</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec03Streaming.html">Streaming</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec04Vectorization.html">Vectorization</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/11Performance/">Post-coding medley, memory leaks, and performance measurements</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/01editor_tools.html">Tools for pretty code</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/02valgrind.html">Memory leaks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/03Performance.html">Profiling a program</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/04MicroBenchmarking.html">Micro-benchmarking</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/95stl/">Appendix - STL</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Intro.html">The Standard Template Library</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Motivation.html">Motivation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec02Containers.html">STL Containers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec03Other.html">Other STL stuff</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/96TemplateMetaProg/">Appendix - TMP</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/96TemplateMetaProg/sec01TemplateMeta.html">Template Meta-Programming</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/97Cloud/">Appendix - Cloud</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec01cloud.html">Cloud computing and big data</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec02exercise1.html">Working in the cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec03exercise2.html">Command line cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec04virtual.html">Virtualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec05exercise3.html">Containers in the Cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec06distributed.html">Distributed computing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec07exercise4.html">MapReduce</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec08exercise5.html">Distributed computing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/98Installation/">Installation</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/01linux.html">Linux</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/02windows.html">Windows</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/03mac.html">Mac</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/04boost.html">Boost</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/99Assignments/">Assessment</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/99Assignments/assignment2.html">MPHYG002 Coursework 2 Parallelising Conway's Game of Life</a> </li> </ul> </li> 
+
+        </ul>
+      </nav>
+
+    </div>
+    <!-- end .sidebar -->
+
+    <nav class="nav nav--top">
+      <ul>
+        
+      </ul>
+    </nav>
+
+  </div>
+  <!-- end .wrapper -->
+
+  </header>
+  <!-- end .header -->
+
+  <div class="site-content wrapper">
+
+    <header class="header header--mobile default-header">
+      <a class="header__open" href="#">
+        <img src="/research-computing-with-cpp/images/ucl-menu.svg" alt="Menu" />
+      </a>
+    </header>
+
+    <div class="site-content__inner clearfix">
+      <div class="site-content__body">
+
+          
+            <nav class="breadcrumb clearfix">
+              <ul class="breadcrumb__list">
+                <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/">UCL</a></li>
+
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/ISD">ISD</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services">Our services</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it">Research IT</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it/training">Training</a></li>
+  
+
+<li class="breadcrumb__item"><a href="/research-computing-with-cpp/">MPHYG002</a></li>
+
+
+
+              </ul>
+            </nav>
+           <div class="site-content__main">
+            
+            
+               <div id="slidelink">
+                 <a href="/research-computing-with-cpp/03cpplibraries/sec07EIGEN-reveal.html">Slides</a>
+               </div>
+            
+          
+          
+
+    <h2>Using Eigen</h2>
+
+<h3>Introduction</h3>
+
+<ul>
+<li><a href="http://eigen.tuxfamily.org">Eigen</a> is:
+
+<ul>
+<li>C++ template library,</li>
+<li>Linear algebra, matrices, vectors, numerical solvers, etc.</li>
+<li><img src="figures/eigenContents.png" alt="Overview of features"></li>
+</ul></li>
+</ul>
+
+<h3>Tutorials</h3>
+
+<p>Obviously, you can read:</p>
+
+<ul>
+<li>the existing <a href="http://eigen.tuxfamily.org/dox/index.html">manual pages</a></li>
+<li>tutorials (<a href="http://eigen.tuxfamily.org/dox/GettingStarted.html">short</a>, <a href="http://eigen.tuxfamily.org/dox/group__TutorialMatrixClass.html">long</a>).</li>
+<li>the <a href="http://eigen.tuxfamily.org/dox/group__QuickRefPage.html">Quick Reference</a></li>
+</ul>
+
+<h3>Getting started</h3>
+
+<ul>
+<li>Header only, just need <code>#include</code></li>
+<li>Uses CMake, but that&#39;s just for
+
+<ul>
+<li>documentation</li>
+<li>run unit tests</li>
+<li>do installation.</li>
+</ul></li>
+</ul>
+
+<h3>C++ Principles</h3>
+
+<p>(i.e. why introduce Eigen on this course)</p>
+
+<ul>
+<li>Eigen uses
+
+<ul>
+<li>Templates</li>
+<li>Loop unrolling, traits, template meta programming</li>
+</ul></li>
+</ul>
+
+<h3>Matrix Class</h3>
+
+<ul>
+<li>This:</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;iostream&gt;
+#include &lt;Eigen/Dense&gt;
+</span><span class="k">using</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">MatrixXd</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">MatrixXd</span> <span class="n">m</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+  <span class="n">m</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="n">m</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mf">2.5</span><span class="p">;</span>
+  <span class="n">m</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="n">m</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">m</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>Produces:</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">  3  -1
+2.5 1.5
+
+</code></pre></div>
+<h3>Matrix Class Declaration</h3>
+
+<p>Matrix Class
+<code>cpp
+template&lt;typename _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols&gt;
+class Matrix
+  : public PlainObjectBase&lt;Matrix&lt;_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols&gt; &gt;
+{
+</code></p>
+
+<p>So, its templates, <a href="http://development.rc.ucl.ac.uk/training/rcwithcpp/session02/">so review last weeks lecture</a>.</p>
+
+<h3>Matrix Class Construction</h3>
+
+<p>But in documentation:</p>
+
+<p><img src="figures/eigenMatrixDynamic.png" alt="Matrix construction"></p>
+
+<p>It took a while but I searched and found:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">src</span><span class="o">/</span><span class="n">Core</span><span class="o">/</span><span class="n">util</span><span class="o">/</span><span class="n">Constants</span><span class="p">.</span><span class="n">h</span><span class="o">:</span><span class="k">const</span> <span class="kt">int</span> <span class="n">Dynamic</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</code></pre></div>
+<p>and both fixed and dynamic Matrices come from same template class???</p>
+
+<p>How do they do that?</p>
+
+<h3>DenseStorage.h - 1</h3>
+
+<p>In <code>src/Core/DenseStorage.h</code>:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">Size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">MatrixOrArrayOptions</span><span class="p">,</span>
+          <span class="kt">int</span> <span class="n">Alignment</span> <span class="o">=</span> <span class="p">(</span><span class="n">MatrixOrArrayOptions</span><span class="o">&amp;</span><span class="n">DontAlign</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span>
+                        <span class="o">:</span> <span class="p">(((</span><span class="n">Size</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">))</span><span class="o">%</span><span class="mi">16</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="mi">16</span>
+                        <span class="o">:</span> <span class="mi">0</span> <span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">plain_array</span>
+<span class="p">{</span>
+  <span class="n">T</span> <span class="n">array</span><span class="p">[</span><span class="n">Size</span><span class="p">];</span>
+</code></pre></div>
+<p>So, a <code>plain_array</code> structure containing a stack allocated array.</p>
+
+<h3>DenseStorage.h - 2</h3>
+
+<p>In <code>src/Core/DenseStorage.h</code>:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="c1">// purely fixed-size matrix
+</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">Size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_Rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_Cols</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_Options</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">DenseStorage</span>
+<span class="p">{</span>
+    <span class="n">internal</span><span class="o">::</span><span class="n">plain_array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">Size</span><span class="p">,</span><span class="n">_Options</span><span class="o">&gt;</span> <span class="n">m_data</span><span class="p">;</span>
+</code></pre></div>
+<p>There is a default template class for DenseStorage, and specialisation for fixed arrays.</p>
+
+<h3>DenseStorage.h - 3</h3>
+
+<p>In <code>src/Core/DenseStorage.h</code>:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">
+<span class="c1">// purely dynamic matrix.
+</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_Options</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">DenseStorage</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">Dynamic</span><span class="p">,</span> <span class="n">Dynamic</span><span class="p">,</span> <span class="n">Dynamic</span><span class="p">,</span> <span class="n">_Options</span><span class="o">&gt;</span>
+<span class="p">{</span>
+    <span class="n">T</span> <span class="o">*</span><span class="n">m_data</span><span class="p">;</span>
+    <span class="n">DenseIndex</span> <span class="n">m_rows</span><span class="p">;</span>
+    <span class="n">DenseIndex</span> <span class="n">m_cols</span><span class="p">;</span>
+</code></pre></div>
+<p>There is a default template class for DenseStorage, and specialisation for Dynamic arrays.</p>
+
+<h3>Eigen Matrix Summary</h3>
+
+<ul>
+<li>Templated type supports dynamic and fixed arrays seamlessly on stack or heap</li>
+<li>typedef&#39;s to make life easier: <code>Matrix3d</code> = 3 by 3 of double</li>
+<li>Uses TMP to generate generate code at compile time</li>
+<li>Benefit from optimisations such as loop unrolling when using fixed size constant arrays</li>
+</ul>
+
+<h3>Eigen Usage - CMake Include</h3>
+
+<ul>
+<li>Need to set include path</li>
+<li>You could download and &#39;install&#39; eigen into your project, and commit it. e.g.</li>
+</ul>
+<div class="highlight"><pre><code class="language-cmake" data-lang="cmake"><span class="nb">include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span>/session03/cpp/Eigen/eigen-3.2.3/include/eigen3<span class="p">)</span>
+</code></pre></div>
+<h3>Eigen Usage - CMake Module</h3>
+
+<ul>
+<li>CMake (3.1) does not have a <code>Find Module</code> for eigen, but eigen provides one.</li>
+<li>So, in your source tree</li>
+</ul>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">mkdir CMake
+cp &lt;path_to_eigen&gt;/cmake/FindEigen3.cmake ./CMake
+</code></pre></div>
+<ul>
+<li>Then in your CMakeLists.txt</li>
+</ul>
+<div class="highlight"><pre><code class="language-cmake" data-lang="cmake"><span class="nb">set</span><span class="p">(</span>CMAKE_MODULE_PATH <span class="s2">"</span><span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span><span class="s2">/CMake;</span><span class="si">${</span><span class="nv">CMAKE_MODULE_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span>Eigen3<span class="p">)</span>
+<span class="nb">include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">EIGEN3_INCLUDE_DIR</span><span class="si">}</span><span class="p">)</span>
+</code></pre></div>
+<h3>Eigen Usage - CMake External</h3>
+
+<ul>
+<li><a href="http://sourceforge.net/projects/niftyseg/">NiftySeg</a> uses</li>
+</ul>
+<div class="highlight"><pre><code class="language-cmake" data-lang="cmake"><span class="nb">option</span><span class="p">(</span>USE_SYSTEM_EIGEN <span class="s2">"Use an already installed version of the Eigen library"</span> OFF<span class="p">)</span>
+<span class="nb">if</span><span class="p">(</span>USE_SYSTEM_EIGEN<span class="p">)</span>
+  <span class="nb">find_package</span><span class="p">(</span>EIGEN REQUIRED<span class="p">)</span>
+<span class="nb">else</span><span class="p">()</span>
+  <span class="nb">set</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>_VERSION_EIGEN <span class="s2">"ffa86ffb5570"</span> CACHE STRING <span class="s2">"Version of EIGEN"</span> FORCE<span class="p">)</span>
+  <span class="nb">set</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>_MD5_SUM_EIGEN 9559c34af203dde5f3f1d976d859c5b3 CACHE STRING <span class="s2">"MD5 check sum for EIGEN"</span> FORCE<span class="p">)</span>
+  <span class="nb">set</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>_LOCATION_EIGEN
+    <span class="s2">"http://cmic.cs.ucl.ac.uk/platform/dependencies/eigen-eigen-</span><span class="si">${${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="nv">_VERSION_EIGEN</span><span class="si">}</span><span class="s2">.tar.gz"</span>
+    CACHE STRING <span class="s2">"Location of Eigen"</span> FORCE<span class="p">)</span>
+  <span class="nf">ExternalProject_Add</span><span class="p">(</span>Eigen
+    URL <span class="si">${${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="nv">_LOCATION_EIGEN</span><span class="si">}</span>
+    URL_MD5 <span class="si">${${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="nv">_MD5_SUM_EIGEN</span><span class="si">}</span>
+    PREFIX <span class="si">${</span><span class="nv">PROJECT_BINARY_DIR</span><span class="si">}</span>/Eigen
+    DOWNLOAD_DIR <span class="si">${</span><span class="nv">PROJECT_BINARY_DIR</span><span class="si">}</span>/Eigen/download
+    SOURCE_DIR <span class="si">${</span><span class="nv">PROJECT_BINARY_DIR</span><span class="si">}</span>/Eigen/source
+    STAMP_DIR <span class="si">${</span><span class="nv">PROJECT_BINARY_DIR</span><span class="si">}</span>/Eigen/stamps
+    TMP_DIR <span class="si">${</span><span class="nv">PROJECT_BINARY_DIR</span><span class="si">}</span>/Eigen/tmp
+    BINARY_DIR <span class="si">${</span><span class="nv">PROJECT_BINARY_DIR</span><span class="si">}</span>/Eigen/build
+    CMAKE_ARGS
+      <span class="si">${</span><span class="nv">CMAKE_PROPAGATED_VARIABLES</span><span class="si">}</span>
+      -DCMAKE_INSTALL_PREFIX:PATH=<span class="si">${</span><span class="nv">PROJECT_BINARY_DIR</span><span class="si">}</span>/Eigen/install
+      -DBUILD_TESTING=1
+    <span class="p">)</span>
+  <span class="nb">set</span><span class="p">(</span>Eigen_INCLUDE_DIR <span class="si">${</span><span class="nv">PROJECT_BINARY_DIR</span><span class="si">}</span>/Eigen/install/include/eigen3<span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+<span class="nb">include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">Eigen_INCLUDE_DIR</span><span class="si">}</span><span class="p">)</span>
+</code></pre></div>
+<h3>Eigen Example - in PCL</h3>
+
+<p><a href="http://pointclouds.org/">Point Cloud Library</a> uses <a href="http://eigen.tuxfamily.org">Eigen</a>.
+Lets look at point based registration of two, same length, point sets.</p>
+
+<h3>PCL - Manual Registration</h3>
+
+<ul>
+<li>Class to hold point lists</li>
+<li>Callbacks (not shown here) to add points to list</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ManualRegistration</span> <span class="o">:</span> <span class="k">public</span> <span class="n">QMainWindow</span>
+<span class="p">{</span>
+  <span class="k">protected</span><span class="o">:</span>
+  <span class="n">pcl</span><span class="o">::</span><span class="n">PointCloud</span><span class="o">&lt;</span><span class="n">pcl</span><span class="o">::</span><span class="n">PointXYZ</span><span class="o">&gt;</span>    <span class="n">src_pc_</span><span class="p">;</span>
+  <span class="n">pcl</span><span class="o">::</span><span class="n">PointCloud</span><span class="o">&lt;</span><span class="n">pcl</span><span class="o">::</span><span class="n">PointXYZ</span><span class="o">&gt;</span>    <span class="n">dst_pc_</span><span class="p">;</span>
+  <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix4f</span>                   <span class="n">transform_</span><span class="p">;</span>  
+</code></pre></div>
+<h3>PCL - SVD class</h3>
+
+<ul>
+<li>In <code>apps/src/manual_registration/manual_registration.cpp</code></li>
+<li>Create a class to estimate SVD of two point sets</li>
+<li>See paper <a href="http://dl.acm.org/citation.cfm?id=28821">Arun et. al. 1987</a></li>
+<li>Its an example of the orthogonal procrustes problem</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">  <span class="n">pcl</span><span class="o">::</span><span class="n">registration</span><span class="o">::</span><span class="n">TransformationEstimationSVD</span><span class="o">&lt;</span><span class="n">pcl</span><span class="o">::</span><span class="n">PointXYZ</span><span class="p">,</span> <span class="n">pcl</span><span class="o">::</span><span class="n">PointXYZ</span><span class="o">&gt;</span> <span class="n">tfe</span><span class="p">;</span>
+  <span class="n">tfe</span><span class="p">.</span><span class="n">estimateRigidTransformation</span><span class="p">(</span><span class="n">src_pc_</span><span class="p">,</span> <span class="n">dst_pc_</span><span class="p">,</span> <span class="n">transform_</span><span class="p">);</span>
+</code></pre></div>
+<h3>PCL - Correlation</h3>
+
+<p>After subtracting each point from the mean point we have in
+<code>registration/include/pcl/registration/impl/transformation_estimation_svd.hpp</code></p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">PointSource</span><span class="p">,</span> <span class="k">typename</span> <span class="n">PointTarget</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Scalar</span><span class="o">&gt;</span> <span class="kt">void</span>
+<span class="n">pcl</span><span class="o">::</span><span class="n">registration</span><span class="o">::</span><span class="n">TransformationEstimationSVD</span><span class="o">&lt;</span><span class="n">PointSource</span><span class="p">,</span> <span class="n">PointTarget</span><span class="p">,</span> <span class="n">Scalar</span><span class="o">&gt;::</span><span class="n">getTransformationFromCorrelation</span> <span class="p">(</span>
+    <span class="k">const</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">cloud_src_demean</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">centroid_src</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">cloud_tgt_demean</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">centroid_tgt</span><span class="p">,</span>
+    <span class="n">Matrix4</span> <span class="o">&amp;</span><span class="n">transformation_matrix</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+  <span class="n">transformation_matrix</span><span class="p">.</span><span class="n">setIdentity</span> <span class="p">();</span>
+
+  <span class="c1">// Assemble the correlation matrix H = source * target'
+</span>  <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">H</span> <span class="o">=</span> <span class="p">(</span><span class="n">cloud_src_demean</span> <span class="o">*</span> <span class="n">cloud_tgt_demean</span><span class="p">.</span><span class="n">transpose</span> <span class="p">()).</span><span class="n">topLeftCorner</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+
+  <span class="c1">// Compute the Singular Value Decomposition
+</span>  <span class="n">Eigen</span><span class="o">::</span><span class="n">JacobiSVD</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">svd</span> <span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeFullU</span> <span class="o">|</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">ComputeFullV</span><span class="p">);</span>
+  <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">u</span> <span class="o">=</span> <span class="n">svd</span><span class="p">.</span><span class="n">matrixU</span> <span class="p">();</span>
+  <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">svd</span><span class="p">.</span><span class="n">matrixV</span> <span class="p">();</span>
+
+  <span class="c1">// Compute R = V * U'
+</span>  <span class="k">if</span> <span class="p">(</span><span class="n">u</span><span class="p">.</span><span class="n">determinant</span> <span class="p">()</span> <span class="o">*</span> <span class="n">v</span><span class="p">.</span><span class="n">determinant</span> <span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+      <span class="n">v</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">R</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">u</span><span class="p">.</span><span class="n">transpose</span> <span class="p">();</span>
+
+  <span class="c1">// Return the correct transformation
+</span>  <span class="n">transformation_matrix</span><span class="p">.</span><span class="n">topLeftCorner</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="n">R</span><span class="p">;</span>
+  <span class="k">const</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">&gt;</span> <span class="n">Rc</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">centroid_src</span><span class="p">.</span><span class="n">head</span> <span class="p">(</span><span class="mi">3</span><span class="p">));</span>
+  <span class="n">transformation_matrix</span><span class="p">.</span><span class="n">block</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">centroid_tgt</span><span class="p">.</span><span class="n">head</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">Rc</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>PCL - Summary</h3>
+
+<ul>
+<li>Use of Eigen implements <a href="http://dl.acm.org/citation.cfm?id=28821">Arun et. al. 1987</a> in one main function.</li>
+<li>Relatively close matching of algorithm to code.</li>
+<li>Template notation a bit awkward, but now, not so insurmountable.</li>
+<li>So, using library, we gain power and benefit of very experienced library programmers.</li>
+</ul>
+
+<h3>Eigen Summary</h3>
+
+<ul>
+<li>Header only</li>
+<li>Use CMake to set the include path</li>
+<li>Templated, so its compiled in, no link or run-time dependencies</li>
+<li>Simple to use linear algebra library</li>
+<li>Advise not to mix with GUI code</li>
+<li>Consider static linking as using templates anyway - ease of distribution</li>
+</ul>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- end .site-content -->
+
+  <footer class="footer wrapper">
+  <div class="footer__inner clearfix">
+             <article class="block block--col-1">
+                <h2 class="as-h5">Facilities</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/departments/faculties">Faculties and departments</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/library/">Library</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/museums">Museums and Collections</a></li>
+					<li class="footer__item"><a href="http://www.thebloomsbury.com/">UCL Bloomsbury Theatre</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/maps">Maps and buildings</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-2">
+                <h2 class="as-h5">Locations</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/london">UCL and London</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/australia">UCL Australia</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/qatar">UCL Qatar</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/global">UCL Global</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-3">
+                <h2 class="as-h5">Connect with us</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/alumni">Alumni</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/enterprise">Businesses</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/media">Media Relations</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/hr/jobs/">Jobs</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/makeyourmark">Give to UCL</a></li>
+				</ul>
+
+      </article>
+  
+    <hr class="clear">
+    <ul class="footer__list list-unstyled zero-bottom">
+      <li class="footer__item text-muted small">University College London,&nbsp;Gower Street,&nbsp;London,&nbsp;WC1E 6BT&nbsp;Tel:&nbsp;+44&nbsp;(0)&nbsp;20 7679 2000</li>
+    </ul>
+    <ul class="list-inline footer__list list-unstyled list-inline--divided">
+      <li class="text-muted small">Copyright © 2018-01-22 17:49:11 +0000 UCL</li>
+      <li class="text-muted small"><a href="#">Disclaimer</a>
+      </li>
+      <li class="text-muted small"><a href="#">Freedom of Information</a>
+      </li>
+      <li class="text-muted small"><a href="#">Accessibility</a>
+      </li>
+      <li class="text-muted small"><a href="#">Privacy</a>
+      </li>
+      <li class="text-muted small"><a href="#">Cookies</a>
+      </li>
+      <li class="text-muted small"><a href="#">Contact Us</a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+
+  <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+  <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+
+</body>
+
+</html>
+

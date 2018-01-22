@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Shared memory parallelism</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Shared memory parallelism</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="shared-memory-parallelism" class="titleslide slide level2"><h1>Shared Memory Parallelism</h1></section><section id="openmp" class="slide level3">
+<h1>OpenMP</h1>
+<ul>
+<li>Shared memory only parallelization</li>
+<li>Useful for parallelization on a single cluster node</li>
+<li>MPI next week for inter-node parallelization</li>
+<li>Can write hybrid code with both OpenMP and MPI</li>
+</ul>
+</section><section id="about-openmp" class="slide level3">
+<h1>About OpenMP</h1>
+<ul>
+<li>Extensions of existing programming languages</li>
+<li>Standardized by international <a href="http://openmp.org/">committee</a></li>
+<li>Support for Fortran, C and C++</li>
+<li>C/C++ uses the same syntax</li>
+<li>Fortran is slightly different</li>
+</ul>
+</section><section id="how-it-works" class="slide level3">
+<h1>How it works</h1>
+<ul>
+<li>Thread based parallelization</li>
+<li>A master thread starts executing the code.</li>
+<li>Sections of the code is marked as parallel
+<ul>
+<li>A set of threads are forked and used together with the master thread</li>
+<li>When the parallel block ends the threads are killed or put to sleep</li>
+</ul></li>
+</ul>
+</section><section id="typical-use-cases" class="slide level3">
+<h1>Typical use cases</h1>
+<ul>
+<li>A loop with independent iterations</li>
+<li>Hopefully a significant part of the execution time</li>
+<li>More complicated if an iterations have dependencies</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

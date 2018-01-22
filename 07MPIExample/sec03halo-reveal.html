@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Halo swap</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Halo swap</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="halo-swap" class="titleslide slide level2"><h1>Halo swap</h1></section><section id="where-do-we-put-the-communicated-data" class="slide level3">
+<h1>Where do we put the communicated data?</h1>
+<p>The data we need to receive from our neighbour needs to be put in a place where it can be conveniently used to calculate the new state of cells within distance <span class="math">\(r\)</span> of the boundary.</p>
+<p>The standard design pattern for this is to use a <strong>Halo Swap</strong>: we extend the memory buffer used for our state, adding new space either side of our main domain to hold a <strong>halo</strong>.</p>
+</section><section id="domains-with-a-halo" class="slide level3">
+<h1>Domains with a halo</h1>
+<p>Thus, each process now holds <span class="math">\(N+2r\)</span> cells:</p>
+<ul>
+<li><span class="math">\(0 \le x &lt; r\)</span>, the left halo, holding data calculated by the left neighbour</li>
+<li><span class="math">\(r \le x &lt; 2r\)</span>, data which we calculate, which will form our <strong>left neighbour's right halo</strong></li>
+<li><span class="math">\(2r \le x &lt; N\)</span>, data which we calculate, unneeded by neighbours</li>
+<li><span class="math">\(N \le x &lt; N+r\)</span>, data which we calculate, which will form our <strong>right neighbour's left halo</strong></li>
+<li><span class="math">\(N+r \le x &lt; N+2r\)</span>, the right halo.</li>
+</ul>
+</section><section id="domains-with-a-halo-1" class="slide level3">
+<h1>Domains with a halo</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+      range(outer + smoothing / <span class="dv">2</span>), local_x_size(sizex / mpi_size),
+      local_x_size_with_halo(local_x_size + <span class="dv">2</span> * range), total_x_size(sizex),
+      x_coordinate_offset(rank * local_x_size - range), local_x_min_calculate(range),
+      local_x_max_needed_left(<span class="dv">2</span> * range), local_x_max_calculate(range + local_x_size),
+      local_x_min_needed_right(local_x_size),</code></pre>
+</section><section id="coding-with-a-halo" class="slide level3">
+<h1>Coding with a halo</h1>
+<p>We will thus <strong>update</strong> the field only from <span class="math">\(r\)</span> to <span class="math">\(N+r\)</span>, but we will <strong>access</strong> the field from <span class="math">\(0\)</span> to <span class="math">\(N+2r\)</span>:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> from_x=<span class="dv">0</span>; <span class="dt">int</span> to_x=local_x_size_with_halo</code></pre>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">void</span> Smooth::QuickUpdateStripe(<span class="dt">int</span> from_x, <span class="dt">int</span> to_x) {
+  <span class="kw">for</span>(<span class="dt">int</span> x = from_x; x &lt; to_x; x++) {
+    <span class="kw">for</span>(<span class="dt">int</span> y = <span class="dv">0</span>; y &lt; sizey; y++) {
+      <span class="dt">double</span> ring_total = <span class="fl">0.0</span>;
+      <span class="dt">double</span> disk_total = <span class="fl">0.0</span>;
+      <span class="kw">for</span>(<span class="dt">int</span> x1 = <span class="dv">0</span>; x1 &lt; local_x_size_with_halo; x1++) {
+        <span class="dt">int</span> deltax
+            = TorusDifference(x + x_coordinate_offset, x1 + x_coordinate_offset, total_x_size);
+        <span class="kw">if</span>(deltax &gt; outer + smoothing / <span class="dv">2</span>)
+          <span class="kw">continue</span>;
+
+        <span class="kw">for</span>(<span class="dt">int</span> y1 = <span class="dv">0</span>; y1 &lt; sizey; y1++) {
+          <span class="dt">int</span> deltay = TorusDifference(y, y1, sizey);
+          <span class="kw">if</span>(deltay &gt; outer + smoothing / <span class="dv">2</span>)
+            <span class="kw">continue</span>;
+
+          <span class="dt">double</span> radius = std::sqrt(deltax * deltax + deltay * deltay);
+          <span class="dt">double</span> fieldv = Field(x1, y1);
+          ring_total += fieldv * Ring(radius);
+          disk_total += fieldv * Disk(radius);
+        }
+      }
+
+      SetNewField(x, y,
+                  transition(disk_total / normalisation_disk, ring_total / normalisation_ring));
+    }
+  }
+}</code></pre>
+</section><section id="transferring-the-halo" class="slide level3">
+<h1>Transferring the halo</h1>
+<p>We need to pass data left at the same time as we receive data from the right.</p>
+<p>If we use separate <code>Send</code> and <code>Recv</code> calls, we'll have a deadlock: process 2 will be sending to process 1, while process 3 is sending to process 2. No process will be executing a <code>Recv</code>.</p>
+<p>Fortunately, MPI provides <code>Sendrecv</code>: expressing that we want to do a blocking <code>Send</code> to one process while we simultaneously do a blocking <code>Recv</code> from another. Exactly what we need for pass-the-parcel.</p>
+</section><section id="transferring-the-halo-1" class="slide level3">
+<h1>Transferring the halo</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">void</span> Smooth::CommunicateMPI() {
+  BufferLeftHaloForSend();
+  MPI_Sendrecv(send_transport_buffer, range * sizey, MPI_DOUBLE, left, rank,
+               receive_transport_buffer, range * sizey, MPI_DOUBLE, right, right, MPI_COMM_WORLD,
+               MPI_STATUS_IGNORE);
+  UnpackRightHaloFromReceive();
+  BufferRightHaloForSend();
+  MPI_Sendrecv(send_transport_buffer, range * sizey, MPI_DOUBLE, right, mpi_size + rank,
+               receive_transport_buffer, range * sizey, MPI_DOUBLE, left, mpi_size + left,
+               MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  UnpackLeftHaloFromReceive();
+}</code></pre>
+</section><section id="noncontiguous-memory" class="slide level3">
+<h1>Noncontiguous memory</h1>
+<p>Our serial solution uses a C++ <code>vector&lt;vector&lt;double&gt; &gt;</code> to store our field.</p>
+<p>That means each column of data starts at a different location in memory; our data is not contiguous in memory, the outer vector holds a series of pointers to the start of each inner vector.</p>
+<p>This means we can't just transmit <span class="math">\(Mr\)</span> <code>doubles</code> in one go by sending from the address of <code>&amp;field1[0][0]</code>.</p>
+</section><section id="buffering" class="slide level3">
+<h1>Buffering</h1>
+<p>We'll get around this by copying all the data into a send buffer, and unpacking from a receive buffer. This adds to our communication overhead, but doesn't change its scaling behaviour, both overheads are <span class="math">\(O(Mr)\)</span>.</p>
+<p>We'll look in a later section how this can be avoided.</p>
+</section><section id="buffering-1" class="slide level3">
+<h1>Buffering</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">void</span> Smooth::BufferLeftHaloForSend() {
+  <span class="kw">for</span>(<span class="dt">int</span> x = local_x_min_calculate; x &lt; local_x_min_calculate + range; x++) {
+    <span class="kw">for</span>(<span class="dt">int</span> y = <span class="dv">0</span>; y &lt; sizey; y++) {
+      send_transport_buffer[y * range + x - local_x_min_calculate] = Field(x, y);
+    }
+  }
+}</code></pre>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">void</span> Smooth::UnpackRightHaloFromReceive() {
+  <span class="kw">for</span>(<span class="dt">int</span> x = local_x_max_calculate; x &lt; local_x_size_with_halo; x++) {
+    <span class="kw">for</span>(<span class="dt">int</span> y = <span class="dv">0</span>; y &lt; sizey; y++) {
+      SetField(x, y, receive_transport_buffer[y * range + x - local_x_max_calculate]);
+    }
+  }
+}</code></pre>
+</section><section id="testing-communications" class="slide level3">
+<h1>Testing communications</h1>
+<p>We implement a copy of our buffers which doesn't use MPI:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">void</span> Smooth::CommunicateLocal(Smooth &amp;left, Smooth &amp;right) {
+  BufferLeftHaloForSend();
+  std::memcpy(left.receive_transport_buffer, send_transport_buffer,
+              <span class="kw">sizeof</span>(density) * range * sizey);
+  left.UnpackRightHaloFromReceive();
+  BufferRightHaloForSend();
+  std::memcpy(right.receive_transport_buffer, send_transport_buffer,
+              <span class="kw">sizeof</span>(density) * range * sizey);
+  right.UnpackLeftHaloFromReceive();
+}</code></pre>
+<p>which allows us to check our halos are all set up correctly.</p>
+</section><section id="testing-communications-1" class="slide level3">
+<h1>Testing communications</h1>
+<p>We test that our copy works as expected:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+TEST_CASE(<span class="st">&quot;CommunicationBufferingFunctionsCorrectly&quot;</span>) {
+  Smooth smooth(<span class="dv">200</span>, <span class="dv">100</span>, <span class="dv">5</span>, <span class="dv">0</span>, <span class="dv">2</span>);
+  Smooth smooth2(<span class="dv">200</span>, <span class="dv">100</span>, <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">2</span>);
+  REQUIRE(smooth.LocalXSize() == <span class="dv">100</span>);
+  REQUIRE(smooth.LocalXSizeWithHalo() == <span class="dv">130</span>);
+  REQUIRE(smooth.Radius(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>) == <span class="dv">0</span>);
+  REQUIRE(smooth2.Radius(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>) == <span class="dv">0</span>);
+  smooth.SeedDisk(); <span class="co">// Half the Seeded Disk falls in smooth2&#39;s domain, so total filling will be</span>
+                     <span class="co">// half a disk.</span>
+  REQUIRE(smooth.Field(<span class="dv">15</span>, <span class="dv">0</span>) == <span class="fl">1.0</span>);
+  REQUIRE(std::abs(smooth.FillingDisk(<span class="dv">15</span>, <span class="dv">0</span>) - <span class="fl">0.5</span>) &lt; <span class="fl">0.1</span>);
+  REQUIRE(smooth2.FillingDisk(<span class="dv">85</span>, <span class="dv">0</span>) == <span class="fl">0.0</span>);
+  smooth.CommunicateLocal(smooth2, smooth2); <span class="co">// Transport the data</span>
+  REQUIRE(std::abs(smooth.FillingDisk(<span class="dv">15</span>, <span class="dv">0</span>) - <span class="fl">0.5</span>) &lt; <span class="fl">0.1</span>);
+  REQUIRE(smooth2.Field(<span class="dv">115</span>, <span class="dv">0</span>) == <span class="fl">1.0</span>);
+  REQUIRE(std::abs(smooth2.FillingDisk(<span class="dv">115</span>, <span class="dv">0</span>) - <span class="fl">0.5</span>) &lt; <span class="fl">0.1</span>);
+}</code></pre>
+</section><section id="testing-communications-2" class="slide level3">
+<h1>Testing communications</h1>
+<p>We test that the MPI comms results are the same as serial</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+    smooth.QuickUpdate();
+    paraSmooth.CommunicateMPI();
+    paraSmooth.QuickUpdate();
+    paraSmooth.CommunicateMPI();
+    <span class="kw">for</span>(<span class="dt">unsigned</span> <span class="dt">int</span> x = <span class="dv">0</span>; x &lt; <span class="dv">50</span>; x++) {
+      <span class="kw">for</span>(<span class="dt">unsigned</span> <span class="dt">int</span> y = <span class="dv">0</span>; y &lt; <span class="dv">100</span>; y++) {
+        REQUIRE(std::abs(smooth.Field(x + <span class="dv">15</span> + rank * <span class="dv">50</span>, y) - paraSmooth.Field(x + <span class="dv">15</span>, y))
+                &lt; <span class="fl">0.00001</span>);
+      }
+    }
+  }</code></pre>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>ITK</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">ITK</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="using-itk" class="titleslide slide level2"><h1>Using ITK</h1></section><section id="introduction" class="slide level3">
+<h1>Introduction</h1>
+<ul>
+<li><a href="http://www.itk.org">Insight Segmentation and Registration Toolkit</a></li>
+<li>Insight Journal for library additions</li>
+<li>Large community in medical image processing</li>
+<li>Deliberately no visualisation, see <a href="http://www.vtk.org">VTK</a>.</li>
+</ul>
+</section><section id="c-principles" class="slide level3">
+<h1>C++ Principles</h1>
+<ul>
+<li>Heavy use of Generic Programming</li>
+<li>Use of Template Meta-Programming</li>
+<li>Often perceived by &quot;scientific programmers&quot; (Matlab) as difficult</li>
+<li>Aim: demonstrate here, that we can now use it!</li>
+<li>Of particular interest
+<ul>
+<li>typedefs - make life easier</li>
+<li>SmartPointers - reduce leaking memory</li>
+<li>Iterators - fast image access</li>
+<li>Object Factories - extensibility</li>
+</ul></li>
+</ul>
+</section><section id="architecture-concept" class="slide level3">
+<h1>Architecture Concept</h1>
+<ul>
+<li>Use of pipeline of filters</li>
+<li>Simple to plug image processing filters together</li>
+<li>Sometimes difficult to manage memory for huge images</li>
+</ul>
+</section><section id="filter-usage---1" class="slide level3">
+<h1>Filter Usage - 1</h1>
+<p>We work through a simple filter program. First, typedefs are aliases.</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span>** argv)
+{
+
+  <span class="dt">const</span> <span class="dt">unsigned</span> <span class="dt">int</span> Dimension = <span class="dv">2</span>;
+  <span class="kw">typedef</span> <span class="dt">int</span> PixelType;
+  <span class="kw">typedef</span> itk::Image&lt;PixelType, Dimension&gt; ImageType;
+  <span class="kw">typedef</span> itk::AddImageFilter&lt;ImageType, ImageType&gt; AddFilterType;
+  <span class="kw">typedef</span> itk::ImageFileReader&lt;ImageType&gt; ImageReaderType;
+  <span class="kw">typedef</span> itk::ImageFileWriter&lt;ImageType&gt; ImageWriterType;</code></pre>
+</section><section id="filter-usage---2" class="slide level3">
+<h1>Filter Usage - 2</h1>
+<p>Objects are constructed:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  ImageReaderType::Pointer reader1 = ImageReaderType::New();
+  ImageReaderType::Pointer reader2 = ImageReaderType::New();
+  AddFilterType::Pointer addFilter = AddFilterType::New();
+  ImageWriterType::Pointer writer = ImageWriterType::New();
+
+  <span class="co">// eg. if not using typedefs</span>
+  <span class="co">//itk::ImageFileWriter&lt; itk::Image&lt;int, 2&gt; &gt;::Pointer writer</span>
+  <span class="co">//  = itk::ImageFileWriter&lt; itk::Image&lt;int, 2&gt; &gt;::New();</span></code></pre>
+</section><section id="filter-usage---3" class="slide level3">
+<h1>Filter Usage - 3</h1>
+<p>Pipeline is executed:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  reader1-&gt;SetFileName(<span class="st">&quot;inputFileName1.nii&quot;</span>);
+  reader2-&gt;SetFileName(<span class="st">&quot;inputFileName2.nii&quot;</span>);
+  addFilter-&gt;SetInput(<span class="dv">0</span>, reader1-&gt;GetOutput());
+  addFilter-&gt;SetInput(<span class="dv">1</span>, reader2-&gt;GetOutput());
+  writer-&gt;SetInput(addFilter-&gt;GetOutput());
+  writer-&gt;SetFileName(<span class="st">&quot;outputFileName1.nii&quot;</span>);
+  <span class="co">//writer-&gt;Update(); // commented out, as filenames are fake.</span>
+                      <span class="co">// and build system for lecture notes</span>
+                      <span class="co">// tries to run the program.</span>
+  <span class="kw">return</span> <span class="dv">0</span>;
+}</code></pre>
+<p>More information on ITK Pipeline can be found in the <a href="http://www.itk.org/ItkSoftwareGuide.pdf">ITK Software Guide</a>.</p>
+</section><section id="smart-pointer-intro" class="slide level3">
+<h1>Smart Pointer Intro</h1>
+<p>Lets look at some interesting features.</p>
+<ul>
+<li>Smart Pointer
+<ul>
+<li>Class, like a pointer, but 'Smarter' (clever)</li>
+<li>Typically, once allocated will automatically destroy the pointed to object</li>
+<li>Implementations vary, STL, ITK, VTK, Qt, so read the docs</li>
+</ul></li>
+<li>So, in each class e.g. itkAddImageFilter</li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">typedef</span> AddImageFilter     Self
+<span class="kw">typedef</span> SmartPointer&lt;Self&gt; Pointer</code></pre>
+<p>and so, its used like</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">ClassName::Pointer variableName = ClassName::New();</code></pre>
+</section><section id="smart-pointer-class" class="slide level3">
+<h1>Smart Pointer Class</h1>
+<p>In the SmartPointer itself</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">  <span class="co">/** Constructor to pointer p  */</span>
+  SmartPointer (ObjectType *p):
+    m_Pointer(p)
+  { <span class="kw">this</span>-&gt;Register(); }
+
+  <span class="co">/** Destructor  */</span>
+  ~SmartPointer ()
+  {
+    <span class="kw">this</span>-&gt;UnRegister();
+    m_Pointer = ITK_SP_NULLPTR;
+  }</code></pre>
+<p>and</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">private</span>:
+  <span class="co">/** The pointer to the object referred to by this smart pointer. */</span>
+  ObjectType *m_Pointer;
+
+  <span class="dt">void</span> Register()
+  {
+    <span class="kw">if</span> ( m_Pointer ) { m_Pointer-&gt;Register(); }
+  }</code></pre>
+</section><section id="general-smart-pointer-usage" class="slide level3">
+<h1>General Smart Pointer Usage</h1>
+<ul>
+<li>Avoid use of explicit pairs of <code>new/delete</code></li>
+<li>Immediately assign object to SmartPointer</li>
+<li>Consistently (i.e. always) use SmartPointer
+<ul>
+<li>Pass (reference to) SmartPointer to function.</li>
+<li>Can (but should you?) return SmartPointer from function.</li>
+<li>Don't use raw pointer, and don't store raw pointers to objects.</li>
+<li>You can't test raw pointer to check if object still exists.</li>
+</ul></li>
+<li>Object is deleted when last SmartPointer reference goes out of scope</li>
+</ul>
+</section><section id="itk-smartpointer" class="slide level3">
+<h1>ITK SmartPointer</h1>
+<ul>
+<li>ITK keeps reference count in itk::LightObject base class</li>
+<li>So, it can only be used by sub-classes of itk::LightObject</li>
+<li>Reference is held in the object</li>
+<li>Same method used in MITK, as MITK uses ITK concepts</li>
+<li><a href="http://www.vtk.org">VTK</a> has a SmartPointer that requires calling Delete explicitly (!!)</li>
+<li>STL has much clearer definition of different types of smart pointer</li>
+<li>Read <a href="http://www.umich.edu/~eecs381/handouts/C++11_smart_ptrs.pdf">THIS</a> tutorial</li>
+</ul>
+</section><section id="implementing-a-filter" class="slide level3">
+<h1>Implementing a Filter</h1>
+<ul>
+<li>ITK provides many image processing filters.</li>
+<li>But you can write your own easily
+<ul>
+<li>Single Threaded - override GenerateData()</li>
+<li>Multi-Threaded - override ThreadedGenerateData()</li>
+</ul></li>
+<li>Now we see an example - thresholding, as we want to study the C++ not the image processing.</li>
+</ul>
+</section><section id="filter-impl---1" class="slide level3">
+<h1>Filter Impl - 1</h1>
+<p>Basic filter:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="kw">namespace</span> itk
+{
+<span class="kw">template</span>&lt; <span class="kw">class</span> TInputImage, <span class="kw">class</span> TOutputImage = TInputImage&gt;
+<span class="kw">class</span> MyThresholdFilter:<span class="kw">public</span> ImageToImageFilter&lt; TInputImage, TOutputImage &gt;
+{
+<span class="kw">public</span>:</code></pre>
+</section><section id="filter-impl---2" class="slide level3">
+<h1>Filter Impl - 2</h1>
+<p>Boilerplate nested typedefs :</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  <span class="co">/** Standard class typedefs. */</span>
+  <span class="kw">typedef</span> MyThresholdFilter                               Self;
+  <span class="kw">typedef</span> ImageToImageFilter&lt; TInputImage, TOutputImage &gt; Superclass;
+  <span class="kw">typedef</span> SmartPointer&lt; Self &gt;                            Pointer;
+  <span class="kw">typedef</span> <span class="kw">typename</span> TInputImage::PixelType                 InputPixelType;
+  <span class="kw">typedef</span> <span class="kw">typename</span> TOutputImage::PixelType                OutputPixelType;
+
+  <span class="co">/** Method for creation through the object factory. */</span>
+  itkNewMacro(Self);
+
+  <span class="co">/** Run-time type information (and related methods). */</span>
+  itkTypeMacro(ImageFilter, ImageToImageFilter);</code></pre>
+</section><section id="filter-impl---3" class="slide level3">
+<h1>Filter Impl - 3</h1>
+<p>Look at ITK Macros :</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  itkSetMacro(Low, InputPixelType);
+  itkGetMacro(Low, InputPixelType);
+  itkSetMacro(High, InputPixelType);
+  itkGetMacro(High, InputPixelType);
+
+<span class="kw">protected</span>:
+  MyThresholdFilter(){}
+  ~MyThresholdFilter(){}</code></pre>
+</section><section id="filter-impl---4" class="slide level3">
+<h1>Filter Impl - 4</h1>
+<p>The main method :</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  <span class="co">/** Does the real work. */</span>
+  <span class="kw">virtual</span> <span class="dt">void</span> GenerateData()
+  {
+    TInputImage  *inputImage  = <span class="kw">static_cast</span>&lt; TInputImage  * &gt;(<span class="kw">this</span>-&gt;ProcessObject::GetInput(<span class="dv">0</span>));
+    TOutputImage *outputImage = <span class="kw">static_cast</span>&lt; TOutputImage * &gt;(<span class="kw">this</span>-&gt;ProcessObject::GetOutput(<span class="dv">0</span>));
+
+    ImageRegionConstIterator&lt;TInputImage&gt; inputIterator = ImageRegionConstIterator&lt;TInputImage&gt;(inputImage, inputImage-&gt;GetLargestPossibleRegion());
+    ImageRegionIterator&lt;TOutputImage&gt; outputIterator = ImageRegionIterator&lt;TOutputImage&gt;(outputImage, outputImage-&gt;GetLargestPossibleRegion());
+
+
+    <span class="kw">for</span> (inputIterator.GoToBegin(),
+         outputIterator.GoToBegin();
+         !inputIterator.IsAtEnd() &amp;&amp; !outputIterator.IsAtEnd();
+         ++inputIterator,
+         ++outputIterator)
+    {
+      <span class="kw">if</span> (*inputIterator &gt;= m_Low &amp;&amp; *inputIterator &lt;= m_High)
+      {
+        *outputIterator = <span class="dv">1</span>;
+      }
+      <span class="kw">else</span>
+      {
+        *outputIterator = <span class="dv">0</span>;
+      }
+    }
+  }
+
+<span class="kw">private</span>:
+  MyThresholdFilter(<span class="dt">const</span> Self &amp;); <span class="co">//purposely not implemented</span>
+  <span class="dt">void</span> <span class="kw">operator</span>=(<span class="dt">const</span> Self &amp;);  <span class="co">//purposely not implemented</span>
+  InputPixelType m_Low;
+  InputPixelType m_High;
+};
+} <span class="co">// end namespace</span>
+
+<span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span>** argv)
+{
+  <span class="co">// Not providing a real example,</span>
+  <span class="co">// as I dont know how to read/write images within the</span>
+  <span class="co">// dexy framework.</span>
+  <span class="kw">return</span> <span class="dv">0</span>;
+}</code></pre>
+</section><section id="iterators" class="slide level3">
+<h1>Iterators</h1>
+<ul>
+<li>ITK provides many iterators</li>
+<li>Generic Programming means:
+<ul>
+<li>Suitable for n-dimensions</li>
+<li>Suitable for all types of data</li>
+</ul></li>
+<li>Also, different image access concepts
+<ul>
+<li>Region of Interest</li>
+<li>Random subsampling</li>
+<li>No change in code</li>
+</ul></li>
+<li>So iterators enable you to traverse image and encapsulate the traversal mechanism in an iterator<br /></li>
+<li>Similar concept to STL <code>.begin()</code>, <code>.end()</code></li>
+<li>See <a href="http://www.itk.org/ItkSoftwareGuide.pdf">ITK Software Guide</a></li>
+</ul>
+</section><section id="private-constructors" class="slide level3">
+<h1>Private Constructors?</h1>
+<p>If you look at an ITK filter, you may notice for example</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">    <span class="kw">protected</span>:
+      AddImageFilter() {}
+      <span class="kw">virtual</span> ~AddImageFilter() {}
+
+    <span class="kw">private</span>:
+      AddImageFilter(<span class="dt">const</span> Self &amp;);
+      <span class="dt">void</span> <span class="kw">operator</span>=(<span class="dt">const</span> Self &amp;);</code></pre>
+<ul>
+<li>Copy constructor and copy assignment are private and not implemented</li>
+<li>Constructor and Destructor private. So how do you use?</li>
+</ul>
+</section><section id="static-new-method" class="slide level3">
+<h1>Static New Method</h1>
+<p>You will then see</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">  <span class="co">/** Method for creation through the object factory. */</span>
+  itkNewMacro(Self);</code></pre>
+<p>which if you hunt for long enough, you find this snippet</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#define itkSimpleNewMacro(x)                                   </span>
+  <span class="dt">static</span> Pointer New(<span class="dt">void</span>)                                     
+    {
+    Pointer smartPtr = ::itk::ObjectFactory&lt; x &gt;::Create();
+    <span class="kw">if</span> ( smartPtr.GetPointer() == ITK_NULLPTR )
+      {
+      smartPtr = <span class="kw">new</span> x;
+      }
+    <span class="kw">return</span> smartPtr;
+    }</code></pre>
+<p>So, either this <code>ObjectFactory</code> creates it, or a standard <code>new</code> call.</p>
+</section><section id="objectfactorycreate" class="slide level3">
+<h1>ObjectFactory::Create</h1>
+<p>In <code>itk::ObjectFactory</code> we ask factory to CreateInstance using a <code>char*</code></p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">  <span class="dt">static</span> <span class="kw">typename</span> T::Pointer Create()
+  {
+    LightObject::Pointer ret = CreateInstance( <span class="kw">typeid</span>( T ).name() );
+    <span class="kw">return</span> <span class="kw">dynamic_cast</span>&lt; T * &gt;( ret.GetPointer() );
+  }</code></pre>
+<p><code>CreateInstance</code> works with either a base class name, or a class name to return either a specific class, or a family of classes derived from a common base class.</p>
+</section><section id="why-object-factories" class="slide level3">
+<h1>Why Object Factories?</h1>
+<ul>
+<li>Rather than create objects directly</li>
+<li>Ask a class (ObjectFactory) to do it</li>
+<li>This class contain complex logic, not just a new operator</li>
+<li>So, we can
+<ul>
+<li>dynamically load libraries from ITK_AUTOLOAD_PATH at runtime</li>
+<li>Have a list/map of current classes, and provide overrides</li>
+<li>i.e swap in a GPU version instead of CPU</li>
+</ul></li>
+<li>More dynamic variant of FactoryMethod, AbstractFactory (See <a href="http://en.wikipedia.org/wiki/Design_Patterns">GoF</a>)</li>
+</ul>
+</section><section id="file-io-example" class="slide level3">
+<h1>File IO Example</h1>
+<p>In <code>itkImageFileReader.hxx</code></p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">      std::list&lt; LightObject::Pointer &gt; allobjects =
+        ObjectFactoryBase::CreateAllInstance(<span class="st">&quot;itkImageIOBase&quot;</span>);</code></pre>
+<ul>
+<li>We ask the factory for every class that is a sub-class of itkImageIOBase.</li>
+<li>Then we can ask each ImageIOBase sub-class if it can read a specific format.</li>
+<li>First one to reply true reads the image.</li>
+<li>In general case, ask ObjectFactoryBase for any class.</li>
+</ul>
+</section><section id="object-factory-list-of-factories" class="slide level3">
+<h1>Object Factory List of Factories</h1>
+<p>In class ObjectFactoryBase</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">class</span>  ObjectFactoryBase:<span class="kw">public</span> Object
+{
+<span class="kw">public</span>:
+  <span class="dt">static</span> std::list&lt; ObjectFactoryBase * &gt; GetRegisteredFactories();</code></pre>
+<p>This class maintains a static vector of ObjectFactoryBase. These are added programmatically, via static initialisation or dynamically via the ITK_AUTO_LOAD_PATH.</p>
+</section><section id="png-io-factory" class="slide level3">
+<h1>PNG IO Factory</h1>
+<ul>
+<li>Given <code>itkPNGImageIO.h/cxx</code> can read PNG images</li>
+<li>We see in <code>itkPNGImageIOFactory.cxx</code></li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">PNGImageIOFactory::PNGImageIOFactory()
+{
+  <span class="kw">this</span>-&gt;RegisterOverride( <span class="st">&quot;itkImageIOBase&quot;</span>,
+                          <span class="st">&quot;itkPNGImageIO&quot;</span>,
+                          <span class="st">&quot;PNG Image IO&quot;</span>,
+                          <span class="dv">1</span>,
+                          CreateObjectFunction&lt; PNGImageIO &gt;::New() );
+}</code></pre>
+<p>So, PNG factory says it implements a type of itkImageIOBase, will return an itkPNGImageIO, and instantiates a function object that calls the right constructor.</p>
+</section><section id="objectfactory-summary" class="slide level3">
+<h1>ObjectFactory Summary</h1>
+<ul>
+<li>ObjectFactory defines a static vector of ObjectFactory</li>
+<li>ObjectFactory objects loaded:
+<ul>
+<li>Directly named in code at compile time</li>
+<li>Via static initialisers when a dynamic library is loaded</li>
+<li>Or from ITK_AUTOLOAD_PATH</li>
+</ul></li>
+<li>ObjectFactory returns one/all classes that implement a given class</li>
+<li>Static New method now asks factory for a class.</li>
+<li>So, you can override any ITK class.</li>
+<li>Why is above example not an infinite loop?</li>
+</ul>
+</section><section id="itk-summary" class="slide level3">
+<h1>ITK Summary</h1>
+<ul>
+<li>Pipeline architecture for most filters</li>
+<li>Also includes a registration framework (see <a href="http://www.itk.org/ItkSoftwareGuide.pdf">ITK Software Guide</a>)</li>
+<li>Smart Pointers - reference counting, automatic deletion</li>
+<li>Static New method with ObjectFactory to enable overriding any class at runtime</li>
+<li>Dynamic loading via ITK_AUTOLOAD_PATH</li>
+<li>Pipeline architecture - easy to prototype, once you know C++</li>
+<li>Write your own filter, unit test, generalise to n-dimension, of n-vectors.</li>
+<li>Easy to extend to multi-threading</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

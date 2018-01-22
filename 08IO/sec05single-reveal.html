@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Writing from a single process</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Writing from a single process</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="writing-from-a-single-process" class="titleslide slide level2"><h1>Writing from a single process</h1></section><section id="one-process-one-file" class="slide level3">
+<h1>One process, one file</h1>
+<p>So far, we've been writing one process from each file, calling them <code>frames.dat.0</code>, <code>frames.dat.1</code> etc.</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  fname &lt;&lt; <span class="st">&quot;.&quot;</span> &lt;&lt; rank &lt;&lt; std::flush;</code></pre>
+<p>We've then been reconciling them together in our visualiser code:</p>
+<pre class="sourceCode python"><code class="sourceCode python">
+<span class="kw">def</span> append_process_suffix(prefix, process):
+    <span class="kw">return</span> prefix + <span class="st">&#39;.&#39;</span> + <span class="dt">str</span>(process)
+
+<span class="kw">def</span> process_many_files(folder, prefix, size, header_type, bulk_type):</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python">
+    process_frames=[]
+    <span class="kw">for</span> process in <span class="dt">range</span>(size):
+        path=os.path.join(folder,append_process_suffix(prefix,process))</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python">
+    <span class="kw">return</span> numpy.concatenate(process_frames, <span class="dv">1</span>)</code></pre>
+</section><section id="one-process-one-file-1" class="slide level3">
+<h1>One process, one file</h1>
+<p>This is necessary, because we <strong>cannot</strong> simply have multiple processes writing to the same file, without considerable care, as they will:</p>
+<ul>
+<li>Block while waiting for access to the file</li>
+<li>Overwrite each others' content</li>
+</ul>
+<p>However, the one-process-one-file approach <strong>does not scale</strong> to large numbers of files: the file system can be overwhelmed once we're running at the thousands-of-processors level.</p>
+</section><section id="writing-from-a-single-process-1" class="slide level3">
+<h1>Writing from a single process</h1>
+<p>An alternative approach is to share all the data to a master process. (Which can be done in <span class="math">\(O(ln p)\)</span> time), and then write from that file.</p>
+<p>This avoids the complexity of reconciling datafiles locally, and avoids overwhealming the cluster filesystem with many small files.</p>
+</section><section id="writing-from-a-single-process-2" class="slide level3">
+<h1>Writing from a single process</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">void</span> SingleWriter::Write() {
+
+  <span class="dt">double</span> *receive_buffer;
+
+  <span class="kw">if</span>(rank == <span class="dv">0</span>) {
+    receive_buffer = <span class="kw">new</span> <span class="dt">double</span>[total_element_count];
+  }
+
+  MPI_Gather(smooth.StartOfWritingBlock(), local_element_count, MPI_DOUBLE, receive_buffer,
+             local_element_count, MPI_DOUBLE, <span class="dv">0</span>, MPI_COMM_WORLD);
+
+  <span class="kw">if</span>(rank == <span class="dv">0</span>) {
+    xdr_vector(&amp;xdrfile, <span class="kw">reinterpret_cast</span>&lt;<span class="dt">char</span> *&gt;(receive_buffer), total_element_count,
+               <span class="kw">sizeof</span>(<span class="dt">double</span>), <span class="kw">reinterpret_cast</span>&lt;xdrproc_t&gt;(xdr_double));
+  }
+}</code></pre>
+</section><section id="writing-from-a-single-process-3" class="slide level3">
+<h1>Writing from a single process</h1>
+<p>It's important to create the file and write the header only on the master process:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+SingleWriter::SingleWriter(Smooth &amp;smooth, <span class="dt">int</span> rank, <span class="dt">int</span> size) : SmoothWriter(smooth, rank, size) {
+  <span class="kw">if</span>(rank != <span class="dv">0</span>) {
+    <span class="kw">return</span>;
+  }</code></pre>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

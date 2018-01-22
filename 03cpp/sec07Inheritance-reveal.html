@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Inheritance</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Inheritance</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="inheritance" class="titleslide slide level2"><h1>Inheritance</h1></section><section id="dont-overuse-inheritance" class="slide level3">
+<h1>Don't overuse Inheritance</h1>
+<ul>
+<li>Inheritance is not just for saving duplication</li>
+<li>It MUST represent derived/related types</li>
+<li>Derived class must truely represent 'is-a' relationship</li>
+<li>eg 'Square' is-a 'Shape'</li>
+<li>Deep inheritance hierarchies are almost always wrong</li>
+<li>If something 'doesn't quite fit' check your inheritance</li>
+</ul>
+</section><section id="surely-its-simple" class="slide level3">
+<h1>Surely Its Simple?</h1>
+<ul>
+<li>Common example: Square/Rectangle problem, <a href="http://www.oodesign.com/liskov-s-substitution-principle.html">here</a></li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;iostream&gt;</span>
+
+<span class="kw">class</span> Rectangle {
+<span class="kw">public</span>:
+  Rectangle() : m_Width(<span class="dv">0</span>), m_Height(<span class="dv">0</span>) {};
+  <span class="kw">virtual</span> ~Rectangle(){};
+  <span class="dt">int</span> GetArea() <span class="dt">const</span> { <span class="kw">return</span> m_Width*m_Height; }
+  <span class="kw">virtual</span> <span class="dt">void</span> SetWidth(<span class="dt">int</span> w) { m_Width=w; }
+  <span class="kw">virtual</span> <span class="dt">void</span> SetHeight(<span class="dt">int</span> h) { m_Height=h; }
+<span class="kw">protected</span>:
+  <span class="dt">int</span> m_Width;
+  <span class="dt">int</span> m_Height;
+};
+
+<span class="kw">class</span> Square : <span class="kw">public</span> Rectangle {
+<span class="kw">public</span>:
+  Square(){};
+  ~Square(){};
+  <span class="kw">virtual</span> <span class="dt">void</span> SetWidth(<span class="dt">int</span> w) { m_Width=w; m_Height=w; }
+  <span class="kw">virtual</span> <span class="dt">void</span> SetHeight(<span class="dt">int</span> h) { m_Width=h; m_Height=h; }
+};
+
+<span class="dt">int</span> main() 
+{
+  Rectangle *r = <span class="kw">new</span> Square();
+  r-&gt;SetWidth(<span class="dv">5</span>);
+  r-&gt;SetHeight(<span class="dv">6</span>);
+  std::cout &lt;&lt; <span class="st">&quot;Area = &quot;</span> &lt;&lt; r-&gt;GetArea() &lt;&lt; std::endl;
+}</code></pre>
+</section><section id="liskov-substitution-principal" class="slide level3">
+<h1>Liskov Substitution Principal</h1>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia</a></li>
+<li>&quot;if S is a subtype of T, then objects of type T may be replaced with objects of type S without altering any of the desirable properties of that program&quot;</li>
+<li>Can something truely be substituted?</li>
+<li>If someone else filled a vector of type T, would I care what type I have?</li>
+<li>Look for:
+<ul>
+<li>Preconditions cannot be strengthened</li>
+<li>Postconditions cannot be weakened</li>
+<li>Invariants preserved</li>
+</ul></li>
+</ul>
+</section><section id="what-to-look-for" class="slide level3">
+<h1>What to Look For</h1>
+<ul>
+<li>If you have:
+<ul>
+<li>Methods you don't want to implement in derived class</li>
+<li>Methods that don't make sense in derived class</li>
+<li>Methods that are unneeded in derived class</li>
+<li>If you have a list of something, and someone else swapping a derived type would cause problems</li>
+</ul></li>
+<li>Then you have probably got your inheritance wrong</li>
+</ul>
+</section><section id="composition-vs-inheritance" class="slide level3">
+<h1>Composition Vs Inheritance</h1>
+<ul>
+<li>Lots of Info online eg. <a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">wikipedia</a></li>
+<li>In basic OO Principals
+<ul>
+<li>'Has-a' means 'pointer or reference to'</li>
+<li>eg.<code>Car</code> has-a <code>Engine</code></li>
+</ul></li>
+<li>But there is also:
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Object_composition#Composition">Composition</a>: Strong 'has-a'. Component parts are owned by thing pointing to them.</li>
+<li><a href="https://en.wikipedia.org/wiki/Object_composition#Aggregation">Aggregation</a>: Weak 'has-a'. Component part has its own lifecycle.</li>
+<li>Association: General term, referring to either composition or aggregation, just a 'pointer-to'</li>
+</ul></li>
+</ul>
+</section><section id="examples" class="slide level3">
+<h1>Examples</h1>
+<ul>
+<li>House 'has-a' set of Rooms. Destroying House, you destroy all Room objects. No point having a House on its own.</li>
+<li>Department 'has-a' Professor. If a department is shutdown (deleted), Professor should not be deleted. Needs assigning to another department.</li>
+</ul>
+</section><section id="but-why" class="slide level3">
+<h1>But Why?</h1>
+<ul>
+<li>Good article: <a href="https://www.thoughtworks.com/insights/blog/composition-vs-inheritance-how-choose">Choosing Composition or Inheritance</a></li>
+<li>Inheritance has much tighter definition than you realise</li>
+<li>Composition is more flexible</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

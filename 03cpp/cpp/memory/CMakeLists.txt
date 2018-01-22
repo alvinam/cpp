@@ -1,0 +1,8 @@
+add_executable(fractionOnStack.x fractionOnStack.cc Fraction.cc)
+add_executable(fractionOnHeap.x fractionOnHeap.cc Fraction.cc)
+add_executable(fractionOnHeapUniquePtr.x fractionOnHeapUniquePtr.cc Fraction.cc)
+add_executable(fractionUniquePtrMove.x fractionUniquePtrMove.cc Fraction.cc)
+add_executable(fractionOnHeapSharedPtr.x fractionOnHeapSharedPtr.cc Fraction.cc)
+add_executable(fractionExceptionProblem.x fractionExceptionProblem.cc Fraction.cc)
+add_executable(fractionExceptionMakeShared.x fractionExceptionMakeShared.cc Fraction.cc)
+add_executable(fractionOnHeapWeakPtr.x fractionOnHeapWeakPtr.cc Fraction.cc)

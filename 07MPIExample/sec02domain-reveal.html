@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Domain decomposition</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Domain decomposition</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="ideal-domain-decomposition" class="titleslide slide level2"><h1>&quot;Ideal&quot; Domain decomposition</h1></section><section id="domain-decomposition" class="slide level3">
+<h1>Domain decomposition</h1>
+<p>One of the most important problems in designing a parallel code is &quot;Domain Decomposition&quot;:</p>
+<ul>
+<li>How will I divide up the calculation between processes?</li>
+</ul>
+<p>Design objectives in decomposition are:</p>
+<ul>
+<li>Minimise communication</li>
+<li>Optimise load balance (Share out work evenly)</li>
+</ul>
+</section><section id="decomposing-smooth-life" class="slide level3">
+<h1>Decomposing Smooth Life</h1>
+<p>We'll go for a 1-d spatial decomposition for smooth life, dividing the domain into &quot;Stripes&quot; along the x-axis.</p>
+<p>If we have an <span class="math">\(N\)</span> by <span class="math">\(M\)</span> domain, and <span class="math">\(p\)</span>, processes, each process will be responsible for <span class="math">\(NM/p\)</span> cells, and <span class="math">\(NMr^2/p\)</span> calculations.</p>
+</section><section id="static-and-dynamic-balance" class="slide level3">
+<h1>Static and dynamic balance</h1>
+<p>This will achieve perfect <strong>static</strong> load balance: the average work done by each process is the same. If we were not solving in a rectangular grid, this would have been harder.</p>
+<p>However, since the calculation can (perhaps) be done quicker when the domain is empty, and our field will vary as time passes, we will not achieve perfect <strong>dynamic</strong> load balance.</p>
+</section><section id="communication-in-smooth-life" class="slide level3">
+<h1>Communication in Smooth Life</h1>
+<p>Given that each cell needs to know the state of cells within a range <span class="math">\(r=3r_d\)</span>, where <span class="math">\(r_d\)</span> is the inner radius of the neighbourhood ring, and <span class="math">\(r\)</span> the outer radius, we need to get this information to the neighbouring sites.</p>
+<p>This is <em>great</em>: we only need to transfer information to neighbours, not all the other processes. Such &quot;local&quot; communication results in fast code.</p>
+<p>The amount of communication to take place each time step is proportional to <span class="math">\(rMp\)</span>, but assuming an appropriate network topology exists, each pair of neighbours can look after their communication at the same time, so communication will take time proportional to <span class="math">\(rMp/p\)</span>=<span class="math">\(rM\)</span>.</p>
+</section><section id="strong-scaling" class="slide level3">
+<h1>Strong scaling</h1>
+<p>We therefore expect the time taken for a simulation to vary like: <span class="math">\(Mr(k+Nr/p)\)</span>. (Where <span class="math">\(k\)</span> is a parameter describing the relative time to communicate one cell's state compared to the time for calculating one cell )</p>
+<p>Thus, we see that for a FIXED problem size, the benefit of parallelism will disappear and communication will dominate: this is Amdahl's law again.</p>
+</section><section id="weak-scaling" class="slide level3">
+<h1>Weak scaling</h1>
+<p>However, if we consider larger and larger problems, growing <span class="math">\(N\)</span> as <span class="math">\(p\)</span> grows, then we can stop communication overtaking us. This is a common outcome: <em>local</em> problems provide perfect <em>weak</em> scaling (until network congestion or IO problems dominate).</p>
+<p>Any NONLOCAL communication, where the total amount of time for communication to take place grows as the number of processes does (such as a gather, which takes <span class="math">\(p\)</span>, a reduction, like <span class="math">\(ln(p)\)</span>, or an all-to-all, like <span class="math">\(p^2\)</span>, means that perfect weak scaling can't be achieved.)</p>
+</section><section id="exercise-blocking-collective" class="slide level3">
+<h1> Exercise: Blocking Collective</h1>
+<p>We will parallelize the update and integral functions by having each process work on a contiguous strip of the whole field.</p>
+<p>For simplicity, each process owns a full replica of the field in memory. This is inneficient since each process owns memory describing a part of the field it will never use. Improving this is fairly easy, but require some more bookkeeping. Do try it at home!</p>
+<p>Exercise: parallelize using a blocking collective</p>
+</section><section id="exercise-halo-update" class="slide level3">
+<h1> Exercise: Halo update</h1>
+<p>Parallelize using a non-blocking collective and layer computation and calculation:</p>
+<ol type="1">
+<li>send data (part of the field) other processes need</li>
+<li>update part of owned field that does not need data from other processes</li>
+<li>receive data from other processes</li>
+<li>update part of owned field that needs data from other proceses</li>
+</ol>
+<p>This is called a halo update and quite common to domain decomposition problems. We can layer communication and computation even more by splitting over data on the left and on the right boundaries.</p>
+</section><section id="header" class="slide level3">
+<h1> Header</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;string&gt;</span>
+<span class="ot">#include &lt;vector&gt;</span>
+<span class="ot">#include &lt;mpi.h&gt;</span>
+
+<span class="kw">typedef</span> <span class="dt">double</span> density;
+<span class="kw">typedef</span> <span class="dt">double</span> distance;
+<span class="kw">typedef</span> <span class="dt">double</span> filling;
+
+<span class="kw">class</span> Smooth {
+<span class="kw">public</span>:
+  Smooth(<span class="dt">int</span> sizex = <span class="dv">100</span>, <span class="dt">int</span> sizey = <span class="dv">100</span>, distance inner = <span class="fl">21.0</span>, filling birth_1 = <span class="fl">0.278</span>,
+         filling birth_2 = <span class="fl">0.365</span>, filling death_1 = <span class="fl">0.267</span>, filling death_2 = <span class="fl">0.445</span>,
+         filling smoothing_disk = <span class="fl">0.147</span>, filling smoothing_ring = <span class="fl">0.028</span>);
+  <span class="dt">int</span> Size() <span class="dt">const</span>;
+  <span class="dt">int</span> Sizex() <span class="dt">const</span>;
+  <span class="dt">int</span> Sizey() <span class="dt">const</span>;
+  <span class="dt">int</span> Range() <span class="dt">const</span>;
+  <span class="dt">int</span> Frame() <span class="dt">const</span>;
+  <span class="dt">const</span> std::vector&lt;density&gt; &amp;Field() <span class="dt">const</span>;
+  <span class="dt">void</span> Field(std::vector&lt;density&gt; <span class="dt">const</span> &amp;input);
+
+  <span class="co">//! </span><span class="kw">\brief</span><span class="co"> Piecewise linear function defining the disk</span>
+  <span class="co">//! </span><span class="kw">\details</span>
+  <span class="co">//! - 1 inside the disk</span>
+  <span class="co">//! - 0 outside the disk</span>
+  <span class="co">//! - 0 &lt; x &lt; 1 in the smoothing region</span>
+  <span class="dt">double</span> Disk(distance radius) <span class="dt">const</span>;
+  <span class="co">//! </span><span class="kw">\brief</span><span class="co"> Piecewise linear function defining the ring</span>
+  <span class="co">//! </span><span class="kw">\details</span>
+  <span class="co">//! - 1 inside the ring</span>
+  <span class="co">//! - 0 outside the ring</span>
+  <span class="co">//! - 0 &lt; x &lt; 1 in the smoothing region</span>
+  <span class="dt">double</span> Ring(distance radius) <span class="dt">const</span>;
+  <span class="co">//! Smooth step function: 0 at -infty, 1 at +infty</span>
+  <span class="dt">static</span> <span class="dt">double</span> Sigmoid(<span class="dt">double</span> variable, <span class="dt">double</span> center, <span class="dt">double</span> width);
+  <span class="co">//! $e^{-4x / width}$: 0 at -infty, 1 at +infty</span>
+  <span class="dt">static</span> <span class="dt">double</span> Sigmoid(<span class="dt">double</span> x, <span class="dt">double</span> width);
+  density Transition(filling disk, filling ring) <span class="dt">const</span>;
+  <span class="dt">int</span> TorusDistance(<span class="dt">int</span> x1, <span class="dt">int</span> x2, <span class="dt">int</span> size) <span class="dt">const</span>;
+  <span class="dt">double</span> Radius(<span class="dt">int</span> x1, <span class="dt">int</span> y1, <span class="dt">int</span> x2, <span class="dt">int</span> y2) <span class="dt">const</span>;
+  <span class="co">// Value of the integral over a single ring</span>
+  <span class="dt">double</span> NormalisationRing() <span class="dt">const</span>;
+  <span class="co">// Value of the integral over a single disk</span>
+  <span class="dt">double</span> NormalisationDisk() <span class="dt">const</span>;
+  <span class="co">//! Sets the playing field to random values</span>
+  <span class="dt">void</span> SeedRandom();
+  <span class="co">//! Sets the playing field to constant values</span>
+  <span class="dt">void</span> SeedConstant(density constant = <span class="dv">0</span>);
+  <span class="co">//! Adds a disk to the playing field</span>
+  <span class="dt">void</span> AddDisk(<span class="dt">int</span> x0 = <span class="dv">0</span>, <span class="dt">int</span> y0 = <span class="dv">0</span>);
+  <span class="co">//! Adds a ring to the playing field</span>
+  <span class="dt">void</span> AddRing(<span class="dt">int</span> x0 = <span class="dv">0</span>, <span class="dt">int</span> y0 = <span class="dv">0</span>);
+  <span class="co">//! Sets a single pixel in the field</span>
+  <span class="dt">void</span> AddPixel(<span class="dt">int</span> x0, <span class="dt">int</span> y0, density value);
+  <span class="co">//! Moves to next step</span>
+  <span class="dt">void</span> Update();
+  <span class="co">//! Prints current field to standard output</span>
+  <span class="dt">void</span> Write(std::ostream &amp;out);
+
+  <span class="co">//! Returns {disk, ring} integrals at point (x, y)</span>
+  std::pair&lt;density, density&gt; Integrals(<span class="dt">int</span> x, <span class="dt">int</span> y) <span class="dt">const</span>;
+
+  <span class="co">//! Linear index from cartesian index</span>
+  <span class="dt">int</span> Index(<span class="dt">int</span> i, <span class="dt">int</span> j) <span class="dt">const</span>;
+  <span class="co">//! Cartesian index from linear index</span>
+  std::pair&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt; Index(<span class="dt">int</span> i) <span class="dt">const</span>;
+
+<span class="kw">private</span>:
+  <span class="dt">int</span> sizex, sizey;
+  std::vector&lt;density&gt; field, work_field;
+  filling birth_1, death_1;
+  filling birth_2, death_2;
+  filling smoothing_disk, smoothing_ring;
+  distance inner, outer, smoothing;
+  <span class="dt">int</span> frame;
+  <span class="dt">double</span> normalisation_disk, normalisation_ring;
+
+<span class="ot">#ifdef HAS_MPI</span>
+<span class="kw">public</span>:
+  MPI_Comm <span class="dt">const</span> &amp;Communicator() <span class="dt">const</span> { <span class="kw">return</span> communicator; }
+  <span class="dt">void</span> Communicator(MPI_Comm <span class="dt">const</span> &amp;comm) { communicator = comm; }
+
+  <span class="co">//! Update which layers computation and communication</span>
+  <span class="dt">void</span> LayeredUpdate();
+
+  <span class="co">//! Figure start owned sites for given rank</span>
+  <span class="dt">static</span> <span class="dt">int</span> OwnedStart(<span class="dt">int</span> nsites, <span class="dt">int</span> ncomms, <span class="dt">int</span> rank);
+
+  <span class="co">//! </span><span class="kw">\brief</span><span class="co"> Syncs fields between processes</span>
+  <span class="co">//! </span><span class="kw">\details</span><span class="co"> Assumes that each rank owns the sites given by OwnedRange.</span>
+  <span class="dt">static</span> <span class="dt">void</span> WholeFieldBlockingSync(std::vector&lt;density&gt; &amp;field, MPI_Comm <span class="dt">const</span> &amp;comm);
+
+  <span class="co">//! </span><span class="kw">\brief</span><span class="co"> Syncs fields between processes without blocking</span>
+  <span class="co">//! </span><span class="kw">\details</span><span class="co"> Assumes that each rank owns the sites given by OwnedRange.</span>
+  <span class="dt">static</span> MPI_Request WholeFieldNonBlockingSync(std::vector&lt;density&gt; &amp;field, MPI_Comm <span class="dt">const</span> &amp;comm);
+<span class="kw">private</span>:
+  MPI_Comm communicator;
+<span class="ot">#endif</span>
+};</code></pre>
+</section><section id="tests" class="slide level3">
+<h1> Tests</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#ifndef HAS_MPI</span>
+<span class="ot">#define CATCH_CONFIG_MAIN</span>
+<span class="ot">#else</span>
+<span class="ot">#define CATCH_CONFIG_RUNNER</span>
+<span class="ot">#include &lt;catch.hpp&gt;</span>
+<span class="ot">#endif</span>
+
+<span class="ot">#include &lt;cmath&gt;</span>
+<span class="ot">#include &lt;random&gt;</span>
+<span class="ot">#include &quot;catch.hpp&quot;</span>
+<span class="ot">#include &quot;smooth.h&quot;</span>
+
+TEST_CASE(<span class="st">&quot;Compute Integrals&quot;</span>) {
+  Smooth smooth(<span class="dv">300</span>, <span class="dv">300</span>);
+  smooth.SeedConstant(<span class="dv">0</span>);
+
+  <span class="co">// check for different positions in the torus</span>
+  <span class="kw">for</span>(<span class="dt">auto</span> <span class="dt">const</span> x : {<span class="dv">150</span>, <span class="dv">298</span>, <span class="dv">0</span>})
+    <span class="kw">for</span>(<span class="dt">auto</span> <span class="dt">const</span> y : {<span class="dv">150</span>, <span class="dv">298</span>, <span class="dv">0</span>}) {
+      SECTION(<span class="st">&quot;At position (&quot;</span> + std::to_string(x) + <span class="st">&quot;, &quot;</span> + std::to_string(y) + <span class="st">&quot;)&quot;</span>) {
+        SECTION(<span class="st">&quot;Ring only&quot;</span>) {
+          smooth.AddRing(<span class="dv">150</span>, <span class="dv">150</span>);
+
+          <span class="dt">auto</span> <span class="dt">const</span> result = smooth.Integrals(<span class="dv">150</span>, <span class="dv">150</span>);
+          <span class="co">// 0.1 accuracy because of smoothing</span>
+          CHECK(std::get&lt;<span class="dv">0</span>&gt;(result) == Approx(<span class="dv">0</span>).epsilon(<span class="fl">0.1</span>));
+          CHECK(std::get&lt;<span class="dv">1</span>&gt;(result) == Approx(<span class="dv">1</span>).epsilon(<span class="fl">0.1</span>));
+        }
+
+        SECTION(<span class="st">&quot;Disk only&quot;</span>) {
+          smooth.AddDisk(<span class="dv">150</span>, <span class="dv">150</span>);
+          <span class="dt">auto</span> <span class="dt">const</span> result = smooth.Integrals(<span class="dv">150</span>, <span class="dv">150</span>);
+          CHECK(std::get&lt;<span class="dv">0</span>&gt;(result) == Approx(<span class="dv">1</span>).epsilon(<span class="fl">0.1</span>));
+          CHECK(std::get&lt;<span class="dv">1</span>&gt;(result) == Approx(<span class="dv">0</span>).epsilon(<span class="fl">0.1</span>));
+        }
+
+        SECTION(<span class="st">&quot;Disk and ring&quot;</span>) {
+          smooth.AddRing(<span class="dv">150</span>, <span class="dv">150</span>);
+          smooth.AddDisk(<span class="dv">150</span>, <span class="dv">150</span>);
+          <span class="dt">auto</span> <span class="dt">const</span> result = smooth.Integrals(<span class="dv">150</span>, <span class="dv">150</span>);
+          CHECK(std::get&lt;<span class="dv">0</span>&gt;(result) == Approx(<span class="dv">1</span>).epsilon(<span class="fl">0.1</span>));
+          CHECK(std::get&lt;<span class="dv">1</span>&gt;(result) == Approx(<span class="dv">1</span>).epsilon(<span class="fl">0.1</span>));
+        }
+      }
+    }
+}
+
+TEST_CASE(<span class="st">&quot;Update&quot;</span>) {
+  <span class="co">// just test playing with a single pixel lit up sufficiently that the</span>
+  <span class="co">// transition is non-zero in the ring.</span>
+  <span class="dt">auto</span> <span class="dt">const</span> radius = <span class="dv">5</span>;
+  Smooth smooth(<span class="dv">100</span>, <span class="dv">100</span>, radius);
+  smooth.AddPixel(<span class="dv">50</span>, <span class="dv">50</span>, <span class="fl">0.3</span> * smooth.NormalisationRing());
+  CHECK(std::get&lt;<span class="dv">0</span>&gt;(smooth.Integrals(<span class="dv">50</span>, <span class="dv">50</span>))
+        == Approx(<span class="fl">0.3</span> * smooth.NormalisationRing() / smooth.NormalisationDisk()));
+
+  <span class="co">// check the integrals are numbers for which Transition gives non-zero result</span>
+  <span class="co">// in the ring</span>
+  CHECK(std::get&lt;<span class="dv">1</span>&gt;(smooth.Integrals(<span class="dv">50</span>, <span class="dv">50</span>)) == Approx(<span class="dv">0</span>));
+  CHECK(std::get&lt;<span class="dv">0</span>&gt;(smooth.Integrals(<span class="dv">40</span>, <span class="dv">40</span>)) == Approx(<span class="dv">0</span>));
+  CHECK(std::get&lt;<span class="dv">1</span>&gt;(smooth.Integrals(<span class="dv">40</span>, <span class="dv">40</span>)) == Approx(<span class="fl">0.3</span>));
+  CHECK(std::get&lt;<span class="dv">0</span>&gt;(smooth.Integrals(<span class="dv">42</span>, <span class="dv">39</span>)) == Approx(<span class="dv">0</span>));
+  CHECK(std::get&lt;<span class="dv">1</span>&gt;(smooth.Integrals(<span class="dv">42</span>, <span class="dv">39</span>)) == Approx(<span class="fl">0.3</span>));
+
+  <span class="co">// Now call update</span>
+  smooth.Update();
+  <span class="dt">auto</span> <span class="dt">const</span> field = smooth.Field();
+  <span class="co">// And check death in the disk</span>
+  CHECK(field[smooth.Index(<span class="dv">50</span>, <span class="dv">50</span>)] == Approx(<span class="dv">0</span>));
+  CHECK(field[smooth.Index(<span class="dv">51</span>, <span class="dv">52</span>)] == Approx(<span class="dv">0</span>));
+  <span class="co">// And check life in the ring</span>
+  CHECK(field[smooth.Index(<span class="dv">45</span>, <span class="dv">45</span>)] == Approx(smooth.Transition(<span class="dv">0</span>, <span class="fl">0.3</span>)));
+  CHECK(field[smooth.Index(<span class="dv">42</span>, <span class="dv">39</span>)] == Approx(smooth.Transition(<span class="dv">0</span>, <span class="fl">0.3</span>)));
+  <span class="co">// And check death outside</span>
+  CHECK(field[smooth.Index(<span class="dv">15</span>, <span class="dv">15</span>)] == Approx(<span class="dv">0</span>));
+}
+
+<span class="ot">#ifdef HAS_MPI</span>
+TEST_CASE(<span class="st">&quot;Arithmetics for plitting a field on different nodes&quot;</span>) {
+  CHECK(Smooth::OwnedStart(<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">0</span>) == <span class="dv">0</span>);
+  CHECK(Smooth::OwnedStart(<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">1</span>) == <span class="dv">3</span>);
+
+  <span class="kw">for</span>(<span class="dt">int</span> i(<span class="dv">0</span>); i &lt; <span class="dv">5</span>; ++i)
+    CHECK(Smooth::OwnedStart(<span class="dv">5</span>, <span class="dv">5</span>, i) == i);
+
+  <span class="co">// with too many procs, some procs have empty ranges</span>
+  <span class="kw">for</span>(<span class="dt">int</span> i(<span class="dv">5</span>); i &lt; <span class="dv">10</span>; ++i)
+    CHECK(Smooth::OwnedStart(<span class="dv">5</span>, <span class="dv">10</span>, i) == <span class="dv">5</span>);
+}
+
+TEST_CASE(<span class="st">&quot;Sync whole field&quot;</span>) {
+  <span class="dt">int</span> rank, ncomms;
+  MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &amp;ncomms);
+
+  <span class="co">// Create known field: -1 outside owned range, equal to rank inside</span>
+  <span class="co">// Different on each process!</span>
+  <span class="co">// Also, we make sure the size does not split evenly with the number of procs,</span>
+  <span class="co">// because that is a harder test.</span>
+  std::vector&lt;density&gt; field(<span class="dv">5</span> * ncomms + ncomms / <span class="dv">3</span>, -<span class="dv">1</span>);
+  std::fill(field.begin() + Smooth::OwnedStart(field.size(), ncomms, rank),
+            field.begin() + Smooth::OwnedStart(field.size(), ncomms, rank + <span class="dv">1</span>), rank);
+
+  SECTION(<span class="st">&quot;Blocking synchronisation&quot;</span>) {
+    Smooth::WholeFieldBlockingSync(field, MPI_COMM_WORLD);
+
+    <span class="kw">for</span>(<span class="dt">int</span> r(<span class="dv">0</span>); r &lt; ncomms; ++r)
+      CHECK(std::all_of(field.begin() + Smooth::OwnedStart(field.size(), ncomms, r),
+                        field.begin() + Smooth::OwnedStart(field.size(), ncomms, r + <span class="dv">1</span>),
+                        [r](density d) { <span class="kw">return</span> std::abs(d - r) &lt; <span class="fl">1e-8</span>; }));
+  }
+
+  SECTION(<span class="st">&quot;Non blocking synchronisation&quot;</span>) {
+    <span class="dt">auto</span> request = Smooth::WholeFieldNonBlockingSync(field, MPI_COMM_WORLD);
+    MPI_Wait(&amp;request, MPI_STATUS_IGNORE);
+
+    <span class="kw">for</span>(<span class="dt">int</span> r(<span class="dv">0</span>); r &lt; ncomms; ++r)
+      CHECK(std::all_of(field.begin() + Smooth::OwnedStart(field.size(), ncomms, r),
+                        field.begin() + Smooth::OwnedStart(field.size(), ncomms, r + <span class="dv">1</span>),
+                        [r](density d) { <span class="kw">return</span> std::abs(d - r) &lt; <span class="fl">1e-8</span>; }));
+  }
+}
+
+TEST_CASE(<span class="st">&quot;Serial vs parallel&quot;</span>) {
+  Smooth serial(<span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">5</span>);
+  Smooth parallel(<span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">5</span>);
+  parallel.Communicator(MPI_COMM_WORLD);
+
+  <span class="co">// generate one field for all Smooth instances</span>
+  std::vector&lt;density&gt; field(<span class="dv">100</span> * <span class="dv">100</span>);
+  std::random_device rd; <span class="co">// Will be used to obtain a seed for the random number engine</span>
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution&lt;&gt; randdist(<span class="dv">0</span>, <span class="dv">1</span>);
+  std::generate(field.begin(), field.end(), [&amp;randdist, &amp;gen]() { <span class="kw">return</span> randdist(gen); });
+  MPI_Bcast(field.data(), field.size(), MPI_DOUBLE, <span class="dv">0</span>, MPI_COMM_WORLD);
+
+  <span class="co">// set the fields for both Smooth instances</span>
+  serial.Field(field);
+  parallel.Field(field);
+
+  <span class="dt">int</span> rank, ncomms;
+  MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &amp;ncomms);
+
+  <span class="dt">auto</span> <span class="dt">const</span> start = Smooth::OwnedStart(field.size(), ncomms, rank);
+  <span class="dt">auto</span> <span class="dt">const</span> end = Smooth::OwnedStart(field.size(), ncomms, rank);
+  <span class="co">// if this is false, then the test itself is wrong</span>
+  CHECK(std::equal(serial.Field().begin() + start, serial.Field().begin() + end,
+                   parallel.Field().begin() + start));
+
+  SECTION(<span class="st">&quot;Blocking synchronization&quot;</span>) {
+    <span class="co">// check fields are the same in parallel and in serial for a few iterations</span>
+    <span class="kw">for</span>(<span class="dt">int</span> i(<span class="dv">0</span>); i &lt; <span class="dv">3</span>; ++i) {
+      serial.Update();
+      parallel.Update();
+      CHECK(std::equal(serial.Field().begin() + start, serial.Field().begin() + end,
+                       parallel.Field().begin() + start));
+    }
+  }
+
+  SECTION(<span class="st">&quot;Layered communication-computation&quot;</span>) {
+    <span class="kw">for</span>(<span class="dt">int</span> i(<span class="dv">0</span>); i &lt; <span class="dv">3</span>; ++i) {
+      serial.Update();
+      parallel.LayeredUpdate();
+      CHECK(std::equal(serial.Field().begin() + start, serial.Field().begin() + end,
+                       parallel.Field().begin() + start));
+    }
+  }
+}
+
+TEST_CASE(<span class="st">&quot;Smooth model can be instantiated and configured&quot;</span>, <span class="st">&quot;[Smooth]&quot;</span>) {
+
+  SECTION(<span class="st">&quot;Smooth can be constructed&quot;</span>) {
+    Smooth smooth;
+    REQUIRE(smooth.Size() == <span class="dv">10000</span>);
+    REQUIRE(smooth.Field().size() == smooth.Size());
+  }
+}
+
+TEST_CASE(<span class="st">&quot;Smooth mathematical functions are correct&quot;</span>, <span class="st">&quot;[Smooth]&quot;</span>) {
+  Smooth smooth;
+  SECTION(<span class="st">&quot;Disk support function is correct&quot;</span>) {
+    REQUIRE(smooth.Disk(<span class="dv">500</span>) == Approx(<span class="dv">0</span>));
+    REQUIRE(smooth.Disk(<span class="fl">21.6</span>) == <span class="fl">0.0</span>);
+    REQUIRE(smooth.Disk(<span class="fl">21.4</span>) &gt; <span class="fl">0.0</span>);
+    REQUIRE(smooth.Disk(<span class="fl">21.4</span>) &lt; <span class="fl">1.0</span>);
+    REQUIRE(smooth.Disk(<span class="fl">20.6</span>) &gt; <span class="fl">0.0</span>);
+    REQUIRE(smooth.Disk(<span class="fl">20.6</span>) &lt; <span class="fl">1.0</span>);
+    REQUIRE(smooth.Disk(<span class="fl">20.4</span>) == Approx(<span class="fl">1.0</span>));
+    REQUIRE(smooth.Disk(<span class="fl">19.0</span>) == Approx(<span class="fl">1.0</span>));
+    REQUIRE(smooth.Disk(<span class="fl">21.0</span>) == Approx(<span class="fl">0.5</span>));
+  }
+  SECTION(<span class="st">&quot;Ring support function is correct&quot;</span>) {
+    REQUIRE(smooth.Ring(<span class="dv">22</span>) == <span class="fl">1.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">21.6</span>) == <span class="fl">1.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">21.4</span>) &gt; <span class="fl">0.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">21.4</span>) &lt; <span class="fl">1.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">20.6</span>) &gt; <span class="fl">0.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">20.6</span>) &lt; <span class="fl">1.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">20.4</span>) == <span class="fl">0.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">21.0</span>) == <span class="fl">0.5</span>);
+    REQUIRE(smooth.Ring(<span class="fl">64.0</span>) == <span class="fl">0.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">63.6</span>) == <span class="fl">0.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">63.4</span>) &gt; <span class="fl">0.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">63.4</span>) &lt; <span class="fl">1.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">62.6</span>) &gt; <span class="fl">0.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">62.6</span>) &lt; <span class="fl">1.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">62.4</span>) == <span class="fl">1.0</span>);
+    REQUIRE(smooth.Ring(<span class="fl">63.0</span>) == <span class="fl">0.5</span>);
+  }
+
+  <span class="co">/// Sigmoid_Test</span>
+  SECTION(<span class="st">&quot;Sigmoid function is correct&quot;</span>) {
+    <span class="dt">double</span> e = std::exp(<span class="fl">1.0</span>);
+    REQUIRE(Smooth::Sigmoid(<span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="fl">4.0</span>) == <span class="fl">0.5</span>);
+    REQUIRE(std::abs(Smooth::Sigmoid(<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">4.0</span>) - e / (<span class="dv">1</span> + e)) &lt; <span class="fl">0.0001</span>);
+    REQUIRE(Smooth::Sigmoid(<span class="dv">10000</span>, <span class="fl">1.0</span>, <span class="fl">4.0</span>) == <span class="fl">1.0</span>);
+    REQUIRE(std::abs(Smooth::Sigmoid(<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>)) &lt; <span class="fl">0.001</span>);
+  }
+  <span class="co">/// end</span>
+  SECTION(<span class="st">&quot;Transition function is correct&quot;</span>) {
+    REQUIRE(std::abs(smooth.Transition(<span class="fl">1.0</span>, <span class="fl">0.3</span>) - <span class="fl">1.0</span>) &lt; <span class="fl">0.1</span>);
+    REQUIRE(smooth.Transition(<span class="fl">1.0</span>, <span class="fl">1.0</span>) == Approx(<span class="dv">0</span>));
+    REQUIRE(std::abs(smooth.Transition(<span class="fl">0.0</span>, <span class="fl">0.3</span>) - <span class="fl">1.0</span>) &lt; <span class="fl">0.1</span>);
+    REQUIRE(std::abs(smooth.Transition(<span class="fl">0.0</span>, <span class="fl">0.0</span>)) &lt; <span class="fl">0.1</span>);
+  }
+  SECTION(<span class="st">&quot;Wraparound Distance is correct&quot;</span>) {
+    REQUIRE(smooth.TorusDistance(<span class="dv">95</span>, <span class="dv">5</span>, <span class="dv">100</span>) == <span class="dv">10</span>);
+    REQUIRE(smooth.TorusDistance(<span class="dv">5</span>, <span class="dv">96</span>, <span class="dv">100</span>) == <span class="dv">9</span>);
+    REQUIRE(smooth.TorusDistance(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">100</span>) == <span class="dv">5</span>);
+    REQUIRE(smooth.Radius(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">14</span>) == <span class="fl">5.0</span>);
+  }
+}
+
+TEST_CASE(<span class="st">&quot;NormalisationsAreCorrect&quot;</span>) {
+  Smooth smooth(<span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">10</span>);
+  SECTION(<span class="st">&quot;Disk Normalisation is correct&quot;</span>) {
+    <span class="co">// Should be roughly pi*radius*radius,</span>
+    REQUIRE(std::abs(smooth.NormalisationDisk() - <span class="fl">314.15</span>) &lt; <span class="fl">1.0</span>);
+  }
+  SECTION(<span class="st">&quot;Ring Normalisation is correct&quot;</span>) {
+    <span class="co">// Should be roughly pi*outer*outer-pi*inner*inner, pi*100*(9-1), 2513.27</span>
+    REQUIRE(std::abs(smooth.NormalisationRing() - <span class="fl">2513.27</span>) &lt; <span class="fl">2.0</span>);
+  }
+}
+
+TEST_CASE(<span class="st">&quot;FillingsAreUnityWhenSeeded&quot;</span>) {
+  Smooth smooth;
+  smooth.SeedConstant(<span class="dv">0</span>);
+  SECTION(<span class="st">&quot;DiskFillingUnityWithDiskSeed&quot;</span>) {
+    smooth.AddDisk();
+    REQUIRE(std::get&lt;<span class="dv">0</span>&gt;(smooth.Integrals(<span class="dv">0</span>, <span class="dv">0</span>)) == Approx(<span class="dv">1</span>).epsilon(<span class="fl">0.1</span>));
+  }
+
+  SECTION(<span class="st">&quot;Disk Filling Zero With Ring Seed&quot;</span>) {
+    smooth.AddRing();
+    REQUIRE(std::get&lt;<span class="dv">0</span>&gt;(smooth.Integrals(<span class="dv">0</span>, <span class="dv">0</span>)) == Approx(<span class="dv">0</span>).epsilon(<span class="fl">0.1</span>));
+  }
+  SECTION(<span class="st">&quot;RingFillingUnityWithRingSeed&quot;</span>) {
+    smooth.AddRing();
+    REQUIRE(std::get&lt;<span class="dv">1</span>&gt;(smooth.Integrals(<span class="dv">0</span>, <span class="dv">0</span>)) == Approx(<span class="dv">1</span>).epsilon(<span class="fl">0.1</span>));
+  }
+}
+
+TEST_CASE(<span class="st">&quot;FillingFieldHasRangeofValues&quot;</span>) {
+  Smooth smooth(<span class="dv">300</span>, <span class="dv">300</span>);
+  smooth.SeedConstant(<span class="dv">0</span>);
+  smooth.AddRing();
+  <span class="dt">double</span> min = <span class="fl">1.0</span>;
+  <span class="dt">double</span> max = <span class="fl">0.0</span>;
+  <span class="kw">for</span>(<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; <span class="dv">300</span>; x++) {
+    <span class="dt">double</span> filling = std::get&lt;<span class="dv">1</span>&gt;(smooth.Integrals(x, <span class="dv">0</span>));
+    min = std::min(min, filling);
+    max = std::max(max, filling);
+  }
+  REQUIRE(min &lt; <span class="fl">0.2</span>);
+  REQUIRE(max &gt; <span class="fl">0.4</span>);
+}
+
+<span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">const</span> <span class="dt">char</span> **argv) {
+  <span class="co">// There must be exactly once instance</span>
+  Catch::Session session;
+
+  MPI_Init(&amp;argc, <span class="kw">const_cast</span>&lt;<span class="dt">char</span> ***&gt;(&amp;argv));
+  <span class="dt">auto</span> <span class="dt">const</span> result = session.run();
+
+  MPI_Finalize();
+
+  <span class="kw">return</span> result;
+}
+<span class="ot">#endif</span></code></pre>
+</section><section id="implementation" class="slide level3">
+<h1> Implementation</h1>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;cassert&gt;</span>
+<span class="ot">#include &lt;cmath&gt;</span>
+<span class="ot">#include &lt;cstdlib&gt;</span>
+<span class="ot">#include &lt;iostream&gt;</span>
+
+<span class="ot">#include &quot;smooth.h&quot;</span>
+
+Smooth::Smooth(<span class="dt">int</span> sizex, <span class="dt">int</span> sizey, distance inner, filling birth_1, filling birth_2,
+               filling death_1, filling death_2, filling smoothing_disk, filling smoothing_ring)
+    : sizex(sizex), sizey(sizey), field(sizex * sizey), work_field(sizex * sizey), inner(inner),
+      birth_1(birth_1), birth_2(birth_2), death_1(death_1), death_2(death_2),
+      smoothing_disk(smoothing_disk), smoothing_ring(smoothing_ring), outer(inner * <span class="dv">3</span>),
+      smoothing(<span class="fl">1.0</span>)
+<span class="ot">#ifdef HAS_MPI</span>
+      ,
+      communicator(MPI_COMM_SELF)
+<span class="ot">#endif</span>
+{
+  normalisation_disk = NormalisationDisk();
+  normalisation_ring = NormalisationRing();
+}
+
+<span class="dt">const</span> std::vector&lt;density&gt; &amp;Smooth::Field() <span class="dt">const</span> { <span class="kw">return</span> field; };
+<span class="dt">void</span> Smooth::Field(std::vector&lt;density&gt; <span class="dt">const</span> &amp;input) {
+  assert(field.size() == input.size());
+  field = input;
+}
+
+<span class="dt">int</span> Smooth::Range() <span class="dt">const</span> { <span class="kw">return</span> outer + smoothing / <span class="dv">2</span>; }
+
+<span class="dt">int</span> Smooth::Sizex() <span class="dt">const</span> { <span class="kw">return</span> sizex; }
+<span class="dt">int</span> Smooth::Sizey() <span class="dt">const</span> { <span class="kw">return</span> sizey; }
+<span class="dt">int</span> Smooth::Size() <span class="dt">const</span> { <span class="kw">return</span> sizex * sizey; }
+
+<span class="co">/// &quot;Disk_Smoothing&quot;</span>
+<span class="dt">double</span> Smooth::Disk(distance radius) <span class="dt">const</span> {
+  <span class="kw">if</span>(radius &gt; inner + smoothing / <span class="dv">2</span>)
+    <span class="kw">return</span> <span class="fl">0.0</span>;
+  <span class="kw">if</span>(radius &lt; inner - smoothing / <span class="dv">2</span>)
+    <span class="kw">return</span> <span class="fl">1.0</span>;
+  <span class="kw">return</span> (inner + smoothing / <span class="dv">2</span> - radius) / smoothing;
+}
+<span class="co">/// end</span>
+
+<span class="dt">double</span> Smooth::Ring(distance radius) <span class="dt">const</span> {
+  <span class="kw">if</span>(radius &lt; inner - smoothing / <span class="dv">2</span>)
+    <span class="kw">return</span> <span class="fl">0.0</span>;
+  <span class="kw">if</span>(radius &lt; inner + smoothing / <span class="dv">2</span>)
+    <span class="kw">return</span> (radius + smoothing / <span class="dv">2</span> - inner) / smoothing;
+  <span class="kw">if</span>(radius &lt; outer - smoothing / <span class="dv">2</span>)
+    <span class="kw">return</span> <span class="fl">1.0</span>;
+  <span class="kw">if</span>(radius &lt; outer + smoothing / <span class="dv">2</span>)
+    <span class="kw">return</span> (outer + smoothing / <span class="dv">2</span> - radius) / smoothing;
+  <span class="kw">return</span> <span class="fl">0.0</span>;
+}
+
+<span class="dt">double</span> Smooth::Sigmoid(<span class="dt">double</span> variable, <span class="dt">double</span> center, <span class="dt">double</span> width) {
+  <span class="kw">return</span> Sigmoid(variable - center, width);
+}
+<span class="dt">double</span> Smooth::Sigmoid(<span class="dt">double</span> x, <span class="dt">double</span> width) { <span class="kw">return</span> <span class="fl">1.0</span> / (<span class="fl">1.0</span> + std::exp(-<span class="fl">4.0</span> * x / width)); }
+
+density Smooth::Transition(filling disk, filling ring) <span class="dt">const</span> {
+  <span class="dt">auto</span> <span class="dt">const</span> sdisk = Sigmoid(disk - <span class="fl">0.5</span>, smoothing_disk);
+  <span class="dt">auto</span> <span class="dt">const</span> t1 = birth_1 * (<span class="fl">1.0</span> - sdisk) + death_1 * sdisk;
+  <span class="dt">auto</span> <span class="dt">const</span> t2 = birth_2 * (<span class="fl">1.0</span> - sdisk) + death_2 * sdisk;
+  <span class="kw">return</span> Sigmoid(ring - t1, smoothing_ring) * Sigmoid(t2 - ring, smoothing_ring);
+}
+
+<span class="dt">int</span> Smooth::Index(<span class="dt">int</span> i, <span class="dt">int</span> j) <span class="dt">const</span> { <span class="kw">return</span> i * Sizex() + j; }
+std::pair&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt; Smooth::Index(<span class="dt">int</span> i) <span class="dt">const</span> { <span class="kw">return</span> {i / Sizex(), i % Sizex()}; }
+
+<span class="co">/// &quot;Torus_Difference&quot;</span>
+<span class="dt">int</span> Smooth::TorusDistance(<span class="dt">int</span> x1, <span class="dt">int</span> x2, <span class="dt">int</span> size) <span class="dt">const</span> {
+  <span class="dt">auto</span> <span class="dt">const</span> remainder = std::abs(x1 - x2) % size;
+  <span class="kw">return</span> std::min(remainder, std::abs(remainder - size));
+}
+<span class="co">/// end</span>
+
+<span class="dt">double</span> Smooth::Radius(<span class="dt">int</span> x1, <span class="dt">int</span> y1, <span class="dt">int</span> x2, <span class="dt">int</span> y2) <span class="dt">const</span> {
+  <span class="dt">int</span> xdiff = TorusDistance(x1, x2, sizex);
+  <span class="dt">int</span> ydiff = TorusDistance(y1, y2, sizey);
+  <span class="kw">return</span> std::sqrt(xdiff * xdiff + ydiff * ydiff);
+}
+
+<span class="dt">double</span> Smooth::NormalisationDisk() <span class="dt">const</span> {
+  <span class="dt">double</span> total = <span class="fl">0.0</span>;
+  <span class="kw">for</span>(<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; sizex; x++)
+    <span class="kw">for</span>(<span class="dt">int</span> y = <span class="dv">0</span>; y &lt; sizey; y++)
+      total += Disk(Radius(<span class="dv">0</span>, <span class="dv">0</span>, x, y));
+  <span class="kw">return</span> total;
+}
+
+<span class="dt">double</span> Smooth::NormalisationRing() <span class="dt">const</span> {
+  <span class="dt">double</span> total = <span class="fl">0.0</span>;
+  <span class="kw">for</span>(<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; sizex; x++)
+    <span class="kw">for</span>(<span class="dt">int</span> y = <span class="dv">0</span>; y &lt; sizey; y++)
+      total += Ring(Radius(<span class="dv">0</span>, <span class="dv">0</span>, x, y));
+  <span class="kw">return</span> total;
+}
+
+<span class="dt">void</span> Smooth::Update() {
+<span class="ot">#ifdef HAS_MPI</span>
+  <span class="dt">int</span> rank, ncomms;
+  MPI_Comm_rank(Communicator(), &amp;rank);
+  MPI_Comm_size(Communicator(), &amp;ncomms);
+
+  WholeFieldBlockingSync(field, communicator);
+  <span class="dt">auto</span> <span class="dt">const</span> start = OwnedStart(Size(), ncomms, rank);
+  <span class="dt">auto</span> <span class="dt">const</span> end = OwnedStart(Size(), ncomms, rank + <span class="dv">1</span>);
+<span class="ot">#else</span>
+  <span class="dt">auto</span> <span class="dt">const</span> start = <span class="dv">0</span>;
+  <span class="dt">auto</span> <span class="dt">const</span> end = field.size();
+<span class="ot">#endif</span>
+
+  <span class="kw">for</span>(<span class="dt">int</span> i(start); i &lt; end; ++i) {
+    <span class="dt">auto</span> <span class="dt">const</span> xy = Index(i);
+    <span class="dt">auto</span> <span class="dt">const</span> integrals = Integrals(xy.first, xy.second);
+    work_field[i] = Transition(integrals.first, integrals.second);
+  }
+
+  std::swap(field, work_field);
+  frame++;
+}
+
+<span class="ot">#ifdef HAS_MPI</span>
+<span class="dt">void</span> Smooth::LayeredUpdate() {
+  <span class="dt">int</span> rank, ncomms;
+  MPI_Comm_rank(Communicator(), &amp;rank);
+  MPI_Comm_size(Communicator(), &amp;ncomms);
+
+  <span class="dt">auto</span> request = WholeFieldNonBlockingSync(field, communicator);
+  <span class="dt">auto</span> <span class="dt">const</span> start = OwnedStart(Size(), ncomms, rank);
+  <span class="dt">auto</span> <span class="dt">const</span> end = OwnedStart(Size(), ncomms, rank + <span class="dv">1</span>);
+  <span class="dt">auto</span> <span class="dt">const</span> interaction = Sizex() * <span class="kw">static_cast</span>&lt;<span class="dt">int</span>&gt;(std::floor(outer + smoothing / <span class="dv">2</span> + <span class="dv">1</span>));
+
+  <span class="dt">auto</span> <span class="dt">const</span> set_work_field_at_index = [<span class="kw">this</span>](<span class="dt">int</span> i) {
+    <span class="dt">auto</span> <span class="dt">const</span> xy = Index(i);
+    <span class="dt">auto</span> <span class="dt">const</span> integrals = Integrals(xy.first, xy.second);
+    work_field[i] = Transition(integrals.first, integrals.second);
+  };
+
+  <span class="kw">for</span>(<span class="dt">int</span> i(start + interaction); i &lt; end - interaction; ++i)
+    set_work_field_at_index(i);
+
+  MPI_Wait(&amp;request, MPI_STATUS_IGNORE);
+
+  <span class="kw">for</span>(<span class="dt">int</span> i(start); i &lt; std::min(end, start + interaction); ++i)
+    set_work_field_at_index(i);
+  <span class="kw">for</span>(<span class="dt">int</span> i(std::min(end, end - interaction)); i &lt; end; ++i)
+    set_work_field_at_index(i);
+
+  std::swap(field, work_field);
+  frame++;
+}
+<span class="ot">#endif</span>
+
+std::pair&lt;density, density&gt; Smooth::Integrals(<span class="dt">int</span> x, <span class="dt">int</span> y) <span class="dt">const</span> {
+  density ring_total(<span class="dv">0</span>), disk_total(<span class="dv">0</span>);
+  <span class="kw">for</span>(std::vector&lt;density&gt;::size_type i(<span class="dv">0</span>); i &lt; field.size(); ++i) {
+    <span class="dt">auto</span> <span class="dt">const</span> cartesian = Index(i);
+    <span class="dt">int</span> deltax = TorusDistance(x, cartesian.first, sizex);
+    <span class="kw">if</span>(deltax &gt; outer + smoothing / <span class="dv">2</span>)
+      <span class="kw">continue</span>;
+
+    <span class="dt">int</span> deltay = TorusDistance(y, cartesian.second, sizey);
+    <span class="kw">if</span>(deltay &gt; outer + smoothing / <span class="dv">2</span>)
+      <span class="kw">continue</span>;
+
+    <span class="dt">double</span> radius = std::sqrt(deltax * deltax + deltay * deltay);
+    <span class="dt">double</span> fieldv = field[i];
+    ring_total += fieldv * Ring(radius);
+    disk_total += fieldv * Disk(radius);
+  }
+  <span class="kw">return</span> {disk_total / NormalisationDisk(), ring_total / NormalisationRing()};
+}
+
+<span class="dt">void</span> Smooth::SeedRandom() {
+  <span class="kw">for</span>(<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; sizex; x++)
+    <span class="kw">for</span>(<span class="dt">int</span> y = <span class="dv">0</span>; y &lt; sizey; y++)
+      field[Index(x, y)] += (<span class="kw">static_cast</span>&lt;<span class="dt">double</span>&gt;(rand()) / <span class="kw">static_cast</span>&lt;<span class="dt">double</span>&gt;(RAND_MAX));
+}
+
+<span class="dt">void</span> Smooth::SeedConstant(density constant) { std::fill(field.begin(), field.end(), constant); }
+<span class="dt">void</span> Smooth::AddDisk(<span class="dt">int</span> x0, <span class="dt">int</span> y0) {
+  <span class="kw">for</span>(<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; sizex; x++)
+    <span class="kw">for</span>(<span class="dt">int</span> y = <span class="dv">0</span>; y &lt; sizey; y++)
+      field[Index(x, y)] += Disk(Radius(x0, y0, x, y));
+}
+
+<span class="dt">void</span> Smooth::AddRing(<span class="dt">int</span> x0, <span class="dt">int</span> y0) {
+  <span class="kw">for</span>(<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; sizex; x++)
+    <span class="kw">for</span>(<span class="dt">int</span> y = <span class="dv">0</span>; y &lt; sizey; y++)
+      field[Index(x, y)] += Ring(Radius(x0, y0, x, y));
+}
+
+<span class="dt">void</span> Smooth::AddPixel(<span class="dt">int</span> x0, <span class="dt">int</span> y0, density value) { field[Index(x0, y0)] = value; }
+
+<span class="dt">void</span> Smooth::Write(std::ostream &amp;out) {
+  <span class="kw">for</span>(<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; sizex; x++) {
+    <span class="kw">for</span>(<span class="dt">int</span> y = <span class="dv">0</span>; y &lt; sizey; y++)
+      out &lt;&lt; field[Index(x, y)] &lt;&lt; <span class="st">&quot; , &quot;</span>;
+    out &lt;&lt; std::endl;
+  }
+  out &lt;&lt; std::endl;
+}
+
+<span class="dt">int</span> Smooth::Frame() <span class="dt">const</span> { <span class="kw">return</span> frame; }
+
+<span class="ot">#ifdef HAS_MPI</span>
+<span class="dt">int</span> Smooth::OwnedStart(<span class="dt">int</span> nsites, <span class="dt">int</span> ncomms, <span class="dt">int</span> rank) {
+  assert(nsites &gt;= <span class="dv">0</span>);
+  assert(ncomms &gt; <span class="dv">0</span>);
+  assert(rank &gt;= <span class="dv">0</span> <span class="kw">and</span> rank &lt;= ncomms);
+  <span class="kw">return</span> rank * (nsites / ncomms) + std::min(nsites % ncomms, rank);
+}
+
+<span class="dt">void</span> Smooth::WholeFieldBlockingSync(std::vector&lt;density&gt; &amp;field, MPI_Comm <span class="dt">const</span> &amp;comm) {
+  <span class="dt">int</span> rank, ncomms;
+  MPI_Comm_rank(comm, &amp;rank);
+  MPI_Comm_size(comm, &amp;ncomms);
+
+  <span class="kw">if</span>(ncomms == <span class="dv">1</span>)
+    <span class="kw">return</span>;
+
+  std::vector&lt;<span class="dt">int</span>&gt; displacements{<span class="dv">0</span>}, sizes;
+
+  <span class="kw">for</span>(<span class="dt">int</span> i(<span class="dv">0</span>); i &lt; ncomms; ++i) {
+    displacements.push_back(Smooth::OwnedStart(field.size(), ncomms, i + <span class="dv">1</span>));
+    sizes.push_back(displacements.back() - displacements[i]);
+  }
+
+  MPI_Allgatherv(MPI_IN_PLACE, sizes[rank], MPI_DOUBLE, field.data(), sizes.data(),
+                 displacements.data(), MPI_DOUBLE, comm);
+}
+
+MPI_Request Smooth::WholeFieldNonBlockingSync(std::vector&lt;density&gt; &amp;field, MPI_Comm <span class="dt">const</span> &amp;comm) {
+  <span class="dt">int</span> rank, ncomms;
+  MPI_Comm_rank(comm, &amp;rank);
+  MPI_Comm_size(comm, &amp;ncomms);
+
+  std::vector&lt;<span class="dt">int</span>&gt; displacements{<span class="dv">0</span>}, sizes;
+
+  <span class="kw">for</span>(<span class="dt">int</span> i(<span class="dv">0</span>); i &lt; ncomms; ++i) {
+    displacements.push_back(Smooth::OwnedStart(field.size(), ncomms, i + <span class="dv">1</span>));
+    sizes.push_back(displacements.back() - displacements[i]);
+  }
+
+  MPI_Request request;
+  MPI_Iallgatherv(MPI_IN_PLACE, sizes[rank], MPI_DOUBLE, field.data(), sizes.data(),
+                  displacements.data(), MPI_DOUBLE, comm, &amp;request);
+  <span class="kw">return</span> request;
+}
+<span class="ot">#endif</span></code></pre>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

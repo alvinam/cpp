@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Vectorization</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Vectorization</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section id="just-uses" class="slide level2">
+<h1>Just USES</h1>
+<p>Using Somebody Else's Software is a good way to avoid becoming a GPU expert. But which? Check for usability and sustainability:</p>
+<ul>
+<li>Does it do what you need?</li>
+<li>What license is it under?</li>
+<li>Is it simply available on Github/BitBucker/Gitlab?</li>
+<li>Are there automatic tests?</li>
+<li>Is it an active development repo? (number of commits, date of last commmit)</li>
+<li>How many people/labs/companies are committing to it? (check pull-requests)</li>
+<li>Is there a community of users? (check issues, wiki)</li>
+<li>Is there documentation?</li>
+</ul>
+<h3 id="broadcasting-vectorization">Broadcasting (Vectorization)</h3>
+<p>GPU require running the <em>same operations</em> over mutliple data (SIMD). Broadcasting transforms nested loops into a set of matrix or array operations amenable to SIMD, <em>and</em> likely to be already GPU-ized by external libraries.</p>
+<p>Also useful for MATLAB, Python/numpy, etc...</p>
+<p>Example:</p>
+<p><span class="math">\[G = max(||A - R_i||)\]</span></p>
+<p>for all <span class="math">\(i\)</span>, where <span class="math">\(A\)</span> and <span class="math">\(R_i\)</span> are vectors</p>
+<p>Naive solution with explicit loops and STL:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">double</span> naive(std::vector&lt;std::array&lt;<span class="dt">double</span>, <span class="dv">3</span>&gt;&gt; <span class="dt">const</span> &amp;Rs,
+             std::array&lt;<span class="dt">double</span>, <span class="dv">3</span>&gt; <span class="dt">const</span> &amp;A) {
+  <span class="dt">double</span> result(<span class="dv">0</span>);
+  <span class="kw">for</span>(<span class="dt">auto</span> <span class="dt">const</span> &amp;R : Rs) {
+    <span class="dt">auto</span> norm = (A[<span class="dv">0</span>] - R[<span class="dv">0</span>]) * (A[<span class="dv">0</span>] - R[<span class="dv">0</span>]) + (A[<span class="dv">1</span>] - R[<span class="dv">1</span>]) * (A[<span class="dv">1</span>] - R[<span class="dv">1</span>])
+                + (A[<span class="dv">2</span>] - R[<span class="dv">2</span>]) * (A[<span class="dv">2</span>] - R[<span class="dv">2</span>]);
+    <span class="kw">if</span>(result &lt; norm)
+      result = norm;
+  }
+  <span class="kw">return</span> std::sqrt(result);
+}</code></pre>
+<h3 id="broadcasting-vectorization-1">Broadcasting (Vectorization)</h3>
+<ol type="1">
+<li>transform A from a vector to a matrix A3xn</li>
+<li>compute pow2 = (R - A3xn)^2 elementwise</li>
+<li>sum pow2 over columns</li>
+<li>reduce final vector using max</li>
+</ol>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+<span class="dt">double</span> broadcasting(std::vector&lt;std::array&lt;<span class="dt">double</span>, <span class="dv">3</span>&gt;&gt; <span class="dt">const</span> &amp;Rs,
+                    std::array&lt;<span class="dt">double</span>, <span class="dv">3</span>&gt; <span class="dt">const</span> &amp;A) {
+  af::array A_3x1(A.size(), A.data());
+  af::array gpuRs(A.size(), Rs.size(), Rs[<span class="dv">0</span>].data());
+
+  <span class="dt">auto</span> <span class="dt">const</span> A_3xn = af::tile(A_3x1, <span class="dv">1</span>, Rs.size());
+  <span class="dt">auto</span> <span class="dt">const</span> norms = af::sum(af::pow(gpuRs - A_3xn, <span class="dv">2</span>), <span class="dv">0</span>);
+  <span class="dt">auto</span> <span class="dt">const</span> result = af::max(norms);
+  std::shared_ptr&lt;<span class="dt">double</span>&gt; <span class="dt">const</span> host_array(result.host&lt;<span class="dt">double</span>&gt;(),
+                                           [](<span class="dt">double</span> *ptr) { <span class="kw">delete</span>[] ptr; });
+  <span class="kw">return</span> std::sqrt(*host_array);
+}</code></pre>
+<h3 id="a-word-on-transfer-rate">A word on transfer rate</h3>
+<ul>
+<li>Transfer to GPU takes time <span class="math">\(T_0\)</span></li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  af::array gpuRs(A.size(), Rs.size(), Rs[<span class="dv">0</span>].data());
+  af::array gpuA(A.size(), A.data());</code></pre>
+<ul>
+<li>Compute takes <span class="math">\(\frac{C}{n}\)</span>, n the number of GPU threads</li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  <span class="dt">auto</span> <span class="dt">const</span> result
+      = af::max(af::sum(af::pow(gpuRs - af::tile(gpuA, <span class="dv">1</span>, Rs.size()), <span class="dv">2</span>), <span class="dv">0</span>));</code></pre>
+<ul>
+<li>Transfer to CPU takes time <span class="math">\(T_1\)</span></li>
+</ul>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">
+  af::array gpuRs(A.size(), Rs.size(), Rs[<span class="dv">0</span>].data());
+  af::array gpuA(A.size(), A.data());</code></pre>
+<ul>
+<li>Then, possibly <span class="math">\(T_0 + T_1 + C/n &gt; C\)</span></li>
+</ul>
+<h3 id="exercise-broadcasting"> Exercise: Broadcasting</h3>
+<p><code>G = \sum_{i, j, k} cos(K_k \cdot (R_i - R_j))</code></p>
+<p>Given</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">std::vector&lt;std::array&lt;<span class="dt">double</span>, <span class="dv">3</span>&gt;&gt; <span class="dt">const</span> Rs = {...};
+std::vector&lt;std::array&lt;<span class="dt">double</span>, <span class="dv">3</span>&gt;&gt; <span class="dt">const</span> Ks = {...};</code></pre>
+<p>Write code to compute G (pseudo, or real code):</p>
+<ol type="1">
+<li>Create an Rs array of (3, 1, n) using <code>af::moddims</code> (<code>n = Rs.size()</code>)</li>
+<li>Create an Rs array of (3, n, 1) using <code>af::moddims</code></li>
+<li>Tile appropriately</li>
+<li>Compute the dot product using <code>af::moddims</code>, <code>af::matmul</code>, <code>af::transpose</code></li>
+<li>sum over the cosine of the result</li>
+</ol>
+<h3 id="exercise-line-of-sight"> Exercise: Line of Sight</h3>
+<p>Given an n by m matrix of altitudes, with n orientations and m distances:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">std::vector&lt;<span class="dt">double</span>&gt; altitudes(nOrientations * mDistances) = { ... };</code></pre>
+<p>Compute the whether any point i, j is in sight. A point is in sight if, for that orientation, all previous angles between X-horizon and X-point are smaller</p>
+<pre><code>            /---\
+X---\      /     \---A
+     \____/</code></pre>
+<p>Angles are computed using the formula <code>atan(z_i / (stepsize * i))</code>.</p>
+<p><code>af::scanf</code> might come in handy: - given [a0, a1, a2, ..., aN] - it computes [0, a0, a0 + a1, a0 + a1 + a2, ..., a0 + ... + aN] - leading zero is removed in exclusive scans</p>
+<p>This function looks intrinsically difficult to parallelize, but there are well known solutions. It is useful in many fields.</p>
+</section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

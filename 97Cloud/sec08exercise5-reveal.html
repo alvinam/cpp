@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Distributed computing</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Distributed computing</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="exercise-5-distributed-computing" class="titleslide slide level2"><h1>Exercise 5: Distributed computing</h1></section><section id="again-with-hadoop" class="slide level3">
+<h1>Again, with Hadoop</h1>
+<p>In the previous exercise, we demonstrated MapReduce on our local computer.</p>
+<p>In this exercise we will spin up multiple cloud instances, making use of Hadoop to carry out a distributed MapReduce operation.</p>
+<p>We could set up multiple instances in the cloud (for example with EC2), then configure Hadoop to run across the instances. This is not trivial and takes time.</p>
+</section><section id="hadoop-in-the-cloud" class="slide level3">
+<h1>Hadoop in the cloud</h1>
+<p>Fortunately, several cloud providers offer configurable Hadoop services. One such service is Amazon Elastic MapReduce (EMR).</p>
+<p>Elastic MapReduce provides a framework for:</p>
+<ul>
+<li>uploading data and code to the Simple Storage Service (S3)</li>
+<li>analysing with a multi-instance cluster on the Elastic Compute Cloud (EC2)</li>
+</ul>
+</section><section id="create-an-s3-bucket" class="slide level3">
+<h1>Create an S3 bucket</h1>
+<p>Create an S3 bucket to hold the input data and our map/reduce functions:</p>
+<ol type="1">
+<li>Open the Amazon Web Services Console: <a href="http://aws.amazon.com/">http://aws.amazon.com</a></li>
+<li>Select &quot;Create Bucket&quot; and enter a globally unique name</li>
+<li>Ensure the S3 Bucket shares the same region as other instances in your cluster</li>
+</ol>
+<p>Or, through the command line interface:</p>
+<pre><code>$ aws s3 mb s3://ucl-jh-books-example</code></pre>
+</section><section id="copy-data-and-code-to-s3" class="slide level3">
+<h1>Copy data and code to S3</h1>
+<p>Sample map and reduce functions are available on GitHub:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># clone the code from a remote repository</span>
+$ <span class="kw">git</span> clone https://github.com/tompollard/dorian</code></pre>
+<p>Copy the data and code to S3:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Copy input code and data to S3</span>
+<span class="co"># No support for unix-style wildcards</span>
+$ <span class="kw">aws</span> s3 cp dorian.txt s3://my-bucket-ucl123/input/
+$ <span class="kw">aws</span> s3 cp mapper.py s3://my-bucket-ucl123/code/
+$ <span class="kw">aws</span> s3 cp reducer.py s3://my-bucket-ucl123/code/</code></pre>
+</section><section id="launch-the-compute-cluster" class="slide level3">
+<h1>Launch the compute cluster</h1>
+<p>Create a compute cluster with one master instance and two core instances:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Start a EMR cluster</span>
+<span class="co"># &lt;ami-version&gt;: version of the machine image to use</span>
+<span class="co"># &lt;instance-type&gt;:  number and type of Amazon EC2 instances</span>
+<span class="co"># &lt;key_name&gt;: &quot;mykeypair&quot;</span>
+$ <span class="kw">aws</span> emr create-cluster --ami-version 3.11.0 \
+    <span class="kw">--ec2-attributes</span> KeyName=student01 \
+    <span class="kw">--instance-groups</span> InstanceGroupType=MASTER,InstanceCount=1,InstanceType=m3.xlarge \
+    <span class="ot">InstanceGroupType=</span>CORE,InstanceCount=<span class="kw">2</span>,InstanceType=m3.xlarge \
+    <span class="kw">--use-default-roles</span>
+
+<span class="st">&quot;ClusterId&quot;</span>: <span class="st">&quot;j-3HGKJHEND0DX8&quot;</span></code></pre>
+</section><section id="get-the-cluster-id" class="slide level3">
+<h1>Get the cluster ID</h1>
+<p>Get the cluster-id:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Get the cluster-id</span>
+$ <span class="kw">aws</span> emr list-clusters
+    <span class="kw">...</span>
+    <span class="st">&quot;Id&quot;</span>: <span class="st">&quot;j-3HGKJHEND0DX8&quot;</span>,
+    <span class="st">&quot;Name&quot;</span>: <span class="st">&quot;Development Cluster&quot;</span></code></pre>
+</section><section id="get-the-public-dns-name-of-the-cluster" class="slide level3">
+<h1>Get the public DNS name of the cluster</h1>
+<p>When the cluster is up and running, get the public DNS name:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Get the DNS</span>
+$ <span class="kw">aws</span> emr describe-cluster --cluster-id j-3HGKJHEND0DX8 \
+    <span class="kw">|</span> <span class="kw">grep</span> MasterPublicDnsName
+    <span class="kw">...</span>
+    <span class="st">&quot;MasterPublicDnsName&quot;</span>: <span class="st">&quot;ec2-52-16-235-144.eu-west-1.compute.amazonaws.com&quot;</span></code></pre>
+</section><section id="connect-to-the-cluster" class="slide level3">
+<h1>Connect to the cluster</h1>
+<p>SSH into the cluster using the username 'hadoop':</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># SSH into the master node</span>
+<span class="co"># &lt;key_file&gt;: ~/.ssh/ec2</span>
+<span class="co"># &lt;MasterPublicDnsName&gt;: ec2-52-16-235-144.eu-west-1.compute.amazonaws.com</span>
+$ <span class="kw">ssh</span> hadoop@<span class="kw">&lt;</span>MasterPublicDnsName<span class="kw">&gt;</span> -i <span class="kw">&lt;</span>key_file<span class="kw">&gt;</span></code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Connected</span>
+       <span class="kw">__|</span>  <span class="kw">__|_</span>  )
+       <span class="kw">_|</span> <span class="dt">\(</span>     <span class="kw">/</span>   Amazon Linux AMI
+      <span class="kw">___|</span><span class="dt">\\</span><span class="kw">___|___|</span>
+
+[<span class="kw">hadoop@ip-xxx</span> ~]$</code></pre>
+</section><section id="run-the-analysis" class="slide level3">
+<h1>Run the analysis</h1>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># To process multiple input files, use a wildcard</span>
+[<span class="kw">hadoop@ip-xxx</span> ~]$ hadoop \
+    <span class="kw">jar</span> contrib/streaming/hadoop-*streaming*.jar \
+    <span class="kw">-files</span> s3://my-bucket-ucl123/code/mapper.py,s3://my-bucket-ucl123/code/reducer.py \
+    <span class="kw">-input</span> s3://my-bucket-ucl123/input/* \
+    <span class="kw">-output</span> s3://my-bucket-ucl123/output/ \
+    <span class="kw">-mapper</span> mapper.py \
+    <span class="kw">-reducer</span> reducer.py</code></pre>
+</section><section id="view-the-results" class="slide level3">
+<h1>View the results</h1>
+<p>Results are saved to the output folder. Each reduce task writes its output to a separate file:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># List files in the output folder</span>
+$ <span class="kw">aws</span> s3 ls s3://my-bucket-ucl123/output/</code></pre>
+<p>Download the output:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Copy the output files to our local folder</span>
+<span class="co"># No support for unix-style wildcards, so use --recursive</span>
+$ <span class="kw">aws</span> s3 cp s3://my-bucket-ucl123/output . --recursive
+
+<span class="co"># View the file</span>
+$ <span class="kw">head</span> part-00001
+
+<span class="kw">the</span>     3948
+<span class="kw">and</span>     2279
+<span class="kw">in</span>      <span class="kw">1266</span>
+<span class="kw">his</span>     996
+<span class="kw">lord</span>    248
+<span class="kw">...</span></code></pre>
+</section><section id="terminate-the-cluster" class="slide level3">
+<h1>Terminate the cluster</h1>
+<p>Once our analysis is complete, terminate the cluster:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># get cluster id: aws emr list-clusters</span>
+<span class="co"># &lt;cluster_ID&gt;: j-3HGKJHEND0DX8</span>
+$ <span class="kw">aws</span> emr terminate-clusters --cluster-id <span class="kw">&lt;</span>cluster_ID<span class="kw">&gt;</span></code></pre>
+</section><section id="delete-the-bucket" class="slide level3">
+<h1>Delete the bucket</h1>
+<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">aws</span> s3 rb s3://my-bucket-ucl123 --force</code></pre>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

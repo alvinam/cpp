@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Choosing Libraries</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Choosing Libraries</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="choosing-libraries" class="titleslide slide level2"><h1>Choosing libraries</h1></section><section id="libraries-are-awesome" class="slide level3">
+<h1>Libraries are Awesome</h1>
+<p>A <a href="http://github-pages.ucl.ac.uk/rsd-engineeringcourse/ch04packaging/01Libraries.html">great set of libraries allows for a very powerful programming style</a>:</p>
+<ul>
+<li>Write minimal code yourself
+<ul>
+<li>Choose the right libraries</li>
+<li>Plug them together</li>
+<li>Create impressive results</li>
+</ul></li>
+</ul>
+</section><section id="libraries-for-efficiency" class="slide level3">
+<h1>Libraries for Efficiency</h1>
+<p>Not only is this efficient with your programming time, it's also more efficient with computer time.</p>
+<p>The chances are any general algorithm you might want to use has already been programmed better by someone else.</p>
+</section><section id="software-licenses" class="slide level3">
+<h1>Software Licenses</h1>
+<ul>
+<li>Consider both:
+<ul>
+<li>License for 3rd party code / dependencies</li>
+<li>License for your code when you distribute it</li>
+</ul></li>
+<li>So, even if you aren't distributing code yet, you need to understand the licenses of your dependencies.</li>
+</ul>
+</section><section id="third-party-licenses" class="slide level3">
+<h1>Third Party Licenses</h1>
+<p>CAVEAT: This is not legal advice. If in doubt, seek your own legal advice.</p>
+<ul>
+<li>When you distribute your code, the licenses of any libraries you use takes effect</li>
+<li>If library has:
+<ul>
+<li><a href="http://opensource.org/licenses/MIT">MIT</a> and <a href="http://opensource.org/licenses/BSD-3-Clause">BSD</a> are permissive. So you can do what you want, including sell it on.</li>
+<li><a href="http://opensource.org/licenses/Apache-2.0">Apache</a> handles multiple contributors and patent rights, but is basically permissive.</li>
+</ul></li>
+</ul>
+</section><section id="third-party-licenses-1" class="slide level3">
+<h1>Third Party Licenses</h1>
+<p>CAVEAT: This is not legal advice. If in doubt, seek your own legal advice.</p>
+<ul>
+<li>When you distribute your code, the licenses of any libraries you use takes effect</li>
+<li>If library has:
+<ul>
+<li><a href="http://opensource.org/licenses/gpl-license">GPL</a> requires you to open-source your code, including changes to the library you imported, and your work is considered a &quot;derivative work&quot;, so must be shared.</li>
+<li><a href="http://opensource.org/licenses/lgpl-license">LGPL</a> for libraries, but use dynamic not static linkage. If you use static linking its basically as per <a href="http://opensource.org/licenses/gpl-license">GPL</a>.</li>
+</ul></li>
+<li>Still some debate on <a href="https://lwn.net/Articles/548216/">GPL/LGPL and derivative works</a> - only true test is in court.</li>
+</ul>
+</section><section id="choosing-a-license" class="slide level3">
+<h1>Choosing a License</h1>
+<p>CAVEAT: This is not legal advice. If in doubt, seek your own legal advice.</p>
+<ul>
+<li>When you plan to distribute code:
+<ul>
+<li>Read <a href="http://www.oreilly.com/openbook/osfreesoft/book/">this book</a>, and/or <a href="http://choosealicense.com/">GitHub's advice</a>, and <a href="http://opensource.org/">OSI</a> for choosing your own license.</li>
+<li>Don't write your own license, unless you use legal advice.</li>
+<li>Try to pick one of the standard ones for compatibility.</li>
+</ul></li>
+<li>Note: Once a 3rd party has your code under a license agreement, their restrictions are determined by that version of the code.</li>
+</ul>
+</section><section id="choose-stability" class="slide level3">
+<h1>Choose Stability</h1>
+<ul>
+<li>So, take care in your choice of 3rd party library
+<ul>
+<li>Don't want to redo work later.</li>
+<li>Don't want to rely too heavily on non-distributable code.</li>
+<li>But if you do, understand what that means.</li>
+</ul></li>
+</ul>
+</section><section id="is-library-updated" class="slide level3">
+<h1>Is Library Updated?</h1>
+<ul>
+<li>Code that is not developed, rots.
+<ul>
+<li>When was the last commit?</li>
+<li>How often are there commits?</li>
+<li>Is the code on an open version control tool like GitHub?</li>
+</ul></li>
+</ul>
+</section><section id="are-developers-reachable" class="slide level3">
+<h1>Are Developers Reachable?</h1>
+<ul>
+<li>Can you find the lead contributor on the internet?
+<ul>
+<li>Do they respond when approached?</li>
+</ul></li>
+<li>Are there contributors other than the lead contributor?</li>
+</ul>
+</section><section id="is-code-tested" class="slide level3">
+<h1>Is Code Tested?</h1>
+<ul>
+<li>Are there many unit tests, do they run, do they pass?</li>
+<li>Does the library depend on other libraries?</li>
+<li>Are the build tools common?</li>
+<li>Is there a sensible versioning scheme (e.g. <a href="http://www.semver.org/">semantic versioning</a>).</li>
+<li>Is there a suitable release schedule?</li>
+</ul>
+</section><section id="is-library-high-quality" class="slide level3">
+<h1>Is Library High Quality?</h1>
+<ul>
+<li>Shouldn't need to look excessively closely, but consider
+<ul>
+<li>Documentation</li>
+<li>Number of ToDo's</li>
+<li>Dependencies (recursively)</li>
+<li>Data Structures? How to import/export image</li>
+<li>Can you write a convenient wrapper?</li>
+</ul></li>
+</ul>
+</section><section id="library-features" class="slide level3">
+<h1>Library Features</h1>
+<ul>
+<li>Then look at features
+<ul>
+<li>Manual</li>
+<li>Easy to use</li>
+</ul></li>
+</ul>
+</section><section id="summary" class="slide level3">
+<h1>Summary</h1>
+<ul>
+<li>In comparison with languages such as MATLAB/Python
+<ul>
+<li>In C++ prefer few well chosen libraries</li>
+<li>Be aware of their licenses for future distribution</li>
+<li>Keep a log of any changes, patches etc. that you make</li>
+<li>Be able to compile all your own code, including libraries
+<ul>
+<li>so need common build environment. (eg. CMake, Make, Visual Studio).</li>
+</ul></li>
+</ul></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>

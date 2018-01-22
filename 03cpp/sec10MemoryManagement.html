@@ -1,0 +1,736 @@
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 7]> <html lang="en" class="lt-ie9 lt-ie8 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="lt-ie9 no-js"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset=utf-8 />
+    <meta name="author" content="UCL" />
+    <meta name="description" content="UCL Homepage" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- social meta -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@uclnews">
+    <meta name="twitter:title" content="UCL - London's Global University">
+    <meta name="twitter:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students.">
+    <meta name="twitter:creator" content="@UCLWAMS">
+    <meta name="twitter:image:src" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png">
+    <meta property="og:image" content="http://www.ucl.ac.uk/visual-identity/logos/standalone.png" />
+    <meta property="og:title" content="UCL - London's Global University" />
+    <meta property="og:url" content="http://www.ucl.ac.uk" />
+    <meta property="og:site_name" content="UCL" />
+    <meta property="og:description" content="UCL (University College London) is London's leading multidisciplinary university, with 8,000 staff and 25,000 students." />
+    <meta property="og:type" content="website" />
+    <meta property="og:profile_id" content="uclofficial" />
+    <!-- end social meta -->
+
+  <title>Smart Pointers</title>
+
+  <link href="/research-computing-with-cpp/css/screen.min.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <link href="/research-computing-with-cpp/css/jekyll-styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/local_styles.css" rel="stylesheet" type="text/css">
+  <link href="/research-computing-with-cpp/site-styles/ipython.css" rel="stylesheet" type="text/css">
+
+  <link rel="shortcut icon" href="/research-computing-with-cpp/images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="/research-computing-with-cpp/favicon-152.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="/research-computing-with-cpp/favicon-144.png">
+
+  <script src="/research-computing-with-cpp/js/lib/modernizr-custom.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+
+    <script>
+      var cuttingTheMustard = document.querySelector && window.localStorage && window.addEventListener;
+
+      Modernizr.load({
+        //cutting the mustard as used by the BBC
+        test: cuttingTheMustard
+        //if old browser load the shiv
+        ,
+        nope: [
+          '/research-computing-with-cpp/js/lib/html5shiv-printshiv.min.js', '/research-computing-with-cpp/js/lib/respond.min.js'
+        ]
+      });
+      //set conditional assets for main.js
+      var globalSiteSpecificVars = {
+        pathToJquery: "/research-computing-with-cpp/js/lib/jquery-1.9.1.min",
+        googleAnalyticsIdsArray: [] //specify array of site specific id's NOT UCL generic UA-943297-1
+      }
+      if (cuttingTheMustard) {
+        globalSiteSpecificVars.pathToJquery = '/research-computing-with-cpp/js/lib/jquery-2.1.1.min';
+      }
+    </script>
+    <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+    <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+</head>
+
+<body id="index" class="layout-vertical layout-vertical--nav-1col">
+
+  <header class="header header--desktop">
+
+  <a class="header__close" href="#">
+    <img src="/research-computing-with-cpp/images/close.png" class="lazy" data-src="//static.ucl.ac.uk/indigo/images/close.png" alt="X" />Close</a>
+
+  <div class="masthead">
+
+  <div class="wrapper clearfix">
+
+      <div class="masthead__search">
+					<form action="#" method="get">
+						<div class="search-form">
+							<input type="search" placeholder="Search UCL websites, people and more" class="search-form__input search-form__input--search" value="">
+						</div>
+						<input type="submit" name="sumbit" value="Go" class="btn search-form__input search-form__input--submit" />
+					</form>
+				</div>
+
+
+				<nav class="masthead__nav m-clear">
+					<ul class="masthead__list">
+						<li class="masthead__item"><a href="index.php" class="masthead__link">UCL Home</a>
+						</li>
+						<li class="masthead__item"><a href="prospective-students.php" class="masthead__link">Prospective students</a>
+						</li>
+						<li class="masthead__item"><a href="current-students.php" class="masthead__link">Current students</a>
+						</li>
+						<li class="masthead__item"><a href="staff.php" class="masthead__link">Staff</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+</div><!-- end .masthead -->
+
+
+  <div class="wrapper">
+
+    <div class="photograph">
+  <div class="brand">
+    <p class="brand__heading">MPHYG002: Research Computing with C++</p>
+    <a href="/" class="brand__link"><span class="visually-hidden">Home</span></a>
+    <img src="//cdn.ucl.ac.uk/img/blank.gif" data-src="//static.ucl.ac.uk/indigo/images/ucl-logo.svg" alt="UCL logo" id="logo" class="brand__logo lazy">  
+  </div>
+</div>
+
+
+    <div class="sidebar">
+
+      <nav class="nav nav--mobile">
+        <ul>
+          
+
+
+
+
+        </ul>
+      </nav>
+
+      <nav class="nav nav--left">
+        <ul>
+          
+
+ <li class="active"> <a href="/research-computing-with-cpp/01research/">C++ for Research</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/01research/sec01Research.html">C++ in Research</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec02Git.html">Git</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec03CMake.html">CMake</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/01research/sec04UnitTesting.html">Unit Testing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/02libraries/">Including Libraries</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec01ChoosingLibraries.html">Choosing Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LibraryBasics.html">Library Basics</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec02LinkingLibraries.html">Linking Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec03UsingLibraries.html">Using Libraries</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec04Examples.html">Examples</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05CMakeCatchTemplate.html">CMakeCatchTemplate</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/02libraries/sec05Summary.html">Summary</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/">Better C++</a><ul> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec01LanguageRecap.html">Object Oriented Review</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec02EssentialReading.html">Essential Reading</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec03TemplatesIntro.html">Templates</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec04FunctionTemplates.html">Function Templates</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec05ClassTemplates.html">Class Templates</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec06Exceptions.html">Error Handling</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec07Inheritance.html">Inheritance</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec08DependencyInjection.html">Dependency Injection</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec09ConstructionPatterns.html">Construction Patterns</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec10MemoryManagement.html">Smart Pointers</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec11RAII.html">RAII Pattern</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec12ProgramToInterfaces.html">Program To Interfaces</a> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpp/sec13SummaryOfPatterns.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/03cpplibraries/">C++ Libraries</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec07EIGEN.html">Eigen</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec08Boost.html">Boost</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec09ITK.html">ITK</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/03cpplibraries/sec10Summary.html">Summary</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/04HPC/">HPC Concepts</a><ul> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/05OpenMP/">Shared memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec01IntroductiontoOpenMP.html">Introduction to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec02Loops.html">Parallelizing loops with OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec03CriticalLocksRaces.html">Races, Locks and Critical regions</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec04Tasks.html">Tasks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec05SchedulingLoadBalancing.html">Scheduling and Load Balancing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec06OpenMPAlternatives.html">Alternatives to OpenMP</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec07FurtherReading.html">Further Reading</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/05OpenMP/sec08Exercise.html">Exercise</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/06MPI/">Distributed memory parallelism</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec01practical.html">MPI in practice</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec02PointToPoint.html">Point to Point</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec03collective.html">Collective communication</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/06MPI/sec04advanced.html">More advanced MPI</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/07MPIExample/">MPI Design Example</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec01smoothlife.html">Smooth Life</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec02domain.html">Domain decomposition</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec03halo.html">Halo swap</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec04deployment.html">Deployment</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec05derived.html">Derived Datatypes</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/07MPIExample/sec06overlap.html">Overlap</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/08IO/">MPI File I/O</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec01visualise.html">Visualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec02text.html">Formatted Text IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec03binary.html">Binary IO</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec04endian.html">Portability</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec05single.html">Writing from a single process</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/08IO/sec06mpiio.html">Parallel IO</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/09Accelerators/">Accelerators</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec01Introduction.html">CPU Vectorisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec02UsingAGPUAsAnAccelerator.html">Using a GPU as an Accelerator</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec03Streaming.html">Streaming</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/09Accelerators/sec04Vectorization.html">Vectorization</a> </li> </ul> </li><li class="active"> <a href="/research-computing-with-cpp/11Performance/">Post-coding medley, memory leaks, and performance measurements</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/01editor_tools.html">Tools for pretty code</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/02valgrind.html">Memory leaks</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/03Performance.html">Profiling a program</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/11Performance/04MicroBenchmarking.html">Micro-benchmarking</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/95stl/">Appendix - STL</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Intro.html">The Standard Template Library</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec01Motivation.html">Motivation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec02Containers.html">STL Containers</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/95stl/sec03Other.html">Other STL stuff</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/96TemplateMetaProg/">Appendix - TMP</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/96TemplateMetaProg/sec01TemplateMeta.html">Template Meta-Programming</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/97Cloud/">Appendix - Cloud</a><ul><li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec01cloud.html">Cloud computing and big data</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec02exercise1.html">Working in the cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec03exercise2.html">Command line cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec04virtual.html">Virtualisation</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec05exercise3.html">Containers in the Cloud</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec06distributed.html">Distributed computing</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec07exercise4.html">MapReduce</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/97Cloud/sec08exercise5.html">Distributed computing</a> </li> </ul> </li> <li class="active"> <a href="/research-computing-with-cpp/98Installation/">Installation</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/01linux.html">Linux</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/02windows.html">Windows</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/03mac.html">Mac</a> </li> <li class="inactive"> <a href="/research-computing-with-cpp/98Installation/04boost.html">Boost</a> </li></ul> </li> <li class="active"> <a href="/research-computing-with-cpp/99Assignments/">Assessment</a><ul> <li class="inactive"> <a href="/research-computing-with-cpp/99Assignments/assignment2.html">MPHYG002 Coursework 2 Parallelising Conway's Game of Life</a> </li> </ul> </li> 
+
+        </ul>
+      </nav>
+
+    </div>
+    <!-- end .sidebar -->
+
+    <nav class="nav nav--top">
+      <ul>
+        
+      </ul>
+    </nav>
+
+  </div>
+  <!-- end .wrapper -->
+
+  </header>
+  <!-- end .header -->
+
+  <div class="site-content wrapper">
+
+    <header class="header header--mobile default-header">
+      <a class="header__open" href="#">
+        <img src="/research-computing-with-cpp/images/ucl-menu.svg" alt="Menu" />
+      </a>
+    </header>
+
+    <div class="site-content__inner clearfix">
+      <div class="site-content__body">
+
+          
+            <nav class="breadcrumb clearfix">
+              <ul class="breadcrumb__list">
+                <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/">UCL</a></li>
+
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/ISD">ISD</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services">Our services</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it">Research IT</a></li>
+  
+    <li class="breadcrumb__item"><a href="http://www.ucl.ac.uk/isd/services/research-it/training">Training</a></li>
+  
+
+<li class="breadcrumb__item"><a href="/research-computing-with-cpp/">MPHYG002</a></li>
+
+
+
+              </ul>
+            </nav>
+           <div class="site-content__main">
+            
+            
+               <div id="slidelink">
+                 <a href="/research-computing-with-cpp/03cpp/sec10MemoryManagement-reveal.html">Slides</a>
+               </div>
+            
+          
+          
+
+    <h2>Smart Pointers</h2>
+
+<h3>Use of Raw Pointers</h3>
+
+<ul>
+<li>Given a pointer passed to a function</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">   void DoSomethingClever(int *a) 
+   {
+     // write some code
+   }
+</code></pre></div>
+<ul>
+<li>How do we use the pointer? </li>
+<li>What problems are there?</li>
+</ul>
+
+<h3>Problems with Raw Pointers</h3>
+
+<ul>
+<li>From <a href="https://www.amazon.co.uk/Effective-Modern-Specific-Ways-Improve/dp/1491903996/ref=sr_1_1?ie=UTF8&qid=1484571499&sr=8-1&keywords=Effective+Modern+C%2B%2B">&quot;Effective Modern C++&quot;, Meyers, p117</a>.
+
+<ul>
+<li>If you are done, do you destroy it?</li>
+<li>How to destroy it? Call <code>delete</code> or some method first: <code>a-&gt;Shutdown();</code></li>
+<li>Single object or array?</li>
+<li><code>delete</code> or <code>delete[]</code>?</li>
+<li>How to ensure the whole system only deletes it once?</li>
+<li>Is it dangling, if I don&#39;t delete it?</li>
+</ul></li>
+</ul>
+
+<h3>Use Smart Pointers</h3>
+
+<ul>
+<li><code>new/delete</code> on raw pointers not good enough</li>
+<li>So, use Smart Pointers
+
+<ul>
+<li>automatically delete pointed to object</li>
+<li>explicit control over sharing</li>
+<li>i.e. smarter</li>
+</ul></li>
+<li>Smart Pointers model the &quot;ownership&quot;</li>
+</ul>
+
+<h3>Further Reading</h3>
+
+<ul>
+<li>Notes here are based on these:
+
+<ul>
+<li><a href="http://www.umich.edu/%7Eeecs381/handouts/C++11_smart_ptrs.pdf">David Kieras online paper</a></li>
+<li><a href="https://www.amazon.co.uk/Effective-Modern-Specific-Ways-Improve/dp/1491903996/ref=sr_1_1?ie=UTF8&qid=1484571499&sr=8-1&keywords=Effective+Modern+C%2B%2B">&quot;Effective Modern C++&quot;, Meyers, ch4</a></li>
+</ul></li>
+</ul>
+
+<h3>Standard Library Smart Pointers</h3>
+
+<ul>
+<li>Here we teach Standard Library
+
+<ul>
+<li><a href="http://en.cppreference.com/w/cpp/memory/unique_ptr">std::unique_ptr</a> - models <em>has-a</em> but also unique ownership</li>
+<li><a href="http://en.cppreference.com/w/cpp/memory/shared_ptr">std::shared_ptr</a> - models <em>has-a</em> but shared ownership</li>
+<li><a href="http://en.cppreference.com/w/cpp/memory/weak_ptr">std::weak_ptr</a> - temporary reference, breaks circular references</li>
+</ul></li>
+</ul>
+
+<h3>Stack Allocated - No Leak.</h3>
+
+<ul>
+<li>To recap:</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Fraction.h"
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Fraction</span> <span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+</code></pre></div>
+<ul>
+<li>Gives:</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">I'm being deleted
+
+</code></pre></div>
+<ul>
+<li>So stack allocated objects are deleted, when stack unwinds.</li>
+</ul>
+
+<h3>Heap Allocated - Leak.</h3>
+
+<ul>
+<li>To recap:</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Fraction.h"
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Fraction</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+</code></pre></div>
+<ul>
+<li>Gives:</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">
+</code></pre></div>
+<ul>
+<li>So heap allocated objects are not deleted.</li>
+<li>Its the pointer (stack allocated) that&#39;s deleted.</li>
+</ul>
+
+<h3>Unique Ptr - Unique Ownership</h3>
+
+<ul>
+<li>So:</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Fraction.h"
+#include &lt;memory&gt;
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">(</span><span class="k">new</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">));</span>
+<span class="p">}</span>
+
+
+</code></pre></div>
+<ul>
+<li>Gives:</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">I'm being deleted
+
+</code></pre></div>
+<ul>
+<li>And object is deleted.</li>
+<li>Is that it?</li>
+</ul>
+
+<h3>Unique Ptr - Move?</h3>
+
+<ul>
+<li>Does move work?</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Fraction.h"
+#include &lt;memory&gt;
+#include &lt;iostream&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">(</span><span class="k">new</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">));</span>
+  <span class="c1">// std::unique_ptr&lt;Fraction&gt; f2(f); // compile error
+</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"f="</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">f2</span><span class="p">;</span>
+  <span class="c1">// f2 = f; // compile error
+</span>  <span class="c1">// f2.reset(f.get()); // bad idea
+</span>
+  <span class="n">f2</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">release</span><span class="p">());</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f="</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">", f2="</span> <span class="o">&lt;&lt;</span> <span class="n">f2</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">f</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">f2</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f="</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">", f2="</span> <span class="o">&lt;&lt;</span> <span class="n">f2</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+</code></pre></div>
+<ul>
+<li>Gives:</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">f=0, f2=0x249f010
+f=0x249f010, f2=0
+I'm being deleted
+
+</code></pre></div>
+<ul>
+<li>We see that API makes difficult to use incorrectly.</li>
+</ul>
+
+<h3>Unique Ptr - Usage 1</h3>
+
+<ul>
+<li>Forces you to think about ownership 
+
+<ul>
+<li>No copy constructor</li>
+<li>No assignment</li>
+</ul></li>
+<li>Consequently
+
+<ul>
+<li>Can&#39;t pass pointer by value</li>
+<li>Use move semantics for placing in containers</li>
+</ul></li>
+</ul>
+
+<h3>Unique Ptr - Usage 2</h3>
+
+<ul>
+<li>Put raw pointer STRAIGHT into unique_ptr</li>
+<li>see <code>std::make_unique</code> in C++14.</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Fraction.h"
+#include &lt;memory&gt;
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">(</span><span class="k">new</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">));</span>
+<span class="p">}</span>
+
+
+</code></pre></div>
+<h3>Shared Ptr - Shared Ownership</h3>
+
+<ul>
+<li>Many pointers pointing to same object</li>
+<li>Object only deleted if no pointers refer to it</li>
+<li>Achieved via reference counting</li>
+</ul>
+
+<h3>Shared Ptr Control Block</h3>
+
+<ul>
+<li><p>Won&#39;t go to too many details:
+<img src="https://www.safaribooksonline.com/library/view/effective-modern-c/9781491908419/assets/emcp_04in02.png" alt="Control Block"></p></li>
+<li><p>From <a href="https://www.amazon.co.uk/Effective-Modern-Specific-Ways-Improve/dp/1491903996/ref=sr_1_1?ie=UTF8&qid=1484571499&sr=8-1&keywords=Effective+Modern+C%2B%2B">&quot;Effective Modern C++&quot;, Meyers, p140</a></p></li>
+</ul>
+
+<h3>Shared Ptr - Usage 1</h3>
+
+<ul>
+<li>Place raw pointer straight into shared_ptr</li>
+<li>Pass to functions, reference or by value</li>
+<li>Copy/Move constructors and assignment all implemented</li>
+</ul>
+
+<h3>Shared Ptr - Usage 2</h3>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Fraction.h"
+#include &lt;memory&gt;
+#include &lt;iostream&gt;
+</span><span class="kt">void</span> <span class="nf">divideBy2</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;&amp;</span> <span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">f</span><span class="o">-&gt;</span><span class="n">denominator</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">multiplyBy2</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">f</span><span class="o">-&gt;</span><span class="n">numerator</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">f1</span><span class="p">(</span><span class="k">new</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">f1</span><span class="p">;</span>
+  <span class="n">divideBy2</span><span class="p">(</span><span class="n">f1</span><span class="p">);</span>
+  <span class="n">multiplyBy2</span><span class="p">(</span><span class="n">f2</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Value="</span> <span class="o">&lt;&lt;</span> <span class="n">f1</span><span class="o">-&gt;</span><span class="n">numerator</span> <span class="o">&lt;&lt;</span> <span class="s">"/"</span> <span class="o">&lt;&lt;</span> <span class="n">f1</span><span class="o">-&gt;</span><span class="n">denominator</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f1="</span> <span class="o">&lt;&lt;</span> <span class="n">f1</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">", f2="</span> <span class="o">&lt;&lt;</span> <span class="n">f2</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+</code></pre></div>
+<h3>Shared Ptr - Usage 3</h3>
+
+<ul>
+<li>Watch out for exceptions.</li>
+<li><a href="https://www.amazon.co.uk/Effective-Modern-Specific-Ways-Improve/dp/1491903996/ref=sr_1_1?ie=UTF8&qid=1484571499&sr=8-1&keywords=Effective+Modern+C%2B%2B">&quot;Effective Modern C++&quot;, Meyers, p140</a></li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Fraction.h"
+#include &lt;memory&gt;
+#include &lt;stdexcept&gt;
+#include &lt;vector&gt;
+</span><span class="kt">int</span> <span class="nf">checkSomething</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;&amp;</span> <span class="n">f</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// whatever.
+</span><span class="p">}</span>
+<span class="kt">int</span> <span class="nf">computeSomethingFirst</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">// what if this throws?
+</span><span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">spaceForLotsOfFractions</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">checkSomething</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)),</span>
+                              <span class="n">computeSomethingFirst</span><span class="p">()</span>
+                             <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>Shared Ptr - Usage 4</h3>
+
+<ul>
+<li>Prefer <code>std::make_shared</code></li>
+<li>Exception safe</li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Fraction.h"
+#include &lt;memory&gt;
+#include &lt;stdexcept&gt;
+#include &lt;vector&gt;
+</span><span class="kt">int</span> <span class="nf">checkSomething</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;&amp;</span> <span class="n">f</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// whatever.
+</span><span class="p">}</span>
+<span class="kt">int</span> <span class="nf">computeSomethingFirst</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">// what if this throws?
+</span><span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">spaceForLotsOfFractions</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">checkSomething</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span>
+                              <span class="n">computeSomethingFirst</span><span class="p">()</span>
+                             <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>Weak Ptr - Why?</h3>
+
+<ul>
+<li>Like a shared pointer, but doesn&#39;t actually own anything</li>
+<li>Use for example:
+
+<ul>
+<li>Caches</li>
+<li>Break circular pointers</li>
+</ul></li>
+<li>Limited API</li>
+<li>Not terribly common as most code ends up as hierarchies</li>
+</ul>
+
+<h3>Weak Ptr - Example</h3>
+
+<ul>
+<li>See <a href="http://www.umich.edu/%7Eeecs381/handouts/C++11_smart_ptrs.pdf">David Kieras online paper</a></li>
+</ul>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "Fraction.h"
+#include &lt;memory&gt;
+#include &lt;iostream&gt;
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">s1</span><span class="p">(</span><span class="k">new</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">w1</span><span class="p">;</span>      <span class="c1">// can point to nothing
+</span>  <span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">w2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span> <span class="c1">// assignment from shared
+</span>  <span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">w3</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>  <span class="c1">// construction from shared
+</span>
+  <span class="c1">// Can't be de-referenced!!!
+</span>  <span class="c1">// std::cerr &lt;&lt; "Value=" &lt;&lt; w1-&gt;numerator &lt;&lt; "/" &lt;&lt; w1-&gt;denominator &lt;&lt; std::endl;
+</span>
+  <span class="c1">// Needs converting to shared, and checking
+</span>  <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">w1</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Object w1 exists="</span> <span class="o">&lt;&lt;</span> <span class="n">s2</span><span class="o">-&gt;</span><span class="n">numerator</span> <span class="o">&lt;&lt;</span> <span class="s">"/"</span> <span class="o">&lt;&lt;</span> <span class="n">s2</span><span class="o">-&gt;</span><span class="n">denominator</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Or, create shared, check for exception
+</span>  <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Fraction</span><span class="o">&gt;</span> <span class="n">s3</span><span class="p">(</span><span class="n">w2</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Object must exists="</span> <span class="o">&lt;&lt;</span> <span class="n">s3</span><span class="o">-&gt;</span><span class="n">numerator</span> <span class="o">&lt;&lt;</span> <span class="s">"/"</span> <span class="o">&lt;&lt;</span> <span class="n">s3</span><span class="o">-&gt;</span><span class="n">denominator</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+</code></pre></div>
+<h3>Final Advice</h3>
+
+<ul>
+<li>Benefits of immediate, fine-grained, garbage collection</li>
+<li>Just ask <a href="https://www.amazon.co.uk/Effective-Modern-Specific-Ways-Improve/dp/1491903996/ref=sr_1_1?ie=UTF8&qid=1484571499&sr=8-1&keywords=Effective+Modern+C%2B%2B">Scott Meyers!</a>
+
+<ul>
+<li>Use <code>unique_ptr</code> for unique ownership</li>
+<li>Easy to convert <code>unique_ptr</code> to <code>shared_ptr</code></li>
+<li>But not the reverse</li>
+<li>Use <code>shared_ptr</code> for shared resource management</li>
+<li>Avoid raw <code>new</code> - use <code>make_shared</code>, <code>make_unique</code></li>
+<li>Use <code>weak_ptr</code> for pointers that can dangle (cache etc)</li>
+</ul></li>
+</ul>
+
+<h3>Comment on Boost</h3>
+
+<ul>
+<li>Boost has become a sandbox for standard C++</li>
+<li>Boost features become part of standard C++, (different name space)</li>
+<li>So if you are forced to use old compiler
+
+<ul>
+<li>You could use boost - lecture 5.</li>
+</ul></li>
+</ul>
+
+<h3>Intrusive Vs Non-Intrusive</h3>
+
+<ul>
+<li>Intrusive - Base class maintains a reference count eg. <a href="http://www.itk.org">ITK</a></li>
+<li>Non-intrusive
+
+<ul>
+<li><code>std::unique_ptr</code></li>
+<li><code>std::shared_ptr</code></li>
+<li><code>std::weak_ptr</code></li>
+<li>works for any class</li>
+</ul></li>
+</ul>
+
+<h3>ITK (intrusive) Smart Pointers</h3>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">MyFilter</span> <span class="o">:</span> <span class="c1">// Other stuff
+</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">typedef</span> <span class="n">MyFilter</span> <span class="n">Self</span>
+  <span class="k">typedef</span> <span class="n">SmartPointer</span><span class="o">&lt;</span><span class="n">Self</span><span class="o">&gt;</span> <span class="n">Pointer</span><span class="p">;</span>
+  <span class="n">itkNewMacro</span><span class="p">(</span><span class="n">Self</span><span class="p">);</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="n">MyFilter</span><span class="p">();</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">MyFilter</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="kt">double</span> <span class="nf">someFunction</span><span class="p">(</span><span class="n">MyFilter</span><span class="o">::</span><span class="n">Pointer</span> <span class="n">p</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// stuff
+</span><span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">MyFilter</span><span class="o">::</span><span class="n">Pointer</span> <span class="n">p</span> <span class="o">=</span> <span class="n">itk</span><span class="o">::</span><span class="n">MyFilter</span><span class="o">::</span><span class="n">New</span><span class="p">();</span>
+<span class="p">}</span>
+
+
+</code></pre></div>
+<h3>Conclusion for Smart Pointers</h3>
+
+<ul>
+<li>Default to standard library, check compiler</li>
+<li>Lots of other Smart Pointers
+
+<ul>
+<li><a href="http://www.boost.org">Boost</a> (use STL).</li>
+<li><a href="http://www.itk.org">ITK</a></li>
+<li><a href="http://www.vtk.org/Wiki/VTK/Tutorials/SmartPointers">VTK</a></li>
+<li><a href="https://wiki.qt.io/Smart_Pointers">Qt Smart Pointers</a></li>
+</ul></li>
+<li>Don&#39;t be tempted to write your own</li>
+<li>Always read the manual</li>
+<li>Always consistently use it</li>
+</ul>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- end .site-content -->
+
+  <footer class="footer wrapper">
+  <div class="footer__inner clearfix">
+             <article class="block block--col-1">
+                <h2 class="as-h5">Facilities</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/departments/faculties">Faculties and departments</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/library/">Library</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/museums">Museums and Collections</a></li>
+					<li class="footer__item"><a href="http://www.thebloomsbury.com/">UCL Bloomsbury Theatre</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/maps">Maps and buildings</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-2">
+                <h2 class="as-h5">Locations</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/london">UCL and London</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/australia">UCL Australia</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/qatar">UCL Qatar</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/global">UCL Global</a></li>
+				</ul>
+            </article>
+            <article class="block block--col-3">
+                <h2 class="as-h5">Connect with us</h2>
+                <ul class="footer__list list-unstyled">
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/alumni">Alumni</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/enterprise">Businesses</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/media">Media Relations</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/hr/jobs/">Jobs</a></li>
+					<li class="footer__item"><a href="http://www.ucl.ac.uk/makeyourmark">Give to UCL</a></li>
+				</ul>
+
+      </article>
+  
+    <hr class="clear">
+    <ul class="footer__list list-unstyled zero-bottom">
+      <li class="footer__item text-muted small">University College London,&nbsp;Gower Street,&nbsp;London,&nbsp;WC1E 6BT&nbsp;Tel:&nbsp;+44&nbsp;(0)&nbsp;20 7679 2000</li>
+    </ul>
+    <ul class="list-inline footer__list list-unstyled list-inline--divided">
+      <li class="text-muted small">Copyright © 2018-01-22 17:49:11 +0000 UCL</li>
+      <li class="text-muted small"><a href="#">Disclaimer</a>
+      </li>
+      <li class="text-muted small"><a href="#">Freedom of Information</a>
+      </li>
+      <li class="text-muted small"><a href="#">Accessibility</a>
+      </li>
+      <li class="text-muted small"><a href="#">Privacy</a>
+      </li>
+      <li class="text-muted small"><a href="#">Cookies</a>
+      </li>
+      <li class="text-muted small"><a href="#">Contact Us</a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+
+  <script src="/research-computing-with-cpp/js/lib/require.min.js"></script>
+  <script src="/research-computing-with-cpp/js/main.js"></script>
+    <script>
+      require.config({
+        baseUrl: '/research-computing-with-cpp/js/lib'
+      });
+        require(["app/general", "app/searchWithAutoComplete", "app/tabs"]);//load the default stuff
+    </script>
+
+</body>
+
+</html>
+

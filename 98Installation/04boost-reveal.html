@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Boost</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+    </style>
+    <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/theme/night.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//css/ucl_reveal.css"/>
+    <link rel="stylesheet" href="/research-computing-with-cpp//site-styles/reveal.css"/>
+  <link rel="stylesheet" media="print" href="http://lab.hakim.se/reveal-js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="http://lab.hakim.se/reveal-js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Boost</h1>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="installing-boost" class="titleslide slide level1"><h1>Installing Boost</h1></section><section id="linux-users" class="slide level2">
+<h1>Linux Users</h1>
+<p>Install the appropriate package with apt-get or yum, for example:</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">sudo</span> apt-get install boost</code></pre>
+<p>On Ubuntu 13.04 boost is spilt into multiple packages. The package needed here is &quot;libboost1.53-dev&quot; and to install it you should do:</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">sudo</span> apt-get install libboost1.53-dev</code></pre>
+<p>Check that your package manager is delivering at least version 1.53, if you have an earlier version, you will need to download from source, following the windows instructions below.</p>
+</section><section id="mac-users" class="slide level2">
+<h1>Mac Users</h1>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">brew</span> install boost</code></pre>
+</section><section id="windows-users" class="slide level2">
+<h1>Windows Users</h1>
+<p>You will need to download and install boost manually.</p>
+<p>Create an appropriate folder, somewhere near your working code for the course.</p>
+<p>For example, if you are working in <code>/home/myusername/devel/cppcourse/rsd-cppcourse/reactor</code> you could do:</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">mkdir</span> -p ~/devel/libraries/boost
+<span class="kw">cd</span> ~/devel/libraries/boost</code></pre>
+<p>Now, download and unzip boost, which will take quite a while:</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">curl</span> -L http://sourceforge.net/projects/boost/files/...
+        <span class="kw">...boost/1.54.0/boost_1_54_0.zip/download</span> <span class="kw">&gt;</span> boost.zip
+<span class="kw">unzip</span> boost.zip</code></pre>
+<p>(All one line, not literally two lines with dots!)</p>
+</section><section id="cmake-and-boost" class="slide level2">
+<h1>CMake and Boost</h1>
+<p>If we download from source, before we next build, we will need to tell our shell where the boost library can be found</p>
+<pre class="sourceCode Bash"><code class="sourceCode bash"><span class="kw">cd</span> build
+<span class="kw">export</span> <span class="ot">CMAKE_INCLUDE_PATH=</span>/home/myusername/devel/libraries/boost_1_54_0
+<span class="kw">cmake</span> ..
+<span class="kw">make</span>
+<span class="kw">ctest</span></code></pre>
+<p>... or your equivalent.</p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"></script>
+  <script src="http://lab.hakim.se/reveal-js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'http://lab.hakim.se/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'http://lab.hakim.se/reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'http://lab.hakim.se/reveal-js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>
